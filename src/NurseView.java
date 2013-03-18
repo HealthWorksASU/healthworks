@@ -211,7 +211,7 @@ public class NurseView extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void addPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPatientActionPerformed
-        PatientRegister pr = new PatientRegister();
+        new PatientRegister().setVisible(true);
         
         // TODO add your handling code here:
     }//GEN-LAST:event_addPatientActionPerformed

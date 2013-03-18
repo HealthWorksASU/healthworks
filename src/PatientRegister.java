@@ -610,13 +610,15 @@ public class PatientRegister extends javax.swing.JFrame
                 prep.setString(3,emailID);
                 prep.setString(4,doc);
                 prep.executeUpdate();
+                
+                dispose();
         }
        }
        catch(SQLException e)
        {
            System.out.println(e.getMessage());
         
-            
+         
         }    }//GEN-LAST:event_registerActionPerformed
 
     private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
