@@ -81,10 +81,11 @@ public class PatientPanel extends javax.swing.JFrame {
         jButton15 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(651, 752));
+        setMaximumSize(new java.awt.Dimension(651, 900));
         setMinimumSize(new java.awt.Dimension(651, 752));
-        setPreferredSize(new java.awt.Dimension(651, 752));
+        setPreferredSize(new java.awt.Dimension(651, 760));
         setResizable(false);
+        setSize(new java.awt.Dimension(671, 800));
 
         jLabel1.setText("Prescriptions");
 
@@ -437,7 +438,7 @@ public class PatientPanel extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jButton14))
@@ -470,7 +471,7 @@ public class PatientPanel extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 227, Short.MAX_VALUE)
+                        .addGap(0, 240, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addGap(7, 7, 7)
                         .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)

@@ -107,7 +107,7 @@ public class PatientRegister extends javax.swing.JFrame
         jRadioButton3 = new javax.swing.JRadioButton();
         jRadioButton4 = new javax.swing.JRadioButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(615, 630));
         setPreferredSize(new java.awt.Dimension(615, 603));
         setResizable(false);
