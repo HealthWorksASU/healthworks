@@ -77,10 +77,10 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
         jLabel17 = new javax.swing.JLabel();
-        jButton15 = new javax.swing.JButton();
+        udpatePersonalInfo = new javax.swing.JButton();
         jLabel19 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(651, 752));
         setMinimumSize(new java.awt.Dimension(651, 752));
         setPreferredSize(new java.awt.Dimension(651, 752));
@@ -385,11 +385,11 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
 
         jLabel17.setText("<html>200 S Ash Ave,<BR>Phoenix AZ - 85011<BR>Phone (480)-555-5555<html>");
 
-        jButton15.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
-        jButton15.setText("Edit Personal Info");
-        jButton15.addActionListener(new java.awt.event.ActionListener() {
+        udpatePersonalInfo.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
+        udpatePersonalInfo.setText("Edit Personal Info");
+        udpatePersonalInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton15ActionPerformed(evt);
+                udpatePersonalInfoActionPerformed(evt);
             }
         });
 
@@ -422,7 +422,7 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(udpatePersonalInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(48, 48, 48)
                         .addComponent(jLabel10)))
@@ -451,7 +451,7 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
                     .addComponent(jLabel19)
                     .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton15)
+                .addComponent(udpatePersonalInfo)
                 .addGap(26, 26, 26)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -515,9 +515,9 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton13ActionPerformed
 
-    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton15ActionPerformed
+    private void udpatePersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_udpatePersonalInfoActionPerformed
+        new PatientEditPersonalInfo().setVisible(true);
+    }//GEN-LAST:event_udpatePersonalInfoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -561,7 +561,6 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -608,5 +607,6 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JButton udpatePersonalInfo;
     // End of variables declaration//GEN-END:variables
 }

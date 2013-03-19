@@ -78,12 +78,10 @@ public class PatientPanel extends javax.swing.JFrame {
         jTextPane1 = new javax.swing.JTextPane();
         jButton14 = new javax.swing.JButton();
         jLabel17 = new javax.swing.JLabel();
-        jButton15 = new javax.swing.JButton();
+        updatePersonalInfo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(651, 900));
         setMinimumSize(new java.awt.Dimension(651, 752));
-        setPreferredSize(new java.awt.Dimension(651, 760));
         setResizable(false);
         setSize(new java.awt.Dimension(671, 800));
 
@@ -394,11 +392,11 @@ public class PatientPanel extends javax.swing.JFrame {
 
         jLabel17.setText("<html>200 S Ash Ave,<BR>Phoenix AZ - 85011<BR>Phone (480)-555-5555<html>");
 
-        jButton15.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
-        jButton15.setText("Edit Personal Info");
-        jButton15.addActionListener(new java.awt.event.ActionListener() {
+        updatePersonalInfo.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
+        updatePersonalInfo.setText("Edit Personal Info");
+        updatePersonalInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton15ActionPerformed(evt);
+                updatePersonalInfoActionPerformed(evt);
             }
         });
 
@@ -430,11 +428,10 @@ public class PatientPanel extends javax.swing.JFrame {
                                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton15)
-                                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(55, 55, 55)
-                                .addComponent(jLabel10)))
+                                .addComponent(jLabel10))
+                            .addComponent(updatePersonalInfo))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -467,7 +464,7 @@ public class PatientPanel extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton15)))
+                        .addComponent(updatePersonalInfo)))
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -530,9 +527,9 @@ public class PatientPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton13ActionPerformed
 
-    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton15ActionPerformed
+    private void updatePersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatePersonalInfoActionPerformed
+        new PatientEditPersonalInfo().setVisible(true);
+    }//GEN-LAST:event_updatePersonalInfoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -577,7 +574,6 @@ public class PatientPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -623,5 +619,6 @@ public class PatientPanel extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JButton updatePersonalInfo;
     // End of variables declaration//GEN-END:variables
 }

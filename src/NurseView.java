@@ -57,6 +57,11 @@ public class NurseView extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jList1);
 
         viewInfo.setText("View Patient Info");
+        viewInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewInfoActionPerformed(evt);
+            }
+        });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "My Patients", "All Patients" }));
 
@@ -215,6 +220,10 @@ public class NurseView extends javax.swing.JFrame {
         
         // TODO add your handling code here:
     }//GEN-LAST:event_addPatientActionPerformed
+
+    private void viewInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewInfoActionPerformed
+        new PatientPanel_NurseView().setVisible(true);
+    }//GEN-LAST:event_viewInfoActionPerformed
 
     /**
      * @param args the command line arguments
