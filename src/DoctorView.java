@@ -1,3 +1,13 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import javax.swing.JOptionPane;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -8,12 +18,72 @@
  * @author Scott
  */
 public class DoctorView extends javax.swing.JFrame {
-
+    
+    private String loginName="NOACCOUNT";
+    private String loginPassword="NOPASSWORD";
+    private Connection con=null;
+    private HashMap<String,String> nurseNameMapping;
+    private HashMap<String,String> patientNameMapping;
+    private class UserInfo {
+        public String firstname; public String lastname; public String username; 
+        public UserInfo(String f, String l, String u){firstname=f;lastname=l;username=u;}
+    }
+    private List<UserInfo> myPatients;
+    private List<UserInfo> allPatients;
+    private List<UserInfo> myNurses;
+    private List<UserInfo> allNurses;
+    
     /**
      * Creates new form DoctorView
      */
     public DoctorView() {
         initComponents();
+    }
+    public DoctorView(String accountName, String accountPassword)
+    {
+        this(); //Delegate constructor
+        loginName=accountName;
+        loginPassword=accountPassword;
+        SignedInAsNotifier.setText("Signed in as: "+accountName);
+        //Attempt to retrieve information from database
+        final String HOST = "jdbc:derby://localhost:1527/information";
+        String uName = "healthworks";
+        String password = "healthworks";
+        try{
+            con = DriverManager.getConnection(HOST,uName,password);
+            PreparedStatement prep = con.prepareStatement("SELECT username, firstname, lastname, doctor FROM NURSES");
+            prep.setString(1,accountName);
+            ResultSet rs = prep.executeQuery();
+            while(rs.next())
+            {
+                UserInfo nurse=new UserInfo(rs.getString("firstname"),rs.getString("lastname"),rs.getString("username"));
+                allNurses.add(nurse);
+                if (rs.getString("doctor").equals(accountName))
+                {
+                   myNurses.add(nurse);   
+                }
+                nurseNameMapping.put(nurse.firstname+" "+nurse.lastname,nurse.username);
+            }
+            //Get all patients
+            prep=con.prepareStatement("SELECT username, firstname, lastname, doctor FROM Patients");
+            rs=prep.executeQuery();
+            while(rs.next())
+            {
+                UserInfo patient=new UserInfo(rs.getString("firstname"),rs.getString("lastname"),rs.getString("username"));
+                allPatients.add(patient);
+                if (rs.getString("doctor").equals(accountName))
+                {
+                   myPatients.add(patient);   
+                }
+                patientNameMapping.put(patient.firstname+" "+patient.lastname,patient.username);
+            }
+        }
+        catch(SQLException e)
+        {
+        JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+        this.dispose();
+        return;
+        }
     }
 
     /**
@@ -25,153 +95,159 @@ public class DoctorView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        Patient = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        viewInfo = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox();
-        jTextField1 = new javax.swing.JTextField();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
-        jTextField2 = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox();
-        addNurse = new javax.swing.JButton();
-        deleteNurse = new javax.swing.JButton();
+        LogoutButton = new javax.swing.JButton();
+        SignedInAsNotifier = new javax.swing.JLabel();
+        ActionsPane = new javax.swing.JTabbedPane();
+        PatientPane = new javax.swing.JPanel();
+        PatientScrollList = new javax.swing.JScrollPane();
+        PatientList = new javax.swing.JList();
+        ViewInfoButton = new javax.swing.JButton();
+        PatientCategorySelector = new javax.swing.JComboBox();
+        PatientSearchField = new javax.swing.JTextField();
+        NursePane = new javax.swing.JPanel();
+        NurseScrollList = new javax.swing.JScrollPane();
+        NurseList = new javax.swing.JList();
+        NurseSearchField = new javax.swing.JTextField();
+        NurseCategorySelector = new javax.swing.JComboBox();
+        NurseAddButton = new javax.swing.JButton();
+        NurseDeleteButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Logout");
+        LogoutButton.setText("Logout");
 
-        jLabel1.setText("Signed in as: DrSingh");
+        SignedInAsNotifier.setText("Signed in as: ");
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        PatientList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Adam Jones", "Michael Stevens", "Kenneth Shive", "Edward Pearsall", "Richard Conti", "John Cephas", "Justin Cook", "Stephen Brand", "Richard Garcia", "Patrick Collard", "Cecil Cortez", "Kevin Appel", "Eugenio Zimmerman", "Roy Kapoor", "Richard Swensen", "Gregory Dawson", "Joseph Sasso", "Richard Pfister", "Robert Wood", "Miles Kelly", "Shaun Lovell", "Paul Gonzales", "Patrick Lacayo", "Martin Price", "Steven Fisher", "Rick Daugherty" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(jList1);
+        PatientScrollList.setViewportView(PatientList);
 
-        viewInfo.setText("View Patient Info");
-        viewInfo.addActionListener(new java.awt.event.ActionListener() {
+        ViewInfoButton.setText("View Patient Info");
+        ViewInfoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewInfoActionPerformed(evt);
+                ViewInfoButtonActionPerformed(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "My Patients", "All Patients" }));
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        PatientCategorySelector.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "My Patients", "All Patients" }));
+        PatientCategorySelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                PatientCategorySelectorActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+        PatientSearchField.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                PatientSearchFieldInputMethodTextChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout PatientPaneLayout = new javax.swing.GroupLayout(PatientPane);
+        PatientPane.setLayout(PatientPaneLayout);
+        PatientPaneLayout.setHorizontalGroup(
+            PatientPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PatientPaneLayout.createSequentialGroup()
+                .addGroup(PatientPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PatientPaneLayout.createSequentialGroup()
                         .addGap(162, 162, 162)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(PatientCategorySelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PatientPaneLayout.createSequentialGroup()
                         .addGap(75, 75, 75)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
+                        .addGroup(PatientPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(PatientSearchField)
+                            .addComponent(PatientScrollList, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(viewInfo)))
+                        .addComponent(ViewInfoButton)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        PatientPaneLayout.setVerticalGroup(
+            PatientPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PatientPaneLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(PatientSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(PatientPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PatientPaneLayout.createSequentialGroup()
+                        .addComponent(PatientScrollList, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(viewInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(PatientCategorySelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ViewInfoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        Patient.addTab("Patient", jPanel1);
+        ActionsPane.addTab("Patient", PatientPane);
 
-        jList2.setModel(new javax.swing.AbstractListModel() {
+        NurseList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Patricia Flanagan", "Margaret Swinney", "Shonta Claudio", "Elizabeth Allard", "Ila Miller", "Patricia Laramie", "Helen Anderson", "Gertie Ramsey", "Jane Thompson", "Alisha Wood", "Jennifer Oberg", "Allison Bunch", "Louis Leech", "Frances Uribe", "Mae Allen", "Clara Ruel", "Dinah Lucius", "Leslie Holgate", "Christine Mims", "Carrie Jackson", "Martha Winnett", "Berniece Cracraft", "Debra Murray", "Dorothy Moore", "Mildred Beach" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(jList2);
+        NurseScrollList.setViewportView(NurseList);
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        NurseCategorySelector.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "My Nurses", "All Nurses" }));
+        NurseCategorySelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                NurseCategorySelectorActionPerformed(evt);
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "My Nurses", "All Nurses" }));
-
-        addNurse.setText("Add New Nurse");
-        addNurse.addActionListener(new java.awt.event.ActionListener() {
+        NurseAddButton.setText("Add New Nurse");
+        NurseAddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addNurseActionPerformed(evt);
+                NurseAddButtonActionPerformed(evt);
             }
         });
 
-        deleteNurse.setText("Delete Nurse");
-        deleteNurse.addActionListener(new java.awt.event.ActionListener() {
+        NurseDeleteButton.setText("Delete Nurse");
+        NurseDeleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteNurseActionPerformed(evt);
+                NurseDeleteButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout NursePaneLayout = new javax.swing.GroupLayout(NursePane);
+        NursePane.setLayout(NursePaneLayout);
+        NursePaneLayout.setHorizontalGroup(
+            NursePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(NursePaneLayout.createSequentialGroup()
+                .addGroup(NursePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(NursePaneLayout.createSequentialGroup()
                         .addGap(162, 162, 162)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(NurseCategorySelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(NursePaneLayout.createSequentialGroup()
                         .addGap(75, 75, 75)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField2)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
+                        .addGroup(NursePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(NurseSearchField)
+                            .addComponent(NurseScrollList, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(addNurse, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(deleteNurse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(48, Short.MAX_VALUE))
+                        .addGroup(NursePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(NurseAddButton, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                            .addComponent(NurseDeleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        NursePaneLayout.setVerticalGroup(
+            NursePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(NursePaneLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(NurseSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(addNurse, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(NursePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(NurseScrollList, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(NursePaneLayout.createSequentialGroup()
+                        .addComponent(NurseAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteNurse, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(NurseDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(NurseCategorySelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        Patient.addTab("Nurse", jPanel2);
+        ActionsPane.addTab("Nurse", NursePane);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -179,43 +255,59 @@ public class DoctorView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addComponent(SignedInAsNotifier)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1))
-            .addComponent(Patient, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(LogoutButton))
+            .addComponent(ActionsPane, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(LogoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SignedInAsNotifier))
                 .addGap(18, 18, 18)
-                .addComponent(Patient))
+                .addComponent(ActionsPane))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void NurseAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseAddButtonActionPerformed
+
+        new NurseRegister(loginName,loginPassword).setVisible(true);
+    }//GEN-LAST:event_NurseAddButtonActionPerformed
+
+    private void NurseDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseDeleteButtonActionPerformed
+        String nurseName=(String)NurseList.getSelectedValue();
+        if (nurseName!=null)
+        {
+            int confirm=JOptionPane.showConfirmDialog(this, "Are you sure you want to delete "+nurseName+" from your list of nurses?");
+            if (confirm==JOptionPane.YES_OPTION){
+                //...
+            }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Please select a nurse to delete.");
+        }
+    }//GEN-LAST:event_NurseDeleteButtonActionPerformed
+
+    private void PatientSearchFieldInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_PatientSearchFieldInputMethodTextChanged
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_PatientSearchFieldInputMethodTextChanged
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void ViewInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewInfoButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_ViewInfoButtonActionPerformed
 
-    private void addNurseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNurseActionPerformed
-       new NurseRegister().setVisible(true);
-    }//GEN-LAST:event_addNurseActionPerformed
-
-    private void deleteNurseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteNurseActionPerformed
+    private void NurseCategorySelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseCategorySelectorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_deleteNurseActionPerformed
+    }//GEN-LAST:event_NurseCategorySelectorActionPerformed
 
-    private void viewInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewInfoActionPerformed
-       new PatientPanel_DoctorView().setVisible(true);
-    }//GEN-LAST:event_viewInfoActionPerformed
+    private void PatientCategorySelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PatientCategorySelectorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PatientCategorySelectorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -252,21 +344,21 @@ public class DoctorView extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTabbedPane Patient;
-    private static javax.swing.JButton addNurse;
-    private static javax.swing.JButton deleteNurse;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JButton viewInfo;
+    private javax.swing.JTabbedPane ActionsPane;
+    private javax.swing.JButton LogoutButton;
+    private javax.swing.JButton NurseAddButton;
+    private javax.swing.JComboBox NurseCategorySelector;
+    private javax.swing.JButton NurseDeleteButton;
+    private javax.swing.JList NurseList;
+    private javax.swing.JPanel NursePane;
+    private javax.swing.JScrollPane NurseScrollList;
+    private javax.swing.JTextField NurseSearchField;
+    private javax.swing.JComboBox PatientCategorySelector;
+    private javax.swing.JList PatientList;
+    private javax.swing.JPanel PatientPane;
+    private javax.swing.JScrollPane PatientScrollList;
+    private javax.swing.JTextField PatientSearchField;
+    private javax.swing.JLabel SignedInAsNotifier;
+    private javax.swing.JButton ViewInfoButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,3 +1,12 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -25,64 +34,64 @@ public class DoctorRegister extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        register = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jPasswordField2 = new javax.swing.JPasswordField();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        FormDescriptionInfo = new javax.swing.JLabel();
+        EnterAccountNamePrompt = new javax.swing.JLabel();
+        accountNameField = new javax.swing.JTextField();
+        EnterDesiredPasswordPrompt = new javax.swing.JLabel();
+        ConfirmPasswordPrompt = new javax.swing.JLabel();
+        EnterEmailPrompt = new javax.swing.JLabel();
+        accountEmailField = new javax.swing.JTextField();
+        EnterVerificationCodePrompt = new javax.swing.JLabel();
+        verificationCodeField = new javax.swing.JTextField();
+        RegisterAccountButton = new javax.swing.JButton();
+        AssistanceLabel = new javax.swing.JLabel();
+        desiredPasswordField = new javax.swing.JPasswordField();
+        confirmPasswordField = new javax.swing.JPasswordField();
+        FirstNamePrompt = new javax.swing.JLabel();
+        LastNamePrompt = new javax.swing.JLabel();
+        firstNameField = new javax.swing.JTextField();
+        lastNameField = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("<html>If you are a patient or nurse, contact your doctor for account details.<BR>If you are a doctor, you may register using the form below.<html>");
+        FormDescriptionInfo.setText("<html>If you are a patient or nurse, contact your doctor for account details.<BR>If you are a doctor, you may register using the form below.<html>");
 
-        jLabel3.setText("Enter desired account name:");
+        EnterAccountNamePrompt.setText("Enter desired account name:");
 
-        jTextField1.setText("drstrangelove");
+        accountNameField.setText("drstrangelove");
 
-        jLabel4.setText("Enter desired password:");
+        EnterDesiredPasswordPrompt.setText("Enter desired password:");
 
-        jLabel5.setText("Confirm password:");
+        ConfirmPasswordPrompt.setText("Confirm password:");
 
-        jLabel6.setText("Enter your email for password recovery:");
+        EnterEmailPrompt.setText("Enter your email for password recovery:");
 
-        jTextField4.setText("example@examples.tv");
+        accountEmailField.setText("example@examples.tv");
 
-        jLabel7.setText("Enter the verification code provided by your administrator:");
+        EnterVerificationCodePrompt.setText("Enter the verification code provided by your administrator:");
 
-        jTextField5.setText("d0GHyWui4");
+        verificationCodeField.setText("d0GHyWui4");
 
-        register.setText("Register Account");
-        register.addActionListener(new java.awt.event.ActionListener() {
+        RegisterAccountButton.setText("Register Account");
+        RegisterAccountButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerActionPerformed(evt);
+                RegisterAccountButtonActionPerformed(evt);
             }
         });
 
-        jLabel8.setText("<html>    For assistance, call 123-456-7890<BR> or email administrator@healthworks.net<html>");
+        AssistanceLabel.setText("<html>    For assistance, call 123-456-7890<BR> or email administrator@healthworks.net<html>");
 
-        jPasswordField1.setText("jPasswordField1");
+        desiredPasswordField.setText("jPasswordField1");
 
-        jPasswordField2.setText("jPasswordField2");
+        confirmPasswordField.setText("jPasswordField2");
 
-        jLabel10.setText("First Name:");
+        FirstNamePrompt.setText("First Name:");
 
-        jLabel11.setText("Last Name: ");
+        LastNamePrompt.setText("Last Name: ");
 
-        jTextField2.setText("Rachna");
+        firstNameField.setText("Rachna");
 
-        jTextField3.setText("Singh");
+        lastNameField.setText("Singh");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -92,104 +101,175 @@ public class DoctorRegister extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel10)
+                        .addComponent(FirstNamePrompt)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2))
+                        .addComponent(firstNameField))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel11)
+                        .addComponent(LastNamePrompt)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
+                                .addComponent(EnterEmailPrompt)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jTextField3)))
+                            .addComponent(lastNameField)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(FormDescriptionInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(144, 144, 144)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                    .addComponent(confirmPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(desiredPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ConfirmPasswordPrompt, javax.swing.GroupLayout.Alignment.TRAILING)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(147, 147, 147)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(accountNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(125, 125, 125)
-                                .addComponent(jLabel3)))
+                                .addComponent(EnterAccountNamePrompt)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel7)
+                .addComponent(EnterVerificationCodePrompt)
                 .addGap(35, 35, 35))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(120, 120, 120)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(accountEmailField, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(91, 91, 91)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(AssistanceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(150, 150, 150)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(RegisterAccountButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(verificationCodeField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(140, 140, 140)
-                        .addComponent(jLabel4)))
+                        .addComponent(EnterDesiredPasswordPrompt)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(FormDescriptionInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(FirstNamePrompt)
+                    .addComponent(firstNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(LastNamePrompt)
+                    .addComponent(lastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel3)
+                .addComponent(EnterAccountNamePrompt)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(accountNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
+                .addComponent(EnterDesiredPasswordPrompt)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(desiredPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
+                .addComponent(ConfirmPasswordPrompt)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(confirmPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
+                .addComponent(EnterEmailPrompt)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(accountEmailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
+                .addComponent(EnterVerificationCodePrompt)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(verificationCodeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(RegisterAccountButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(AssistanceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
-        //register code
+    private void RegisterAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterAccountButtonActionPerformed
+        // TODO add your handling code here:
+        try
+       {
+        final String HOST = "jdbc:derby://localhost:1527/information";
+        String uName = "healthworks";
+        String password = "healthworks";
+        Connection con = DriverManager.getConnection(HOST,uName,password);
         
-        dispose();
-    }//GEN-LAST:event_registerActionPerformed
+        String id = accountNameField.getText();
+        String pass = desiredPasswordField.getText();
+        String passConfirm = confirmPasswordField.getText();
+        String emailID = accountEmailField.getText();
+        String verificationCode = verificationCodeField.getText();
+        String firstName=firstNameField.getText();
+        String lastName=lastNameField.getText();
+               
+                
+        String inv="";
+        boolean flag=false;
+        
+        if(id.equals("")){
+            inv="Please enter a valid user name.";
+            flag=true;
+        }
+        else if(emailID.equals("")){
+            inv="Please enter a valid email address.";
+            flag=true;
+        }
+        else if(!(pass.equals(passConfirm))){
+            inv="The passwords that you entered do not match.";
+            flag=true;
+        }
+        if (flag)
+        {
+            JOptionPane.showMessageDialog(DoctorRegister.this,inv);
+            return;
+        }
+        //A prepared statement is used to prevent SQL injection attacks and other malformed strings.
+        PreparedStatement prep = con.prepareStatement("SELECT * FROM DOCTORS WHERE username= ? ");
+        prep.setString(1,id);
+        ResultSet rs = prep.executeQuery();
+        
+        
+        if(rs.isBeforeFirst()){ //error if id in use
+            JOptionPane.showMessageDialog(DoctorRegister.this, "The requested username is already in use.");
+            return;
+        }
+        
+        prep = con.prepareStatement("SELECT * FROM VERIFICATION_CODES WHERE Code = ? ");
+        prep.setString(1,verificationCode);
+        rs=prep.executeQuery();        
+        if(rs.isBeforeFirst()) {
+            JOptionPane.showMessageDialog(DoctorRegister.this,"Invalid verification code. Please check your code and enter it again.");
+            return;
+        }
+        //Insert!
+        prep = con.prepareStatement("INSERT INTO DOCTORS(USERNAME,PASSWORD,EMAIL,FIRSTNAME,LASTNAME,VERIFICATION) VALUES(?,?,?,?,?,?)");
+
+        prep.setString(1,id);
+        prep.setString(2,pass);
+        prep.setString(3,emailID);
+        prep.setString(4,firstName);
+        prep.setString(5,lastName);
+        prep.setString(6,verificationCode);
+        prep.executeUpdate();
+        JOptionPane.showMessageDialog(DoctorRegister.this,"Success! Your account has been registered.");
+        //Close this GUI and bring up the login.
+        this.dispose();
+        new LoginScreen().setVisible(true);
+       }
+       catch(SQLException e)
+       {
+           JOptionPane.showMessageDialog(DoctorRegister.this,"There was a network problem registering your account.\nDetails: "+e.getMessage());
+        }
+    }//GEN-LAST:event_RegisterAccountButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -226,22 +306,22 @@ public class DoctorRegister extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private static javax.swing.JButton register;
+    private javax.swing.JLabel AssistanceLabel;
+    private javax.swing.JLabel ConfirmPasswordPrompt;
+    private javax.swing.JLabel EnterAccountNamePrompt;
+    private javax.swing.JLabel EnterDesiredPasswordPrompt;
+    private javax.swing.JLabel EnterEmailPrompt;
+    private javax.swing.JLabel EnterVerificationCodePrompt;
+    private javax.swing.JLabel FirstNamePrompt;
+    private javax.swing.JLabel FormDescriptionInfo;
+    private javax.swing.JLabel LastNamePrompt;
+    private javax.swing.JButton RegisterAccountButton;
+    private javax.swing.JTextField accountEmailField;
+    private javax.swing.JTextField accountNameField;
+    private javax.swing.JPasswordField confirmPasswordField;
+    private javax.swing.JPasswordField desiredPasswordField;
+    private javax.swing.JTextField firstNameField;
+    private javax.swing.JTextField lastNameField;
+    private javax.swing.JTextField verificationCodeField;
     // End of variables declaration//GEN-END:variables
 }

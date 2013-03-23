@@ -12,8 +12,16 @@ public class NurseRegister extends javax.swing.JFrame {
     /**
      * Creates new form DoctorRegister
      */
+    private String doctorAccountName="NOACCOUNT";
+    private String doctorLoginPassword="NOPASSWORD";
+    
     public NurseRegister() {
         initComponents();
+    }
+    public NurseRegister(String docName, String docPW){
+        this(); //Delegate constructor
+        doctorAccountName=docName;
+        doctorLoginPassword=docPW;
     }
 
     /**
