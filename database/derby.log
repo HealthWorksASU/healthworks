@@ -1,25 +1,17 @@
-Thu Mar 21 18:42:06 MST 2013 : Apache Derby Network Server - 10.8.1.2 - (1095077) started and ready to accept connections on port 1527
+Sat Mar 23 15:11:25 MST 2013 : Apache Derby Network Server - 10.8.1.2 - (1095077) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-Thu Mar 21 18:42:06 MST 2013:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-013d-8fc2-91af-00002db38cbd 
-on database directory C:\Users\Scott\Desktop\Healthworks\healthworks\database\information  with class loader sun.misc.Launcher$AppClassLoader@bfbdb0 
+Sat Mar 23 15:11:25 MST 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-013d-994e-6998-ffff9aa73f3a 
+on database directory C:\Users\Scott\Desktop\Healthworks_Actual\database\information  with class loader sun.misc.Launcher$AppClassLoader@2a340e 
 Loaded from file:/C:/Program%20Files/glassfish-3.1.2.2/javadb/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0-b147
 user.dir=C:\Program Files\glassfish-3.1.2.2\javadb
-derby.system.home=C:\Users\Scott\Desktop\Healthworks\healthworks\database
+derby.system.home=C:\Users\Scott\Desktop\Healthworks_Actual\database
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Thu Mar 21 18:42:15 MST 2013:
-Shutting down instance a816c00e-013d-8fc2-91af-00002db38cbd on database directory C:\Users\Scott\Desktop\Healthworks\healthworks\database\information with class loader sun.misc.Launcher$AppClassLoader@bfbdb0 
-Thu Mar 21 18:42:15 MST 2013 Thread[DRDAConnThread_3,5,main] (DATABASE = information), (DRDAID = {2}), Database 'information' shutdown.
+Sat Mar 23 15:11:41 MST 2013: Shutting down Derby engine
 ----------------------------------------------------------------
-Thu Mar 21 18:44:15 MST 2013:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance 6c44409f-013d-8fc2-91af-00002db38cbd 
-on database directory C:\Users\Scott\Desktop\Healthworks\healthworks\database\information  with class loader sun.misc.Launcher$AppClassLoader@bfbdb0 
-Loaded from file:/C:/Program%20Files/glassfish-3.1.2.2/javadb/lib/derby.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.7.0-b147
-user.dir=C:\Program Files\glassfish-3.1.2.2\javadb
-derby.system.home=C:\Users\Scott\Desktop\Healthworks\healthworks\database
-Database Class Loader started - derby.database.classpath=''
+Sat Mar 23 15:11:41 MST 2013:
+Shutting down instance a816c00e-013d-994e-6998-ffff9aa73f3a on database directory C:\Users\Scott\Desktop\Healthworks_Actual\database\information with class loader sun.misc.Launcher$AppClassLoader@2a340e 
+----------------------------------------------------------------
