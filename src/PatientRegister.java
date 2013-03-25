@@ -66,7 +66,7 @@ public class PatientRegister extends javax.swing.JFrame
         jLabel16 = new javax.swing.JLabel();
         jFormattedTextField3 = new javax.swing.JFormattedTextField();
         jLabel17 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        insuranceName = new javax.swing.JComboBox();
         jLabel18 = new javax.swing.JLabel();
         jTextField10 = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
@@ -82,25 +82,25 @@ public class PatientRegister extends javax.swing.JFrame
         jTextField16 = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        otherName = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
-        jFormattedTextField4 = new javax.swing.JFormattedTextField();
+        name = new javax.swing.JTextField();
+        DOB = new javax.swing.JFormattedTextField();
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
-        jTextField17 = new javax.swing.JTextField();
+        policyNum = new javax.swing.JTextField();
         jLabel29 = new javax.swing.JLabel();
-        jTextField18 = new javax.swing.JTextField();
+        groupNum = new javax.swing.JTextField();
         jLabel30 = new javax.swing.JLabel();
-        jFormattedTextField5 = new javax.swing.JFormattedTextField();
+        effDate = new javax.swing.JFormattedTextField();
         jComboBox2 = new javax.swing.JComboBox();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel31 = new javax.swing.JLabel();
-        jTextField19 = new javax.swing.JTextField();
+        socSec = new javax.swing.JTextField();
         jLabel32 = new javax.swing.JLabel();
-        jTextField20 = new javax.swing.JTextField();
+        relationTo = new javax.swing.JTextField();
         jLabel33 = new javax.swing.JLabel();
-        jTextField21 = new javax.swing.JTextField();
+        phoneNum = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel34 = new javax.swing.JLabel();
         docList = new javax.swing.JComboBox();
@@ -109,7 +109,6 @@ public class PatientRegister extends javax.swing.JFrame
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(615, 630));
-        setPreferredSize(new java.awt.Dimension(615, 603));
         setResizable(false);
 
         jLabel3.setText("Enter desired account name:");
@@ -185,7 +184,12 @@ public class PatientRegister extends javax.swing.JFrame
 
         jLabel17.setText("Insurance:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Aetna", "IHC", "Humana", "Assurant", "Kaisser", "UnitedHealthOne", "Other" }));
+        insuranceName.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Aetna", "IHC", "Humana", "Assurant", "Kaisser", "UnitedHealthOne", "Other" }));
+        insuranceName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insuranceNameActionPerformed(evt);
+            }
+        });
 
         jLabel18.setText("Phone (Primary)");
 
@@ -217,46 +221,57 @@ public class PatientRegister extends javax.swing.JFrame
 
         jLabel25.setText("If Other, Name:");
 
-        jLabel26.setText("Insured's Name:");
-
-        jTextField7.setText("Luiz Gonzalez");
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+        otherName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
+                otherNameActionPerformed(evt);
             }
         });
 
-        jFormattedTextField4.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("M/d/yyyy"))));
-        jFormattedTextField4.setText("3/5/1983");
+        jLabel26.setText("Insured's Name:");
+
+        name.setText("Luiz Gonzalez");
+        name.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nameActionPerformed(evt);
+            }
+        });
+
+        DOB.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("M/d/yyyy"))));
+        DOB.setText("3/5/1983");
 
         jLabel27.setText("Insured's Date of Birth:");
 
         jLabel28.setText("ID/Policy Number:");
 
-        jTextField17.setText("15038322");
+        policyNum.setText("15038322");
 
         jLabel29.setText("Group Number:");
 
-        jTextField18.setText("23428");
+        groupNum.setText("23428");
 
         jLabel30.setText("Effective Date:");
 
-        jFormattedTextField5.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("M/d/yyyy"))));
-        jFormattedTextField5.setText("6/8/2012");
+        effDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("M/d/yyyy"))));
+        effDate.setText("6/8/2012");
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Single", "Married", "Widowed", "Separated", "Divorced" }));
 
         jLabel31.setText("Insured's Social Security:");
 
-        jTextField19.setText("123-45-6789");
+        socSec.setText("123-45-6789");
 
         jLabel32.setText("Relation:");
 
-        jTextField20.setText("Self");
+        relationTo.setText("Self");
 
         jLabel33.setText("Phone:");
 
-        jTextField21.setText("4805555555");
+        phoneNum.setText("4805555555");
+        phoneNum.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                phoneNumActionPerformed(evt);
+            }
+        });
 
         jLabel34.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         jLabel34.setText("Register");
@@ -279,28 +294,28 @@ public class PatientRegister extends javax.swing.JFrame
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jLabel28)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(policyNum, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel29)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(groupNum, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel17)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(insuranceName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel25)
                                         .addGap(9, 9, 9)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(otherName, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel26)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(12, 12, 12)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                                     .addComponent(jLabel30)
@@ -309,19 +324,19 @@ public class PatientRegister extends javax.swing.JFrame
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addComponent(jLabel31)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(socSec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel32)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(relationTo, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel33)
                                                 .addGap(5, 5, 5)))
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(phoneNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jFormattedTextField5)
-                                                .addComponent(jFormattedTextField4)))))
+                                                .addComponent(effDate)
+                                                .addComponent(DOB)))))
                                 .addGap(129, 129, 129)))
                         .addGap(86, 86, 86))
                     .addGroup(layout.createSequentialGroup()
@@ -505,31 +520,31 @@ public class PatientRegister extends javax.swing.JFrame
                 .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(insuranceName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel25)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(otherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel26)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jFormattedTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(DOB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel27))
                 .addGap(1, 1, 1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel31)
-                    .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(socSec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel32)
-                    .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(relationTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel33)
-                    .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(phoneNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel28)
-                    .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(policyNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel29)
-                    .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(groupNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel30)
-                    .addComponent(jFormattedTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(effDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
@@ -576,19 +591,46 @@ public class PatientRegister extends javax.swing.JFrame
         String pass = this.password.getText();
         String passConfirm = confirmPassword.getText();
         String emailID = email.getText();
-        String sql = "SELECT * FROM Patient";
+        String insurance = (String)insuranceName.getSelectedItem();
+        String other = otherName.getText();
+        String insuredName = name.getText();
+        String dateOfBirth = DOB.getText();
+        String socSecNum = socSec.getText();
+        String relation = relationTo.getText();
+        String phoneNumber = phoneNum.getText();
+        String policyNumber = policyNum.getText();
+        String groupNumber = groupNum.getText();
+        String effectiveDate = effDate.getText();
+        
+        
+        
+        
+        
+        
+        
+        String sql = "SELECT * FROM Patients";
         ResultSet rs = stmt.executeQuery(sql);
         
         //checks if user id is taken or not
         while(rs.next())
         {
-            String dbID = rs.getString("ID");
+            String dbID = rs.getString("USERNAME");
             if(dbID.equals(id))
             {
                 flag = true;
                 break;
             }
         }
+        if(insuranceName.getSelectedItem().equals("Other"))
+        {
+            if(otherName.getText().equals(""))
+            {
+                JOptionPane.showMessageDialog(PatientRegister.this, "Please enter an Insurance Name");
+            }
+            
+            insurance = otherName.getText();
+        }
+        
         
         if(id.equals(""))//error message shown if id field blank
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a User ID");
@@ -603,12 +645,22 @@ public class PatientRegister extends javax.swing.JFrame
         else
         {  
                 String doc = (String)(docList.getSelectedItem());
-                PreparedStatement prep = con.prepareStatement("INSERT INTO PATIENT(ID,PASS,EMAIL,DOC) VALUES(?,?,?,?)");
+                PreparedStatement prep = con.prepareStatement("INSERT INTO PATIENTS(USERNAME,PASSWORD,EMAIL,DOCTOR,INSURANCE,INSUREDNAME,DATEOFBIRTH,SOCSEC,RELATION,PHONENUM,POLICYNUM,GROUPNUM,EFFDATE) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
             
                 prep.setString(1,id);
                 prep.setString(2,pass);
                 prep.setString(3,emailID);
                 prep.setString(4,doc);
+                prep.setString(5,insurance);
+                prep.setString(6, insuredName);
+                prep.setString(7,dateOfBirth);
+                prep.setString(8, socSecNum);
+                prep.setString(9, relation);
+                prep.setString(10, phoneNumber);
+                prep.setString(11, policyNumber);
+                prep.setString(12, groupNumber);
+                prep.setString(13, effectiveDate);
+                
                 prep.executeUpdate();
                 
                 dispose();
@@ -625,9 +677,21 @@ public class PatientRegister extends javax.swing.JFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField8ActionPerformed
 
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
+    private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
+    }//GEN-LAST:event_nameActionPerformed
+
+    private void insuranceNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insuranceNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_insuranceNameActionPerformed
+
+    private void otherNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_otherNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_otherNameActionPerformed
+
+    private void phoneNumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNumActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_phoneNumActionPerformed
 
     /**
      * @param args the command line arguments
@@ -670,6 +734,7 @@ public class PatientRegister extends javax.swing.JFrame
              
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private static javax.swing.JFormattedTextField DOB;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
@@ -680,14 +745,14 @@ public class PatientRegister extends javax.swing.JFrame
     private javax.swing.ButtonGroup buttonGroup8;
     private static javax.swing.JPasswordField confirmPassword;
     private static javax.swing.JComboBox docList;
+    private static javax.swing.JFormattedTextField effDate;
     private static javax.swing.JTextField email;
-    private javax.swing.JComboBox jComboBox1;
+    private static javax.swing.JTextField groupNum;
+    private static javax.swing.JComboBox insuranceName;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JFormattedTextField jFormattedTextField2;
     private javax.swing.JFormattedTextField jFormattedTextField3;
-    private javax.swing.JFormattedTextField jFormattedTextField4;
-    private javax.swing.JFormattedTextField jFormattedTextField5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -733,19 +798,18 @@ public class PatientRegister extends javax.swing.JFrame
     private javax.swing.JTextField jTextField14;
     private javax.swing.JTextField jTextField15;
     private javax.swing.JTextField jTextField16;
-    private javax.swing.JTextField jTextField17;
-    private javax.swing.JTextField jTextField18;
-    private javax.swing.JTextField jTextField19;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField20;
-    private javax.swing.JTextField jTextField21;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
+    private static javax.swing.JTextField name;
+    private static javax.swing.JTextField otherName;
     private static javax.swing.JPasswordField password;
+    private static javax.swing.JTextField phoneNum;
+    private static javax.swing.JTextField policyNum;
     private javax.swing.JButton register;
+    private static javax.swing.JTextField relationTo;
+    private static javax.swing.JTextField socSec;
     private static javax.swing.JTextField userID;
     // End of variables declaration//GEN-END:variables
 }
