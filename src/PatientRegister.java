@@ -592,7 +592,6 @@ public class PatientRegister extends javax.swing.JFrame
         String passConfirm = confirmPassword.getText();
         String emailID = email.getText();
         String insurance = (String)insuranceName.getSelectedItem();
-        String other = otherName.getText();
         String insuredName = name.getText();
         String dateOfBirth = DOB.getText();
         String socSecNum = socSec.getText();
@@ -601,13 +600,7 @@ public class PatientRegister extends javax.swing.JFrame
         String policyNumber = policyNum.getText();
         String groupNumber = groupNum.getText();
         String effectiveDate = effDate.getText();
-        
-        
-        
-        
-        
-        
-        
+
         String sql = "SELECT * FROM Patients";
         ResultSet rs = stmt.executeQuery(sql);
         
