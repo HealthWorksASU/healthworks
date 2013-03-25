@@ -614,18 +614,32 @@ public class PatientRegister extends javax.swing.JFrame
                 break;
             }
         }
-        if(insuranceName.getSelectedItem().equals("Other"))
+
+        if(socSec.getText().length() != 9 )
+            JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a valid 9 digit Social Security number");
+        else if(insuranceName.getSelectedItem().equals("Other"))
         {
             if(otherName.getText().equals(""))
             {
                 JOptionPane.showMessageDialog(PatientRegister.this, "Please enter an Insurance Name");
             }
-            
             insurance = otherName.getText();
         }
-        
-        
-        if(id.equals(""))//error message shown if id field blank
+        else if(insuredName.equals(""))
+            JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a name for the insured patient");
+        else if(dateOfBirth.equals(""))
+            JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a Date of Birth");
+        else if(relation.equals(""))
+            JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a your Relation to the patient");
+        else if(phoneNumber.equals(""))
+            JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a Phone Number");
+        else if(policyNumber.equals(""))
+            JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a Policy Number");
+        else if(groupNumber.equals(""))
+            JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a Group Number");
+        else if(effectiveDate.equals(""))
+            JOptionPane.showMessageDialog(PatientRegister.this, "Please enter the effective date of your insurance");
+        else if(id.equals(""))//error message shown if id field blank
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a User ID");
         else if(flag)//error if id in use
             JOptionPane.showMessageDialog(PatientRegister.this, "ID already in use");
