@@ -49,6 +49,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Logout"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="LogoutButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="SignedInAsNotifier">
       <Properties>
@@ -177,7 +180,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="PatientSearchField">
               <Events>
-                <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="PatientSearchFieldInputMethodTextChanged"/>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="PatientSearchFieldKeyTyped"/>
               </Events>
             </Component>
           </SubComponents>
@@ -282,6 +285,9 @@
               </SubComponents>
             </Container>
             <Component class="javax.swing.JTextField" name="NurseSearchField">
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="NurseSearchFieldKeyTyped"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="NurseCategorySelector">
               <Properties>

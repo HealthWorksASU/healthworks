@@ -233,7 +233,8 @@ public class DoctorRegister extends javax.swing.JFrame {
             return;
         }
         //A prepared statement is used to prevent SQL injection attacks and other malformed strings.
-        PreparedStatement prep = con.prepareStatement("SELECT * FROM DOCTORS WHERE username= ? ");
+        PreparedStatement prep = con.prepareStatement("SELECT * FROM DOCTORS WHERE username= ? ", 
+                ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
         prep.setString(1,id);
         ResultSet rs = prep.executeQuery();
         
@@ -243,12 +244,18 @@ public class DoctorRegister extends javax.swing.JFrame {
             return;
         }
         
-        prep = con.prepareStatement("SELECT * FROM VERIFICATION_CODES WHERE Code = ? ");
+        prep = con.prepareStatement("SELECT * FROM VERIFICATION_TABLES WHERE verification_code = ? ", ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
         prep.setString(1,verificationCode);
         rs=prep.executeQuery();        
-        if(rs.isBeforeFirst()) {
+        if(!rs.isBeforeFirst()) {
             JOptionPane.showMessageDialog(DoctorRegister.this,"Invalid verification code. Please check your code and enter it again.");
             return;
+        }
+        else
+        {
+            prep = con.prepareStatement("DROP ? ON VERIFICATION_CODES");
+            prep.setString(1,verificationCode);
+            prep.executeUpdate();
         }
         //Insert!
         prep = con.prepareStatement("INSERT INTO DOCTORS(USERNAME,PASSWORD,EMAIL,FIRSTNAME,LASTNAME,VERIFICATION) VALUES(?,?,?,?,?,?)");
@@ -259,6 +266,7 @@ public class DoctorRegister extends javax.swing.JFrame {
         prep.setString(4,firstName);
         prep.setString(5,lastName);
         prep.setString(6,verificationCode);
+        
         prep.executeUpdate();
         JOptionPane.showMessageDialog(DoctorRegister.this,"Success! Your account has been registered.");
         //Close this GUI and bring up the login.
@@ -267,7 +275,7 @@ public class DoctorRegister extends javax.swing.JFrame {
        }
        catch(SQLException e)
        {
-           JOptionPane.showMessageDialog(DoctorRegister.this,"There was a network problem registering your account.\nDetails: "+e.getMessage());
+           JOptionPane.showMessageDialog(DoctorRegister.this,"There was a network problem registering your account.\nDetails: "+e.toString());
         }
     }//GEN-LAST:event_RegisterAccountButtonActionPerformed
 

@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.lang.Exception;
 
 /*
  * To change this template, choose Tools | Templates
@@ -22,26 +24,55 @@ public class DoctorView extends javax.swing.JFrame {
     private String loginName="NOACCOUNT";
     private String loginPassword="NOPASSWORD";
     private Connection con=null;
-    private HashMap<String,String> nurseNameMapping;
-    private HashMap<String,String> patientNameMapping;
+    private HashMap<String,String> nurseNameMapping=new HashMap<String,String>(); //Maps nurses "FirstName LastName" to the user account
+    private HashMap<String,String> patientNameMapping=new HashMap<String,String>(); //Ditto for patients
     private class UserInfo {
         public String firstname; public String lastname; public String username; 
         public UserInfo(String f, String l, String u){firstname=f;lastname=l;username=u;}
     }
-    private List<UserInfo> myPatients;
-    private List<UserInfo> allPatients;
-    private List<UserInfo> myNurses;
-    private List<UserInfo> allNurses;
+    private ArrayList<UserInfo> myPatients=new ArrayList<UserInfo>();
+    private ArrayList<UserInfo> allPatients=new ArrayList<UserInfo>();
+    private ArrayList<UserInfo> myNurses=new ArrayList<UserInfo>();
+    private ArrayList<UserInfo> allNurses=new ArrayList<UserInfo>();
+    private ArrayList<UserInfo> nurseView=new ArrayList<UserInfo>();
+    private ArrayList<UserInfo> patientView=new ArrayList<UserInfo>();
     
     /**
      * Creates new form DoctorView
      */
     public DoctorView() {
         initComponents();
-    }
+        //Constructor for test
+        //Test initializers
+        SignedInAsNotifier.setText("TEST MODE ONLY");
+        String[] s_allPatientsFirst={"Michael","Dan","Robert","Shawn","Olga","Eileen","Joan"};
+        String[] s_allPatientsLast={"Cook","McDonald","Seavey","Boehm","Adkins","Barkley","Pangburn"};
+        String[] s_allPatientsUser={"mcook","ddonald","rseavey","sboehm","olgirl203","ebarkley","jpang"};
+        
+        String[] s_allNursesFirst={"Joy","Amanda","Argentina","Tiesha","Vivian","Gina","Elaine"};
+        String[] s_allNursesLast={"Kopec","Davis","Benitez","Wheaton","Hess","Sickler","Glenn"};
+        String[] s_allNursesUser={"jkepec","adavis","abenitez","twheat","vhess","ginasick2923","eglenn"};
+        for (int i=0;i<s_allPatientsFirst.length;i++)
+        {
+            UserInfo patient=new UserInfo(s_allPatientsFirst[i],s_allPatientsLast[i],s_allPatientsUser[i]);
+            UserInfo nurse=new UserInfo(s_allNursesFirst[i],s_allNursesLast[i],s_allNursesUser[i]);
+            allPatients.add(patient);
+            allNurses.add(nurse);
+            nurseNameMapping.put(nurse.firstname+" "+nurse.lastname,nurse.username);
+            patientNameMapping.put(patient.firstname+" "+patient.lastname,patient.username);
+            if(i<4)
+            {
+                myPatients.add(patient);
+                myNurses.add(nurse);
+            }
+        }
+        UpdateNurseScrollList();
+        UpdatePatientScrollList();
+     }
+    
     public DoctorView(String accountName, String accountPassword)
     {
-        this(); //Delegate constructor
+        initComponents();
         loginName=accountName;
         loginPassword=accountPassword;
         SignedInAsNotifier.setText("Signed in as: "+accountName);
@@ -51,7 +82,8 @@ public class DoctorView extends javax.swing.JFrame {
         String password = "healthworks";
         try{
             con = DriverManager.getConnection(HOST,uName,password);
-            PreparedStatement prep = con.prepareStatement("SELECT username, firstname, lastname, doctor FROM NURSES");
+            PreparedStatement prep = con.prepareStatement("SELECT username, firstname, lastname, doctor FROM NURSES",
+                        ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
             prep.setString(1,accountName);
             ResultSet rs = prep.executeQuery();
             while(rs.next())
@@ -65,7 +97,7 @@ public class DoctorView extends javax.swing.JFrame {
                 nurseNameMapping.put(nurse.firstname+" "+nurse.lastname,nurse.username);
             }
             //Get all patients
-            prep=con.prepareStatement("SELECT username, firstname, lastname, doctor FROM Patients");
+            prep=con.prepareStatement("SELECT username, firstname, lastname, doctor FROM Patients",ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
             rs=prep.executeQuery();
             while(rs.next())
             {
@@ -77,6 +109,10 @@ public class DoctorView extends javax.swing.JFrame {
                 }
                 patientNameMapping.put(patient.firstname+" "+patient.lastname,patient.username);
             }
+            UpdateNurseScrollList();
+            UpdatePatientScrollList();
+            
+            
         }
         catch(SQLException e)
         {
@@ -115,6 +151,11 @@ public class DoctorView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         LogoutButton.setText("Logout");
+        LogoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LogoutButtonActionPerformed(evt);
+            }
+        });
 
         SignedInAsNotifier.setText("Signed in as: ");
 
@@ -139,11 +180,9 @@ public class DoctorView extends javax.swing.JFrame {
             }
         });
 
-        PatientSearchField.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                PatientSearchFieldInputMethodTextChanged(evt);
+        PatientSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                PatientSearchFieldKeyTyped(evt);
             }
         });
 
@@ -188,6 +227,12 @@ public class DoctorView extends javax.swing.JFrame {
             public Object getElementAt(int i) { return strings[i]; }
         });
         NurseScrollList.setViewportView(NurseList);
+
+        NurseSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                NurseSearchFieldKeyTyped(evt);
+            }
+        });
 
         NurseCategorySelector.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "My Nurses", "All Nurses" }));
         NurseCategorySelector.addActionListener(new java.awt.event.ActionListener() {
@@ -272,7 +317,52 @@ public class DoctorView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    private static ArrayList<UserInfo> helperListMatch(String match, ArrayList<UserInfo> source)
+    {
+        ArrayList<UserInfo> build = new ArrayList<UserInfo>();
+        for(UserInfo elem : source)
+        {
+            if ((elem.firstname+" "+elem.lastname).toLowerCase().contains(match.toLowerCase())==true)
+            {
+                build.add(elem);
+            }
+        }
+        return build;
+    }
+    
+    private void UpdateNurseScrollList()
+    {
+        if ((String)NurseCategorySelector.getSelectedItem()=="My Nurses")
+        {
+            nurseView=helperListMatch(NurseSearchField.getText(),myNurses);
+        }
+        else
+        {
+            nurseView=helperListMatch(NurseSearchField.getText(),allNurses);
+        }
+        NurseList.setModel(new javax.swing.AbstractListModel() {
+            public int getSize() { return nurseView.size(); }
+            public Object getElementAt(int i) {UserInfo j=nurseView.get(i); return j.firstname+' '+j.lastname; }
+            });
+    }
+    
+    private void UpdatePatientScrollList()
+    {
+         if ((String)PatientCategorySelector.getSelectedItem()=="My Patients")
+        {
+            patientView=helperListMatch(PatientSearchField.getText(),myPatients);
+        }
+        else
+        {
+            patientView=helperListMatch(PatientSearchField.getText(),allPatients);
+        }
+        PatientList.setModel(new javax.swing.AbstractListModel() {
+            public int getSize() { return patientView.size(); }
+            public Object getElementAt(int i) {UserInfo j=patientView.get(i); return j.firstname+' '+j.lastname; }
+            });
+    }
+    
     private void NurseAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseAddButtonActionPerformed
 
         new NurseRegister(loginName,loginPassword).setVisible(true);
@@ -293,21 +383,48 @@ public class DoctorView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_NurseDeleteButtonActionPerformed
 
-    private void PatientSearchFieldInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_PatientSearchFieldInputMethodTextChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_PatientSearchFieldInputMethodTextChanged
-
     private void ViewInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewInfoButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ViewInfoButtonActionPerformed
 
     private void NurseCategorySelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseCategorySelectorActionPerformed
         // TODO add your handling code here:
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                UpdateNurseScrollList();
+            }});
     }//GEN-LAST:event_NurseCategorySelectorActionPerformed
 
     private void PatientCategorySelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PatientCategorySelectorActionPerformed
         // TODO add your handling code here:
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                UpdatePatientScrollList();
+            }});
     }//GEN-LAST:event_PatientCategorySelectorActionPerformed
+
+    private void NurseSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NurseSearchFieldKeyTyped
+        // TODO add your handling code here:
+        //UpdateNurseScrollList(Character.toString(evt.getKeyChar()));
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                UpdateNurseScrollList();
+            }});
+    }//GEN-LAST:event_NurseSearchFieldKeyTyped
+
+    private void PatientSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PatientSearchFieldKeyTyped
+        // TODO add your handling code here:   
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                UpdatePatientScrollList();
+            }});
+    }//GEN-LAST:event_PatientSearchFieldKeyTyped
+
+    private void LogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButtonActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        (new LoginScreen()).setVisible(true);
+    }//GEN-LAST:event_LogoutButtonActionPerformed
 
     /**
      * @param args the command line arguments
