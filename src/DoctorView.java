@@ -9,6 +9,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import java.lang.Exception;
+import java.util.Collections;
+import java.util.Comparator;
 
 /*
  * To change this template, choose Tools | Templates
@@ -19,6 +21,8 @@ import java.lang.Exception;
  *
  * @author Scott
  */
+
+
 public class DoctorView extends javax.swing.JFrame {
     
     private String loginName="NOACCOUNT";
@@ -26,10 +30,13 @@ public class DoctorView extends javax.swing.JFrame {
     private Connection con=null;
     private HashMap<String,String> nurseNameMapping=new HashMap<String,String>(); //Maps nurses "FirstName LastName" to the user account
     private HashMap<String,String> patientNameMapping=new HashMap<String,String>(); //Ditto for patients
-    private class UserInfo {
+    
+    private class UserInfo implements Comparable {
+        public int compareTo(Object b){UserInfo c=(UserInfo)b;return (firstname+" "+lastname+" "+username).compareTo(c.firstname+" "+c.lastname+" "+c.username);}
         public String firstname; public String lastname; public String username; 
         public UserInfo(String f, String l, String u){firstname=f;lastname=l;username=u;}
     }
+    
     private ArrayList<UserInfo> myPatients=new ArrayList<UserInfo>();
     private ArrayList<UserInfo> allPatients=new ArrayList<UserInfo>();
     private ArrayList<UserInfo> myNurses=new ArrayList<UserInfo>();
@@ -42,7 +49,7 @@ public class DoctorView extends javax.swing.JFrame {
      */
     public DoctorView() {
         initComponents();
-        //Constructor for test
+        //Constructor for test. Populates with TEST data. Actual constructor accepting two strings should be called in actual application.
         //Test initializers
         SignedInAsNotifier.setText("TEST MODE ONLY");
         String[] s_allPatientsFirst={"Michael","Dan","Robert","Shawn","Olga","Eileen","Joan"};
@@ -66,6 +73,11 @@ public class DoctorView extends javax.swing.JFrame {
                 myNurses.add(nurse);
             }
         }
+        Collections.sort((List)myPatients);
+        Collections.sort((List)allPatients);
+        Collections.sort((List)myNurses);
+        Collections.sort((List)allNurses);
+        
         UpdateNurseScrollList();
         UpdatePatientScrollList();
      }
@@ -109,6 +121,11 @@ public class DoctorView extends javax.swing.JFrame {
                 }
                 patientNameMapping.put(patient.firstname+" "+patient.lastname,patient.username);
             }
+            
+            Collections.sort((List)myPatients);
+            Collections.sort((List)allPatients);
+            Collections.sort((List)myNurses);
+            Collections.sort((List)allNurses);
             UpdateNurseScrollList();
             UpdatePatientScrollList();
             
@@ -318,49 +335,34 @@ public class DoctorView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private static ArrayList<UserInfo> helperListMatch(String match, ArrayList<UserInfo> source)
+    private static void helperListMatch(String match, ArrayList<UserInfo> source,ArrayList<UserInfo> listView)
     {
-        ArrayList<UserInfo> build = new ArrayList<UserInfo>();
         for(UserInfo elem : source)
         {
             if ((elem.firstname+" "+elem.lastname).toLowerCase().contains(match.toLowerCase())==true)
             {
-                build.add(elem);
+                listView.add(elem);
             }
         }
-        return build;
     }
     
+    private void updateGenericPersonnelListing(javax.swing.JComboBox categorySelector, javax.swing.JList UIList, javax.swing.JTextField searchField, ArrayList<UserInfo> allList, ArrayList<UserInfo> myList, final ArrayList<UserInfo> listView)
+    {
+        listView.clear();
+        helperListMatch(searchField.getText(),(categorySelector.getSelectedIndex()==0)? myList : allList, listView);
+        UIList.setModel(new javax.swing.AbstractListModel() {
+            public int getSize() { return listView.size(); }
+            public Object getElementAt(int i) {UserInfo j=listView.get(i); return j.firstname+' '+j.lastname; }
+            });
+    }
     private void UpdateNurseScrollList()
     {
-        if ((String)NurseCategorySelector.getSelectedItem()=="My Nurses")
-        {
-            nurseView=helperListMatch(NurseSearchField.getText(),myNurses);
-        }
-        else
-        {
-            nurseView=helperListMatch(NurseSearchField.getText(),allNurses);
-        }
-        NurseList.setModel(new javax.swing.AbstractListModel() {
-            public int getSize() { return nurseView.size(); }
-            public Object getElementAt(int i) {UserInfo j=nurseView.get(i); return j.firstname+' '+j.lastname; }
-            });
+        updateGenericPersonnelListing(NurseCategorySelector,NurseList,NurseSearchField,allNurses,myNurses,nurseView);
     }
     
     private void UpdatePatientScrollList()
     {
-         if ((String)PatientCategorySelector.getSelectedItem()=="My Patients")
-        {
-            patientView=helperListMatch(PatientSearchField.getText(),myPatients);
-        }
-        else
-        {
-            patientView=helperListMatch(PatientSearchField.getText(),allPatients);
-        }
-        PatientList.setModel(new javax.swing.AbstractListModel() {
-            public int getSize() { return patientView.size(); }
-            public Object getElementAt(int i) {UserInfo j=patientView.get(i); return j.firstname+' '+j.lastname; }
-            });
+       updateGenericPersonnelListing(PatientCategorySelector,PatientList,PatientSearchField,allPatients,myPatients,patientView);
     }
     
     private void NurseAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseAddButtonActionPerformed
