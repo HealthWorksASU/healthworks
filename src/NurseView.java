@@ -15,6 +15,10 @@ public class NurseView extends javax.swing.JFrame {
     public NurseView() {
         initComponents();
     }
+    
+    public NurseView(String username, String password) {
+        initComponents();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -71,6 +71,11 @@ public class DoctorRegister extends javax.swing.JFrame {
         EnterVerificationCodePrompt.setText("Enter the verification code provided by your administrator:");
 
         verificationCodeField.setText("d0GHyWui4");
+        verificationCodeField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verificationCodeFieldActionPerformed(evt);
+            }
+        });
 
         RegisterAccountButton.setText("Register Account");
         RegisterAccountButton.addActionListener(new java.awt.event.ActionListener() {
@@ -278,6 +283,10 @@ public class DoctorRegister extends javax.swing.JFrame {
            JOptionPane.showMessageDialog(DoctorRegister.this,"There was a network problem registering your account.\nDetails: "+e.toString());
         }
     }//GEN-LAST:event_RegisterAccountButtonActionPerformed
+
+    private void verificationCodeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verificationCodeFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_verificationCodeFieldActionPerformed
 
     /**
      * @param args the command line arguments

@@ -1,3 +1,7 @@
+
+import java.sql.*;
+import javax.swing.JOptionPane;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -8,12 +12,29 @@
  * @author Scott
  */
 public class LoginScreen extends javax.swing.JFrame {
-
+    private final String HOST = "jdbc:derby://localhost:1527/information";
+    private String uName = "healthworks";
+    private String password = "healthworks";
+    private Connection con;
+    private Statement stmt;
     /**
      * Creates new form LoginScreen
      */
     public LoginScreen() {
         initComponents();
+        try
+        {
+            
+            con = DriverManager.getConnection(HOST,uName,password);
+            stmt = con.createStatement();
+        }
+        catch(SQLException e)
+       {
+           JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+        this.dispose();
+        return;
+        
+       }
     }
 
     /**
@@ -28,7 +49,7 @@ public class LoginScreen extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         username = new javax.swing.JTextField();
-        password = new javax.swing.JPasswordField();
+        pass = new javax.swing.JPasswordField();
         login = new javax.swing.JButton();
         recovery = new javax.swing.JLabel();
         docRegister = new javax.swing.JLabel();
@@ -45,9 +66,14 @@ public class LoginScreen extends javax.swing.JFrame {
 
         username.setText("DrHouse");
 
-        password.setText("jPasswordField1");
+        pass.setText("jPasswordField1");
 
         login.setText("Login");
+        login.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginActionPerformed(evt);
+            }
+        });
 
         recovery.setForeground(new java.awt.Color(0, 51, 255));
         recovery.setText("<html><u>Forgot username or password?</u></html>");
@@ -98,7 +124,7 @@ public class LoginScreen extends javax.swing.JFrame {
                                 .addGap(24, 24, 24)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(username)
-                            .addComponent(password)
+                            .addComponent(pass)
                             .addComponent(role, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
@@ -132,7 +158,7 @@ public class LoginScreen extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -152,6 +178,64 @@ public class LoginScreen extends javax.swing.JFrame {
     private void recoveryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recoveryMouseClicked
         new PasswordRecovery().setVisible(true);
     }//GEN-LAST:event_recoveryMouseClicked
+
+    private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
+        
+       try
+       {
+           if(username.getText().equals(""))
+               JOptionPane.showMessageDialog(LoginScreen.this, "Please enter a username");
+           else if(username.getText().equals(""))
+               JOptionPane.showMessageDialog(LoginScreen.this, "Please enter a password");
+           else if(role.getSelectedItem().equals(" "))
+               JOptionPane.showMessageDialog(LoginScreen.this, "Please Select if you are a Patient, Doctor or Nurrse");
+           else if(role.getSelectedItem().equals("Doctor"))
+           {
+               String sql = "SELECT * FROM DOCTORS WHERE USERNAME=\'"+username.getText()+
+                    "\' AND PASSWORD=\'"+pass.getText()+"\'";
+               ResultSet rs = stmt.executeQuery(sql);
+               if(!rs.next())
+                   JOptionPane.showMessageDialog(LoginScreen.this, "Username and password does not match");
+               else
+               {
+                   new DoctorView(username.getText(),pass.getText()).setVisible(true);
+                   this.dispose();
+               }
+           }
+           else if(role.getSelectedItem().equals("Patient"))
+           {
+               String sql = "SELECT * FROM PATIENTS WHERE USERNAME=\'"+username.getText()+
+                    "\' AND PASSWORD=\'"+pass.getText()+"\'";
+               ResultSet rs = stmt.executeQuery(sql);
+               if(!rs.next())
+                   JOptionPane.showMessageDialog(LoginScreen.this, "Username and password does not match");
+               else
+               {
+                   new PatientPanel(username.getText(),pass.getText()).setVisible(true);
+                   this.dispose();
+               }
+           }
+           else if(role.getSelectedItem().equals("Nurse"))
+           {
+               String sql = "SELECT * FROM NURSES WHERE USERNAME=\'"+username.getText()+
+                    "\' AND PASSWORD=\'"+pass.getText()+"\'";
+               ResultSet rs = stmt.executeQuery(sql);
+               if(!rs.next())
+                   JOptionPane.showMessageDialog(LoginScreen.this, "Username and password does not match");
+               else
+               {
+                   new NurseView(username.getText(),pass.getText()).setVisible(true);
+                   this.dispose();
+               }
+           }
+       }catch(SQLException e)
+       {
+           JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+        this.dispose();
+        return;
+       }
+            
+    }//GEN-LAST:event_loginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -195,7 +279,7 @@ public class LoginScreen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private static javax.swing.JButton login;
     private javax.swing.JLabel logo;
-    private static javax.swing.JPasswordField password;
+    private static javax.swing.JPasswordField pass;
     private javax.swing.JLabel recovery;
     private static javax.swing.JComboBox role;
     private static javax.swing.JTextField username;

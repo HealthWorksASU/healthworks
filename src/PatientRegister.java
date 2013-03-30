@@ -675,9 +675,10 @@ public class PatientRegister extends javax.swing.JFrame
        }
        catch(SQLException e)
        {
-           System.out.println(e.getMessage());
-        
-         
+           JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+        this.dispose();
+        return;
+       
         }    }//GEN-LAST:event_registerActionPerformed
 
     private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
