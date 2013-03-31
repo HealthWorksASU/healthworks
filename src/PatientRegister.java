@@ -669,31 +669,31 @@ public class PatientRegister extends javax.swing.JFrame
         }
         else if(marraige.getSelectedItem().equals(" "))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please select a Maratial Status");
-        else if(fName.equals(""))
+        else if(first.equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a First Name");
-        else if(lName.equals(""))
+        else if(last.equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a Last Name");
-        else if(primPhone.equals(""))
+        else if(primPhone.getText().equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a Primary Phone");
-        else if(persEmail.equals(""))
+        else if(pEmail.equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter an email");
-        else if(address.equals(""))
+        else if(add.equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter your address");
-        else if(city.equals(""))
+        else if(City.equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter your city");
-        else if(state.equals(""))
+        else if(State.equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a state");
-        else if(age.equals(""))
+        else if(age.getText().equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter your age");
-        else if(zip.equals(""))
+        else if(zip.getText().equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter your area code");
-        else if(dateBirth.equals("MM/DD/YYYY"))
+        else if(dateBirth.getText().equals("MM/DD/YYYY"))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter your date of birth");
-        else if(eName.equals(""))
+        else if(eName.getText().equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter an emergency contact");
-        else if(ePhone.equals(""))
+        else if(ePhone.getText().equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a phone number for the emergency contact");
-        else if(eRelation.equals(""))
+        else if(eRelation.getText().equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "How are you related to your emergency contact?");
         else if(insuredName.equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a Name for the Insured Patient");
@@ -725,7 +725,7 @@ public class PatientRegister extends javax.swing.JFrame
         {  
                 String doc = (String)(docList.getSelectedItem());
                 String status = (String)(marraige.getSelectedItem());
-                String gender = buttonGroup1.getSelection().getActionCommand();
+
                 PreparedStatement prep = con.prepareStatement("INSERT INTO PATIENTS(USERNAME,PASSWORD,EMAIL,DOCTOR,"+
                         "INSURANCE,INSUREDNAME,DATEOFBIRTH,SOCSEC,RELATION,PHONENUM,POLICYNUM,GROUPNUM,EFFDATE,"+
                         "FIRSTNAME,LASTNAME,PRIMEPHONE,OTHERPHONE,ADDRESS,CITY,STATE,ZIP,DOB,AGE,GENDER,STATUS,EMERGENCYNAME,EMERGENCYREL,EMERGENCYPH) "+
@@ -754,7 +754,10 @@ public class PatientRegister extends javax.swing.JFrame
                 prep.setString(21, zip.getText());
                 prep.setString(22, dateBirth.getText());
                 prep.setString(23, age.getText());
-                prep.setString(24, gender);
+                if(m.isSelected())
+                    prep.setInt(24, 0);
+                else
+                    prep.setInt(24, 1);
                 prep.setString(25, status);
                 prep.setString(26, emName);
                 prep.setString(27, emRelation);
@@ -762,12 +765,16 @@ public class PatientRegister extends javax.swing.JFrame
            
                 prep.executeUpdate();
                 
+                String createTable = "CREATE TABLE P"+first+last+" (bp VARCHAR(255), sugar VARCHAR(255), weight VARCHAR(255), drugs VARCHAR(255), observations VARCHAR(2500))";
+                stmt.executeUpdate(createTable);
+                
                 dispose();
         }
        }
        catch(SQLException e)
        {
            JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+           e.printStackTrace();
         this.dispose();
         return;
        

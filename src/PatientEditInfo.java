@@ -93,7 +93,8 @@ public class PatientEditInfo extends javax.swing.JFrame {
         jRadioButton4 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(615, 440));
+        setMaximumSize(new java.awt.Dimension(615, 450));
+        setMinimumSize(new java.awt.Dimension(615, 450));
         setPreferredSize(new java.awt.Dimension(615, 450));
         setResizable(false);
 
@@ -379,7 +380,7 @@ public class PatientEditInfo extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(10, Short.MAX_VALUE)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
