@@ -589,17 +589,16 @@ public class PatientPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void newBPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBPActionPerformed
-        new BPEntry().setVisible(true);
-        BPEntry bloodP = new BPEntry();
+        //JOptionPane to be implemented here
         try
         {
             String sql = "SELECT * FROM P"+user;
             rs = stmt.executeQuery(sql);
             
             rs.moveToInsertRow();
-            rs.updateString("BP", bloodP.getBP());
+            //rs.updateString("BP", getBP());
             rs.insertRow();
-            bpV.add(bloodP.getBP());
+            //bpV.add(getBP());
             bpEntries.setListData(bpV);
         }
         catch(SQLException e)

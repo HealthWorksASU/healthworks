@@ -728,7 +728,7 @@ public class PatientRegister extends javax.swing.JFrame
 
                 PreparedStatement prep = con.prepareStatement("INSERT INTO PATIENTS(USERNAME,PASSWORD,EMAIL,DOCTOR,"+
                         "INSURANCE,INSUREDNAME,DATEOFBIRTH,SOCSEC,RELATION,PHONENUM,POLICYNUM,GROUPNUM,EFFDATE,"+
-                        "FIRSTNAME,LASTNAME,PRIMEPHONE,OTHERPHONE,ADDRESS,CITY,STATE,ZIP,DOB,AGE,GENDER,STATUS,EMERGENCYNAME,EMERGENCYREL,EMERGENCYPH) "+
+                        "FIRSTNAME,LASTNAME,PRIMEPHONE,OTHERPHONE,ADDRESS,CITY,STATE,ZIP,DOB,AGE,GENDER,STATUS,EMERGENCYNAME,EMERGENCYREL,EMERGENCYPH,PERSONALEMAIL) "+
                         "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             
                 prep.setString(1,id);
@@ -762,6 +762,7 @@ public class PatientRegister extends javax.swing.JFrame
                 prep.setString(26, emName);
                 prep.setString(27, emRelation);
                 prep.setString(28, ePhone.getText());
+                prep.setString(29, pEmail);
            
                 prep.executeUpdate();
                 
