@@ -765,7 +765,7 @@ public class PatientRegister extends javax.swing.JFrame
            
                 prep.executeUpdate();
                 
-                String createTable = "CREATE TABLE P"+first+last+" (bp VARCHAR(255), sugar VARCHAR(255), weight VARCHAR(255), drugs VARCHAR(255), observations VARCHAR(2500))";
+                String createTable = "CREATE TABLE P"+id+" (bp VARCHAR(255), sugar VARCHAR(255), weight VARCHAR(255), drugs VARCHAR(255), observations VARCHAR(2500))";
                 stmt.executeUpdate(createTable);
                 
                 dispose();
