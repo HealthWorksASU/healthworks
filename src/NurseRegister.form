@@ -6,6 +6,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -30,7 +31,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jTextField2" min="-2" pref="325" max="-2" attributes="0"/>
+                              <Component id="FirstName" min="-2" pref="325" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
@@ -38,7 +39,7 @@
                                   <Group type="102" attributes="0">
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jTextField3" max="32767" attributes="0"/>
+                                          <Component id="LastName" max="32767" attributes="0"/>
                                           <Group type="102" attributes="0">
                                               <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
                                               <Component id="register" min="-2" pref="125" max="-2" attributes="0"/>
@@ -49,7 +50,7 @@
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
-                                      <Component id="jTextField4" min="-2" pref="177" max="-2" attributes="0"/>
+                                      <Component id="email" min="-2" pref="177" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
@@ -70,14 +71,14 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="jTextField1" min="-2" pref="128" max="-2" attributes="0"/>
-                                          <Component id="jPasswordField2" alignment="1" min="-2" pref="128" max="-2" attributes="0"/>
+                                          <Component id="accountName" min="-2" pref="128" max="-2" attributes="0"/>
+                                          <Component id="confirmPass" alignment="1" min="-2" pref="128" max="-2" attributes="0"/>
                                           <Group type="103" alignment="1" groupAlignment="0" attributes="0">
                                               <Group type="102" attributes="0">
                                                   <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                                                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                              <Component id="jPasswordField1" min="-2" pref="128" max="-2" attributes="0"/>
+                                              <Component id="password" min="-2" pref="128" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -102,29 +103,29 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="FirstName" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextField3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="LastName" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTextField1" min="-2" max="-2" attributes="0"/>
+              <Component id="accountName" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPasswordField1" min="-2" max="-2" attributes="0"/>
+              <Component id="password" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPasswordField2" min="-2" max="-2" attributes="0"/>
+              <Component id="confirmPass" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTextField4" min="-2" max="-2" attributes="0"/>
+              <Component id="email" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="register" min="-2" pref="48" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -140,10 +141,13 @@
         <Property name="text" type="java.lang.String" value="Enter desired account name:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField1">
+    <Component class="javax.swing.JTextField" name="accountName">
       <Properties>
         <Property name="text" type="java.lang.String" value="nursemary"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
@@ -160,10 +164,13 @@
         <Property name="text" type="java.lang.String" value="Enter your email for password recovery:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField4">
+    <Component class="javax.swing.JTextField" name="email">
       <Properties>
         <Property name="text" type="java.lang.String" value="example@examples.tv"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="register">
       <Properties>
@@ -181,15 +188,21 @@
         <Property name="text" type="java.lang.String" value="&lt;html&gt;For assistance, call 123-456-7890&lt;BR&gt; or email administrator@healthworks.net&lt;html&gt;"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JPasswordField" name="jPasswordField1">
+    <Component class="javax.swing.JPasswordField" name="password">
       <Properties>
         <Property name="text" type="java.lang.String" value="jPasswordField1"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JPasswordField" name="jPasswordField2">
+    <Component class="javax.swing.JPasswordField" name="confirmPass">
       <Properties>
         <Property name="text" type="java.lang.String" value="jPasswordField2"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel10">
       <Properties>
@@ -209,15 +222,21 @@
         <Property name="text" type="java.lang.String" value="Last Name:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField2">
+    <Component class="javax.swing.JTextField" name="FirstName">
       <Properties>
         <Property name="text" type="java.lang.String" value="Mary"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField3">
+    <Component class="javax.swing.JTextField" name="LastName">
       <Properties>
         <Property name="text" type="java.lang.String" value="Thompson"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

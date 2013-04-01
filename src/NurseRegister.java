@@ -1,3 +1,12 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -34,26 +43,26 @@ public class NurseRegister extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        accountName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        email = new javax.swing.JTextField();
         register = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jPasswordField2 = new javax.swing.JPasswordField();
+        password = new javax.swing.JPasswordField();
+        confirmPass = new javax.swing.JPasswordField();
         jLabel10 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        FirstName = new javax.swing.JTextField();
+        LastName = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel3.setText("Enter desired account name:");
 
-        jTextField1.setText("nursemary");
+        accountName.setText("nursemary");
 
         jLabel4.setText("Enter desired password:");
 
@@ -61,7 +70,7 @@ public class NurseRegister extends javax.swing.JFrame {
 
         jLabel6.setText("Enter your email for password recovery:");
 
-        jTextField4.setText("example@examples.tv");
+        email.setText("example@examples.tv");
 
         register.setText("Register Account");
         register.addActionListener(new java.awt.event.ActionListener() {
@@ -72,9 +81,9 @@ public class NurseRegister extends javax.swing.JFrame {
 
         jLabel8.setText("<html>For assistance, call 123-456-7890<BR> or email administrator@healthworks.net<html>");
 
-        jPasswordField1.setText("jPasswordField1");
+        password.setText("jPasswordField1");
 
-        jPasswordField2.setText("jPasswordField2");
+        confirmPass.setText("jPasswordField2");
 
         jLabel10.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         jLabel10.setText("Register Nurse");
@@ -83,9 +92,9 @@ public class NurseRegister extends javax.swing.JFrame {
 
         jLabel2.setText("Last Name:");
 
-        jTextField2.setText("Mary");
+        FirstName.setText("Mary");
 
-        jTextField3.setText("Thompson");
+        LastName.setText("Thompson");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -99,14 +108,14 @@ public class NurseRegister extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(FirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField3)
+                                            .addComponent(LastName)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGap(62, 62, 62)
                                                 .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -114,9 +123,9 @@ public class NurseRegister extends javax.swing.JFrame {
                                             .addComponent(jLabel6)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(51, 51, 51)
-                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE)))))
-                        .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,13 +138,13 @@ public class NurseRegister extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(accountName, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(confirmPass, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(layout.createSequentialGroup()
                                                     .addGap(6, 6, 6)
                                                     .addComponent(jLabel5))
-                                                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                                .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                 .addGap(115, 115, 115))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel4)
@@ -149,27 +158,27 @@ public class NurseRegister extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(FirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(LastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(accountName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(confirmPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -182,6 +191,73 @@ public class NurseRegister extends javax.swing.JFrame {
 
     private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
         //code
+        try
+        {
+            final String HOST = "jdbc:derby://localhost:1527/information";
+        String uName = "healthworks";
+        String password = "healthworks";
+        Connection con = DriverManager.getConnection(HOST,uName,password);
+        Statement stmt = con.createStatement();
+        
+        boolean flag = false;
+        String id = accountName.getText();
+        String pass = this.password.getText();
+        String confPass = this.confirmPass.getText();
+        String firstName = FirstName.getText();
+        String lastName = LastName.getText();
+        String mail = email.getText();
+        
+        String sql = "SELECT * FROM Patients";
+        ResultSet rs = stmt.executeQuery(sql);
+        
+        //checks if user id is taken or not
+        while(rs.next())
+        {
+            String dbID = rs.getString("USERNAME");
+            if(dbID.equals(id))
+            {
+                flag = true;
+                break;
+            }
+        }
+        
+        if(firstName.equals(""))
+        {
+            JOptionPane.showMessageDialog(NurseRegister.this, "Please enter a First Name");
+        }
+        else if(lastName.equals(""))
+            JOptionPane.showMessageDialog(NurseRegister.this, "Please enter a Last Name");
+        else if(mail.equals(""))
+            JOptionPane.showMessageDialog(NurseRegister.this, "Please enter an email");
+        else if(id.equals(""))
+            JOptionPane.showMessageDialog(NurseRegister.this, "Please enter a user name");
+        else if(!(pass.equals(confPass)))
+            JOptionPane.showMessageDialog(NurseRegister.this, "Passwords do not match");
+        else
+        {
+            PreparedStatement prep = con.prepareStatement("INSERT INTO NURSE(USERNAME, PASSWORD, EMAIL, FIRSTNAME, LASTNAME) VALUES(?,?,?,?,?)");
+            prep.setString(1, id);
+            prep.setString(2, pass);
+            prep.setString(3, mail);
+            prep.setString(4, firstName);
+            prep.setString(5, lastName);
+            
+            prep.executeUpdate();
+            
+            String createTable = "CREATE TABLE N"+id+"(patients VARCHAR(255), doctors VARCHAR(255))";
+        stmt.executeUpdate(createTable);
+        }
+        
+        }
+        
+        catch(SQLException e)
+       {
+           JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+           e.printStackTrace();
+        this.dispose();
+        return;
+       
+        }
         
         dispose();
     }//GEN-LAST:event_registerActionPerformed
@@ -221,6 +297,11 @@ public class NurseRegister extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private static javax.swing.JTextField FirstName;
+    private static javax.swing.JTextField LastName;
+    private static javax.swing.JTextField accountName;
+    private static javax.swing.JPasswordField confirmPass;
+    private static javax.swing.JTextField email;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -229,12 +310,7 @@ public class NurseRegister extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private static javax.swing.JPasswordField password;
     private static javax.swing.JButton register;
     // End of variables declaration//GEN-END:variables
 }
