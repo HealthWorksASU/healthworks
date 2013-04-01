@@ -207,7 +207,7 @@ public class NurseRegister extends javax.swing.JFrame {
         String lastName = LastName.getText();
         String mail = email.getText();
         
-        String sql = "SELECT * FROM Patients";
+        String sql = "SELECT * FROM NURSES";
         ResultSet rs = stmt.executeQuery(sql);
         
         //checks if user id is taken or not
@@ -233,9 +233,11 @@ public class NurseRegister extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(NurseRegister.this, "Please enter a user name");
         else if(!(pass.equals(confPass)))
             JOptionPane.showMessageDialog(NurseRegister.this, "Passwords do not match");
+        else if(flag == true)
+            JOptionPane.showMessageDialog(NurseRegister.this, "Username already exists");
         else
         {
-            PreparedStatement prep = con.prepareStatement("INSERT INTO NURSE(USERNAME, PASSWORD, EMAIL, FIRSTNAME, LASTNAME) VALUES(?,?,?,?,?)");
+            PreparedStatement prep = con.prepareStatement("INSERT INTO NURSES(USERNAME, PASSWORD, EMAIL, FIRSTNAME, LASTNAME) VALUES(?,?,?,?,?)");
             prep.setString(1, id);
             prep.setString(2, pass);
             prep.setString(3, mail);
