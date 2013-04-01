@@ -1,6 +1,7 @@
 
 import java.sql.*;
 import javax.swing.JOptionPane;
+import java.util.*;
 
 /*
  * To change this template, choose Tools | Templates
@@ -19,6 +20,9 @@ public class PatientPanel extends javax.swing.JFrame {
     private Connection con;
     private Statement stmt;
     private ResultSet rs;
+    private Vector<String> bpV;
+    private String bloodPress;
+    private String user;
     /**
      * Creates new form PatientPanel
      */
@@ -31,15 +35,28 @@ public class PatientPanel extends javax.swing.JFrame {
         initComponents();
         try
         {
+            user = userName;
             con = DriverManager.getConnection(HOST,uName,password);
-            stmt = con.createStatement();
-            String sql = "SELECT * FROM PATIENTS WHERE USERNAME=\'"+userName+"\'";
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            String sql = "SELECT * FROM PATIENTS WHERE USERNAME=\'"+user+"\'";
             rs = stmt.executeQuery(sql);
             rs.next();
             
             name.setText(rs.getString("Firstname") + " "+ rs.getString("Lastname"));
             address.setText("<html>"+rs.getString("Address")+",<BR>"+rs.getString("city")
                     +" "+rs.getString("state")+"-"+rs.getString("zip")+"<BR>Phone "+rs.getString("Primephone"));
+            
+            sql = "SELECT * FROM P"+userName;
+            rs = stmt.executeQuery(sql);
+            
+            bpV = new Vector();
+            
+            
+            while(rs.next())
+                bpV.add(rs.getString("bp"));
+            
+            bpEntries.setListData(bpV);
+            
         }
         catch(SQLException e)
         {
@@ -85,7 +102,7 @@ public class PatientPanel extends javax.swing.JFrame {
         jScrollPane7 = new javax.swing.JScrollPane();
         bpEntries = new javax.swing.JList();
         jLabel11 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        newBP = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -185,10 +202,10 @@ public class PatientPanel extends javax.swing.JFrame {
 
         jLabel11.setText("Recent Blood Pressure Entries");
 
-        jButton2.setText("New Entry");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        newBP.setText("New Entry");
+        newBP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                newBPActionPerformed(evt);
             }
         });
 
@@ -223,7 +240,7 @@ public class PatientPanel extends javax.swing.JFrame {
                 .addContainerGap(66, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(jButton2)
+                .addComponent(newBP)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16))
@@ -239,7 +256,7 @@ public class PatientPanel extends javax.swing.JFrame {
                 .addComponent(jLabel12)
                 .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(newBP, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
                 .addGap(17, 17, 17)
                 .addComponent(jLabel11)
@@ -571,9 +588,28 @@ public class PatientPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton10ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void newBPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBPActionPerformed
+        new BPEntry().setVisible(true);
+        BPEntry bloodP = new BPEntry();
+        try
+        {
+            String sql = "SELECT * FROM P"+user;
+            rs = stmt.executeQuery(sql);
+            
+            rs.moveToInsertRow();
+            rs.updateString("BP", bloodP.getBP());
+            rs.insertRow();
+            bpV.add(bloodP.getBP());
+            bpEntries.setListData(bpV);
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+            //this.dispose();
+            return;
+        }
+    }//GEN-LAST:event_newBPActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
@@ -633,7 +669,6 @@ public class PatientPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -674,6 +709,7 @@ public class PatientPanel extends javax.swing.JFrame {
     private javax.swing.JTextPane jTextPane1;
     private static javax.swing.JButton logout;
     private static javax.swing.JLabel name;
+    private javax.swing.JButton newBP;
     private static javax.swing.JLabel sugar;
     private static javax.swing.JList sugarList;
     private javax.swing.JButton updatePersonalInfo;
