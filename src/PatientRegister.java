@@ -725,46 +725,20 @@ public class PatientRegister extends javax.swing.JFrame
         {  
                 String doc = (String)(docList.getSelectedItem());
                 String status = (String)(marraige.getSelectedItem());
-
-                PreparedStatement prep = con.prepareStatement("INSERT INTO PATIENTS(USERNAME,PASSWORD,EMAIL,DOCTOR,"+
-                        "INSURANCE,INSUREDNAME,DATEOFBIRTH,SOCSEC,RELATION,PHONENUM,POLICYNUM,GROUPNUM,EFFDATE,"+
-                        "FIRSTNAME,LASTNAME,PRIMEPHONE,OTHERPHONE,ADDRESS,CITY,STATE,ZIP,DOB,AGE,GENDER,STATUS,EMERGENCYNAME,EMERGENCYREL,EMERGENCYPH,PERSONALEMAIL) "+
-                        "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            
-                prep.setString(1,id);
-                prep.setString(2,pass);
-                prep.setString(3,emailID);
-                prep.setString(4,doc);
-                prep.setString(5,insurance);
-                prep.setString(6, insuredName);
-                prep.setString(7,dateOfBirth);
-                prep.setString(8, socSecNum);
-                prep.setString(9, relation);
-                prep.setString(10, phoneNum.getText());
-                prep.setString(11, policyNumber);
-                prep.setString(12, groupNumber);
-                prep.setString(13, effectiveDate);
-                prep.setString(14, first);
-                prep.setString(15, last);
-                prep.setString(16, primPhone.getText());
-                prep.setString(17, otherPhone.getText());
-                prep.setString(18, add);
-                prep.setString(19, City);
-                prep.setString(20, State);
-                prep.setString(21, zip.getText());
-                prep.setString(22, dateBirth.getText());
-                prep.setString(23, age.getText());
+                String gender;
                 if(m.isSelected())
-                    prep.setInt(24, 0);
+                    gender = "0";
                 else
-                    prep.setInt(24, 1);
-                prep.setString(25, status);
-                prep.setString(26, emName);
-                prep.setString(27, emRelation);
-                prep.setString(28, ePhone.getText());
-                prep.setString(29, pEmail);
-           
-                prep.executeUpdate();
+                    gender = "1";
+          
+                PatientDB newPatient = new PatientDB(id);
+
+                newPatient.setRegistrationInfo(id, pass, doc, emailID);
+                newPatient.setEmergencyInfo(emName, ePhone.getText(), emRelation);
+                newPatient.setPersonalInfo(first,last,primPhone.getText(),otherPhone.getText(),gender,status,age.getText(),dateBirth.getText(),pEmail);
+                newPatient.setInsuranceInfo(insurance, insuredName, dateOfBirth,socSec.getText(),relation,phoneNum.getText(),policyNumber,groupNumber,effectiveDate);
+                newPatient.setAddress(add, City, State, zip.getText());
+                newPatient.update();
                 
                 String createTable = "CREATE TABLE P"+id+" (bp VARCHAR(255), sugar VARCHAR(255), weight VARCHAR(255), drugs VARCHAR(255), observations VARCHAR(2500))";
                 stmt.executeUpdate(createTable);
