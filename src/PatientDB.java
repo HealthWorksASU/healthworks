@@ -18,19 +18,24 @@ public class PatientDB
     private String password = "healthworks";
     private Connection con;
     private Statement stmt;
-    private ResultSet rs;
+    private ResultSet rs, rsPat;  
     private PreparedStatement prep;
+    private String username;
         
     public PatientDB(String username)
     {
+        this.username = username;
         //to open the PATIENTS table to store information
         try
         {
             con = DriverManager.getConnection(HOST,uName,password);
-            stmt = con.createStatement();
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
             
             String sql = "SELECT * FROM Patients";
             rs = stmt.executeQuery(sql);
+            
+            String sql2 ="SELECT * FROM P"+username;
+            rsPat = stmt.executeQuery(sql2);
             
             prep = con.prepareStatement("INSERT INTO PATIENTS(FIRSTNAME,LASTNAME,PRIMEPHONE,OTHERPHONE,DOB,AGE,GENDER,STATUS,PERSONALEMAIL,"+
                     "ADDRESS,CITY,STATE,ZIP,EMERGENCYNAME,EMERGENCYPH,EMERGENCYREL,USERNAME,PASSWORD,EMAIL,DOCTOR," +  
@@ -43,21 +48,6 @@ public class PatientDB
             e.printStackTrace();
             return;
         }      
-    }
-    public PatientDB(String username, String password)
-    {
-        //open patient specific table to get health information
-        try
-        {
-            con = DriverManager.getConnection(HOST,uName,password);
-            stmt = con.createStatement();
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
     }
     public void setPersonalInfo(String first, String last,String primePhone, String otherPhone, String gender, String status, String age, String birth, String pEmail)
     {
@@ -161,7 +151,39 @@ public class PatientDB
             return;
         }
     }
-    public void setBP(Vector<String> bp)
+    public void setBPTIME(Vector<String> bp)
+    {
+        try
+        {
+            PreparedStatement pstmt;
+            
+            //rsPat.beforeFirst();
+            Iterator i = bp.iterator();
+            while(i.hasNext())
+            {
+                String b = (String)(i.next());
+                System.out.println(b);
+                pstmt = con.prepareStatement("UPDATE P"+username+" SET BP = \'"+b+"\'");
+                //pstmt.setString(1, b);
+                pstmt.executeUpdate();
+            }
+            
+                //rsPat.updateString("BP", i.next());
+            
+            //rsPat.updateRow();*/
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+    }
+    public  void setLowBP(Vector<String> lowbp)
+    {
+        
+    }
+    public void setHighBP(Vector<String> highbp)
     {
         
     }
@@ -169,7 +191,15 @@ public class PatientDB
     {
         
     }
+    public void setSugarTime(Vector<String> sugarTime)
+    {
+        
+    }
     public void setWeight(Vector<String> weight)
+    {
+        
+    }
+    public void setWeightTime(Vector<String> weightTime)
     {
         
     }

@@ -1,7 +1,8 @@
 
 import java.sql.*;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import java.util.*;
+import java.text.*;
 
 /*
  * To change this template, choose Tools | Templates
@@ -20,9 +21,10 @@ public class PatientPanel extends javax.swing.JFrame {
     private Connection con;
     private Statement stmt;
     private ResultSet rs;
-    private Vector<String> bpV;
+    private Vector<String> bpV,bpLow,bpHigh,sugarV,sugarL,weightV,weightL;
     private String bloodPress;
     private String user;
+    private PatientDB patient;
     /**
      * Creates new form PatientPanel
      */
@@ -50,10 +52,22 @@ public class PatientPanel extends javax.swing.JFrame {
             rs = stmt.executeQuery(sql);
             
             bpV = new Vector();
+            bpLow = new Vector();
+            bpHigh = new Vector();
+            sugarV = new Vector();
+            sugarL = new Vector();
+            weightV = new Vector();
+            weightL = new Vector();
+            
+            patient = new PatientDB(userName);
             
             
             while(rs.next())
+            {
                 bpV.add(rs.getString("bp"));
+                sugarV.add(rs.getString("sugartime"));
+                weightV.add(rs.getString("weighttime"));
+            }
             
             bpEntries.setListData(bpV);
             
@@ -76,6 +90,7 @@ public class PatientPanel extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDialog1 = new javax.swing.JDialog();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         drug = new javax.swing.JList();
@@ -114,7 +129,7 @@ public class PatientPanel extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jButton8 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
-        jButton9 = new javax.swing.JButton();
+        newSugar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jButton10 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
@@ -123,7 +138,7 @@ public class PatientPanel extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         jButton12 = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
-        jButton13 = new javax.swing.JButton();
+        newWeight = new javax.swing.JButton();
         name = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
@@ -133,6 +148,17 @@ public class PatientPanel extends javax.swing.JFrame {
         bp = new javax.swing.JLabel();
         sugar = new javax.swing.JLabel();
         weight = new javax.swing.JLabel();
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(651, 752));
@@ -293,10 +319,10 @@ public class PatientPanel extends javax.swing.JFrame {
 
         jLabel14.setText("Recent Sugar Level Entries");
 
-        jButton9.setText("New Entry");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        newSugar.setText("New Entry");
+        newSugar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                newSugarActionPerformed(evt);
             }
         });
 
@@ -321,7 +347,7 @@ public class PatientPanel extends javax.swing.JFrame {
                                 .addComponent(jLabel13))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(28, 28, 28)
-                                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(newSugar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap(212, Short.MAX_VALUE)
@@ -339,7 +365,7 @@ public class PatientPanel extends javax.swing.JFrame {
                 .addGap(7, 7, 7)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                    .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(newSugar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -375,10 +401,10 @@ public class PatientPanel extends javax.swing.JFrame {
 
         jLabel16.setText("Recent Weight Entries");
 
-        jButton13.setText("New Entry");
-        jButton13.addActionListener(new java.awt.event.ActionListener() {
+        newWeight.setText("New Entry");
+        newWeight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton13ActionPerformed(evt);
+                newWeightActionPerformed(evt);
             }
         });
 
@@ -394,7 +420,7 @@ public class PatientPanel extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(28, 28, 28)
-                        .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(newWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addComponent(jLabel16))
@@ -421,7 +447,7 @@ public class PatientPanel extends javax.swing.JFrame {
                 .addGap(7, 7, 7)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                    .addComponent(jButton13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(newWeight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -590,7 +616,32 @@ public class PatientPanel extends javax.swing.JFrame {
 
     private void newBPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBPActionPerformed
         //JOptionPane to be implemented here
+        String lower,upper;
+        JFrame frame = new JFrame();
         try
+        {
+            lower = JOptionPane.showInputDialog(frame, "Enter lower blood pressure bound (mmHg):");
+            while(Integer.parseInt(lower)<50 || Integer.parseInt(lower) > 230)
+                lower = JOptionPane.showInputDialog(frame, "Enter a VALID LOWEER blood pressure(50-230) mmHg:");
+            
+            upper = JOptionPane.showInputDialog(frame, "Enter an upper blood pressure bound (mmHg):");
+            while(Integer.parseInt(upper)<50 || Integer.parseInt(upper)>230 || (Integer.parseInt(upper) < Integer.parseInt(lower)))
+                upper = JOptionPane.showInputDialog(frame, "Enter a VALID UPPER blood pressure(50-230) mmHg:");
+            
+            String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
+            bpV.add("["+timeStamp+"] "+lower+"/"+upper+"mmHg");
+            bpLow.add(lower);
+            bpHigh.add(upper);
+            bpEntries.setListData(bpV);
+            patient.setBPTIME(bpV);
+            patient.setHighBP(bpHigh);
+            patient.setLowBP(bpLow);
+        }
+        catch(NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this,"Enter only numbers"); 
+        }
+        /*try
         {
             String sql = "SELECT * FROM P"+user;
             rs = stmt.executeQuery(sql);
@@ -607,16 +658,52 @@ public class PatientPanel extends javax.swing.JFrame {
             e.printStackTrace();
             //this.dispose();
             return;
-        }
+        }*/
     }//GEN-LAST:event_newBPActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton9ActionPerformed
+    private void newSugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSugarActionPerformed
+        String sugarEntry;
+        JFrame frame = new JFrame();
+        try
+        {
+            sugarEntry = JOptionPane.showInputDialog(frame, "Enter sugar level (mmol/L):");
+            while(Integer.parseInt(sugarEntry)<0)
+                sugarEntry = JOptionPane.showInputDialog(frame, "Enter a VALID sugar level mmol/L:");
+            
+            String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
+            sugarV.add("["+timeStamp+"] "+sugarEntry+"mmHg");
+            sugarL.add(sugarEntry);
+            sugarList.setListData(sugarV);
+            patient.setSugar(sugarL);
+            patient.setSugarTime(sugarV);
+        }
+        catch(NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this,"Enter only numbers"); 
+        }
+    }//GEN-LAST:event_newSugarActionPerformed
 
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton13ActionPerformed
+    private void newWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newWeightActionPerformed
+       String weightEntry;
+        JFrame frame = new JFrame();
+        try
+        {
+            weightEntry = JOptionPane.showInputDialog(frame, "Enter sugar level (mmol/L):");
+            while(Integer.parseInt(weightEntry)<0)
+                weightEntry = JOptionPane.showInputDialog(frame, "Enter a VALID sugar level mmol/L:");
+            
+            String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
+            weightV.add("["+timeStamp+"] "+weightEntry+"mmHg");
+            weightL.add(weightEntry);
+            this.weightEntry.setListData(weightV);
+            patient.setWeight(weightL);
+            patient.setSugarTime(weightV);
+        }
+        catch(NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this,"Enter only numbers"); 
+        }
+    }//GEN-LAST:event_newWeightActionPerformed
 
     private void updatePersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatePersonalInfoActionPerformed
         new PatientEditInfo().setVisible(true);
@@ -667,14 +754,13 @@ public class PatientPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
+    private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -709,6 +795,8 @@ public class PatientPanel extends javax.swing.JFrame {
     private static javax.swing.JButton logout;
     private static javax.swing.JLabel name;
     private javax.swing.JButton newBP;
+    private static javax.swing.JButton newSugar;
+    private static javax.swing.JButton newWeight;
     private static javax.swing.JLabel sugar;
     private static javax.swing.JList sugarList;
     private javax.swing.JButton updatePersonalInfo;

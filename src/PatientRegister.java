@@ -740,7 +740,8 @@ public class PatientRegister extends javax.swing.JFrame
                 newPatient.setAddress(add, City, State, zip.getText());
                 newPatient.update();
                 
-                String createTable = "CREATE TABLE P"+id+" (bp VARCHAR(255), sugar VARCHAR(255), weight VARCHAR(255), drugs VARCHAR(255), observations VARCHAR(2500))";
+                String createTable = "CREATE TABLE P"+id+" (bp VARCHAR(255), sugar VARCHAR(255), weight VARCHAR(255), drugs VARCHAR(255), observations VARCHAR(2500), "
+                        + "LOWBP VARCHAR(2500), HIGHBP VARCHAR(2500), SUGARTIME VARCHAR(2500), WEIGHTTIME(2500))";
                 stmt.executeUpdate(createTable);
                 
                 dispose();
