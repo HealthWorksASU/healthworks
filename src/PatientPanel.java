@@ -70,6 +70,8 @@ public class PatientPanel extends javax.swing.JFrame {
             }
             
             bpEntries.setListData(bpV);
+            sugarList.setListData(sugarV);
+            weightEntry.setListData(weightV);
             
         }
         catch(SQLException e)

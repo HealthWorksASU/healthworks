@@ -31,11 +31,12 @@ public class PatientDB
             con = DriverManager.getConnection(HOST,uName,password);
             stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
             
-            String sql = "SELECT * FROM Patients";
-            rs = stmt.executeQuery(sql);
+            //con.setAutoCommit(false);
             
-            String sql2 ="SELECT * FROM P"+username;
-            rsPat = stmt.executeQuery(sql2);
+            
+            
+            //String sql2 = "SELECT * FROM Patients";
+            //rs = stmt.executeQuery(sql2);
             
             prep = con.prepareStatement("INSERT INTO PATIENTS(FIRSTNAME,LASTNAME,PRIMEPHONE,OTHERPHONE,DOB,AGE,GENDER,STATUS,PERSONALEMAIL,"+
                     "ADDRESS,CITY,STATE,ZIP,EMERGENCYNAME,EMERGENCYPH,EMERGENCYREL,USERNAME,PASSWORD,EMAIL,DOCTOR," +  
@@ -155,22 +156,31 @@ public class PatientDB
     {
         try
         {
-            PreparedStatement pstmt;
+            //PreparedStatement pstmt = con.prepareStatement("UPDATE P"+username+" SET BP = ?");
+            String sql ="SELECT BP FROM P"+username;
+            rsPat = stmt.executeQuery(sql);
             
-            //rsPat.beforeFirst();
+            if(!rsPat.next())
+            {
+                rsPat.moveToInsertRow();
+                System.out.println("false");
+            }
+
             Iterator i = bp.iterator();
+
             while(i.hasNext())
             {
+                System.out.println(rsPat.getRow());
+                rs.next();
                 String b = (String)(i.next());
                 System.out.println(b);
-                pstmt = con.prepareStatement("UPDATE P"+username+" SET BP = \'"+b+"\'");
-                //pstmt.setString(1, b);
-                pstmt.executeUpdate();
+                rsPat.updateString("BP",b);
+                //rsPat.updateRow();           
             }
             
                 //rsPat.updateString("BP", i.next());
             
-            //rsPat.updateRow();*/
+            //rsPat.updateRow();
         }
         catch(SQLException e)
         {
