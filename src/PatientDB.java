@@ -21,6 +21,8 @@ public class PatientDB extends UserDB
     private ResultSet rs, rsPat;  
     private PreparedStatement prep;
     private String username;
+    private String sql;
+    private String latestBP,latestSugar,latestWeight;
         
     public PatientDB(String username)
     {
@@ -33,11 +35,8 @@ public class PatientDB extends UserDB
             stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
             
             //con.setAutoCommit(false);
-            
-            
-            
-            //String sql2 = "SELECT * FROM Patients";
-            //rs = stmt.executeQuery(sql2);
+   
+            sql = "SELECT * FROM P"+username;
             
             prep = con.prepareStatement("INSERT INTO PATIENTS(FIRSTNAME,LASTNAME,PRIMEPHONE,OTHERPHONE,DOB,AGE,GENDER,STATUS,PERSONALEMAIL,"+
                     "ADDRESS,CITY,STATE,ZIP,EMERGENCYNAME,EMERGENCYPH,EMERGENCYREL,USERNAME,PASSWORD,EMAIL,DOCTOR," +  
@@ -153,35 +152,17 @@ public class PatientDB extends UserDB
             return;
         }
     }
-    public void setBPTIME(Vector<String> bp)
+    public void setBP(String bp, String bpHigh, String bpLow)
     {
         try
         {
-            //PreparedStatement pstmt = con.prepareStatement("UPDATE P"+username+" SET BP = ?");
-            String sql ="SELECT BP FROM P"+username;
-            rsPat = stmt.executeQuery(sql);
-            
-            if(!rsPat.next())
-            {
-                rsPat.moveToInsertRow();
-                System.out.println("false");
-            }
+            PreparedStatement pstmt = con.prepareStatement("INSERT INTO P"+username+" (BP, LOWBP, HIGHBP) VALUES(?,?,?)");
+ 
+                pstmt.setString(1,bp);
+                pstmt.setString(2,bpHigh);
+                pstmt.setString(3,bpLow);
+                pstmt.executeUpdate();
 
-            Iterator i = bp.iterator();
-
-            while(i.hasNext())
-            {
-                System.out.println(rsPat.getRow());
-                rs.next();
-                String b = (String)(i.next());
-                System.out.println(b);
-                rsPat.updateString("BP",b);
-                //rsPat.updateRow();           
-            }
-            
-                //rsPat.updateString("BP", i.next());
-            
-            //rsPat.updateRow();
         }
         catch(SQLException e)
         {
@@ -190,17 +171,23 @@ public class PatientDB extends UserDB
             return;
         }
     }
-    public  void setLowBP(Vector<String> lowbp)
+    public void setSugar(String sugarTime, String sugar)
     {
-        
-    }
-    public void setHighBP(Vector<String> highbp)
-    {
-        
-    }
-    public void setSugar(Vector<String> sugar)
-    {
-        
+        try
+        {
+            PreparedStatement pstmt = con.prepareStatement("INSERT INTO P"+username+" (SUGARTIME, SUGAR) VALUES(?,?)");
+ 
+                pstmt.setString(1,sugarTime);
+                pstmt.setString(2,sugar);
+                pstmt.executeUpdate();
+
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+            return;
+        }
     }
     public void setSugarTime(Vector<String> sugarTime)
     {
@@ -244,19 +231,102 @@ public class PatientDB extends UserDB
     }
     public Vector<String> getBP()
     {
-        return new Vector<String>();
+        Vector<String> bpV = new Vector();
+        try
+        {
+            rs = stmt.executeQuery(sql);
+            while(rs.next())
+                bpV.add(rs.getString("BP"));
+            
+            bpV.removeAll(Collections.singleton(null));
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return bpV;
+    }
+    public String getLatestBP()
+    {
+        /*try
+        {
+            rs = stmt.executeQuery(sql);
+            while(rs.next())
+                
+            
+            bpV.removeAll(Collections.singleton(null));
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        */
+        return new String();
     }
     public Vector<String> getSugar()
     {
-        return new Vector<String>();
+        Vector<String> sugarV = new Vector();
+        try
+        {
+            rs = stmt.executeQuery(sql);
+            while(rs.next())
+                sugarV.add(rs.getString("SUGARTIME"));
+            
+            sugarV.removeAll(Collections.singleton(null));
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return sugarV;
     }
     public Vector<String> getWeight()
     {
-        return new Vector<String>();
+        Vector<String> weightV = new Vector();
+        try
+        {
+            rs = stmt.executeQuery(sql);
+            while(rs.next())
+                weightV.add(rs.getString("WEIGHTTIME"));
+           
+            weightV.removeAll(Collections.singleton(null));
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return weightV;
     }
     public Vector<String> getDrugs()
     {
-        return new Vector<String>();
+        Vector<String> pres = new Vector();
+        try
+        {
+            rs = stmt.executeQuery(sql);
+            while(rs.next())
+                pres.add(rs.getString("DRUGS"));
+            
+            pres.removeAll(Collections.singleton(null));
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return pres;
     }
     public Vector<String> getObservations()
     {
