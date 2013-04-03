@@ -58,6 +58,10 @@ public class PatientPanel extends javax.swing.JFrame {
             weightV = patient.getWeight();
             pres = patient.getDrugs();
             
+            bp.setText(patient.getLatestBP());
+            sugar.setText(patient.getLatestSugar());
+            weight.setText(patient.getLatestWeight());
+            
             bpEntries.setListData(bpV);
             sugarList.setListData(sugarV);
             weightEntry.setListData(weightV);
@@ -453,6 +457,11 @@ public class PatientPanel extends javax.swing.JFrame {
         jScrollPane6.setViewportView(jTextPane1);
 
         logout.setText("Logout");
+        logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutActionPerformed(evt);
+            }
+        });
 
         address.setText("<html>200 S Ash Ave,<BR>Phoenix AZ - 85011<BR>Phone (480)-555-5555<html>");
 
@@ -653,11 +662,11 @@ public class PatientPanel extends javax.swing.JFrame {
                 weightEntry = JOptionPane.showInputDialog(frame, "Enter a VALID sugar level mmol/L:");
             
             String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
-            weightV.add("["+timeStamp+"] "+weightEntry+"kg");
-            weightL.add(weightEntry);
+            String time = "["+timeStamp+"] "+weightEntry+"kg";
+            weightV.add(time);
+            //weightL.add(weightEntry);
             this.weightEntry.setListData(weightV);
-            patient.setWeight(weightL);
-            patient.setSugarTime(weightV);
+            patient.setWeight(weightEntry,time);
             weight.setText(weightEntry+"kg");
         }
         catch(NumberFormatException e)
@@ -669,6 +678,16 @@ public class PatientPanel extends javax.swing.JFrame {
     private void updatePersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatePersonalInfoActionPerformed
         new PatientEditInfo().setVisible(true);
     }//GEN-LAST:event_updatePersonalInfoActionPerformed
+
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        int response = JOptionPane.showConfirmDialog(null, "Do you want to log out?", "Logout",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION)
+        {
+            this.dispose();
+            new LoginScreen().setVisible(true);
+        }  
+    }//GEN-LAST:event_logoutActionPerformed
 
     /**
      * @param args the command line arguments
