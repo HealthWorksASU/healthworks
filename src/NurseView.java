@@ -1,6 +1,4 @@
-
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -174,6 +172,11 @@ public class NurseView extends javax.swing.JFrame {
         });
 
         PatientDeleteButton.setText("Delete Patient\n");
+        PatientDeleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PatientDeleteButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout PatientPaneLayout = new javax.swing.GroupLayout(PatientPane);
         PatientPane.setLayout(PatientPaneLayout);
@@ -396,6 +399,40 @@ public class NurseView extends javax.swing.JFrame {
         this.dispose();
         new LoginScreen().setVisible(true);
     }//GEN-LAST:event_LogoutButtonActionPerformed
+
+    private void PatientDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PatientDeleteButtonActionPerformed
+       int i=PatientList.getSelectedIndex();
+        if (i==-1) 
+        {
+            JOptionPane.showMessageDialog(this, "Please first select a patient to delete.");
+            return;
+        }
+        
+        UserInfo patient=patientView.get(i);
+        int confirm=JOptionPane.showConfirmDialog(this, "Are you sure you want to delete the account "+
+              patient.username+" belonging to " + patient.firstname + " " + patient.lastname +  "?");
+        if (confirm==JOptionPane.YES_OPTION){
+                myPatients.remove(patient);
+                allPatients.remove(patient);
+                PatientDB ndb = new PatientDB(patient.username);
+                try
+                {
+                    if (ndb.accountExists())
+                    {
+                        ndb.deleteUser();
+                        JOptionPane.showMessageDialog(this, "Successfully deleted "+patient.username+".");
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(this, "Could not delete "+patient.username+" because the user has already been deleted.");
+                    }
+                }
+                catch(SQLException e)
+                {
+                    JOptionPane.showMessageDialog(this, "Could not delete "+patient.username+" due to network problems.\nDetails: "+e.getMessage());
+                }
+            }
+    }//GEN-LAST:event_PatientDeleteButtonActionPerformed
 
     /**
      * @param args the command line arguments

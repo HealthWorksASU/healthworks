@@ -1,10 +1,4 @@
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JOptionPane;
 
 /*
@@ -190,78 +184,54 @@ public class NurseRegister extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
-        //code
+
         try
         {
-            final String HOST = "jdbc:derby://localhost:1527/information";
-        String uName = "healthworks";
-        String password = "healthworks";
-        Connection con = DriverManager.getConnection(HOST,uName,password);
-        Statement stmt = con.createStatement();
         
-        boolean flag = false;
         String id = accountName.getText();
         String pass = this.password.getText();
-        String confPass = this.confirmPass.getText();
+        String passConfirm = this.confirmPass.getText();
         String firstName = FirstName.getText();
         String lastName = LastName.getText();
-        String mail = email.getText();
+        String emailID = email.getText();
         
-        String sql = "SELECT * FROM NURSES";
-        ResultSet rs = stmt.executeQuery(sql);
+        NurseDB nurse = new NurseDB(id);
         
-        //checks if user id is taken or not
-        while(rs.next())
+        String inv="";
+        boolean flag=false;
+        
+        if(id.equals("")){
+            inv="Please enter a valid user name.";
+            flag=true;
+        }
+        else if(emailID.equals("")){
+            inv="Please enter a valid email address.";
+            flag=true;
+        }
+        else if(!(pass.equals(passConfirm))){
+            inv="The passwords that you entered do not match.";
+            flag=true;
+        }
+        else if (nurse.accountExists())
         {
-            String dbID = rs.getString("USERNAME");
-            if(dbID.equals(id))
-            {
-                flag = true;
-                break;
-            }
+            inv="The requested username is already in use.";
+            flag=true;
         }
         
-        if(firstName.equals(""))
+        if (flag)
         {
-            JOptionPane.showMessageDialog(NurseRegister.this, "Please enter a First Name");
+            JOptionPane.showMessageDialog(this,inv);
+            return;
         }
-        else if(lastName.equals(""))
-            JOptionPane.showMessageDialog(NurseRegister.this, "Please enter a Last Name");
-        else if(mail.equals(""))
-            JOptionPane.showMessageDialog(NurseRegister.this, "Please enter an email");
-        else if(id.equals(""))
-            JOptionPane.showMessageDialog(NurseRegister.this, "Please enter a user name");
-        else if(!(pass.equals(confPass)))
-            JOptionPane.showMessageDialog(NurseRegister.this, "Passwords do not match");
-        else if(flag == true)
-            JOptionPane.showMessageDialog(NurseRegister.this, "Username already exists");
-        else
-        {
-            PreparedStatement prep = con.prepareStatement("INSERT INTO NURSES(USERNAME, PASSWORD, EMAIL, FIRSTNAME, LASTNAME) VALUES(?,?,?,?,?)");
-            prep.setString(1, id);
-            prep.setString(2, pass);
-            prep.setString(3, mail);
-            prep.setString(4, firstName);
-            prep.setString(5, lastName);
-            
-            prep.executeUpdate();
-            
-            String createTable = "CREATE TABLE N"+id+"(patients VARCHAR(255), doctors VARCHAR(255))";
-        stmt.executeUpdate(createTable);
-        }
-        
-        }
-        
-        catch(SQLException e)
+        //Insert!
+        nurse.createAccount(firstName, lastName, pass, emailID);
+        nurse.setDoctor(doctorAccountName);
+        JOptionPane.showMessageDialog(this,"Success! The account " +id+ " has been registered.");
+       }
+       catch(SQLException e)
        {
-           JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-           e.printStackTrace();
-        this.dispose();
-        return;
-       
-        }
-        
-        dispose();
+           JOptionPane.showMessageDialog(this,"There was a network problem registering your account.\n Details: "+e.toString());
+       }
     }//GEN-LAST:event_registerActionPerformed
 
     /**
@@ -293,6 +263,7 @@ public class NurseRegister extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new NurseRegister().setVisible(true);
             }

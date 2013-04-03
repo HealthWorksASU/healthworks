@@ -1,12 +1,9 @@
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* A generic manager for a user database.
  */
 
 /**
@@ -17,7 +14,7 @@ abstract class UserDB {
     protected static final String databaseHOST="jdbc:derby://localhost:1527/information";
     protected static final String databaseUserName="healthworks";
     protected static final String databaseUserPassword="healthworks";
-    protected static String userTableName;
+    protected static String userTableName; //Overriding classes should change this
     
     protected String user;
     protected Connection con;
@@ -90,12 +87,27 @@ abstract class UserDB {
         return rs;
     }
     
-    public String getEmail() throws SQLException
+    private String queryField(String field) throws SQLException
     {
         ensureConnection();
-        PreparedStatement prep = con.prepareStatement("SELECT email FROM "+userTableName+" WHERE username = ?");
+        PreparedStatement prep = con.prepareStatement("SELECT "+field+" FROM "+userTableName+" WHERE username = ?");
         prep.setString(1,user);
         ResultSet rs=prep.executeQuery();
-        return rs.getString("email");
+        return rs.getString(field);
+    }
+    
+    public String getEmail() throws SQLException
+    {
+        return queryField("email");
+    }
+    
+    private String getPassword() throws SQLException
+    {
+        return queryField("password");
+    }
+    
+    public boolean verifyPassword(String inputPW) throws SQLException
+    {
+        return inputPW.compareTo(getPassword())==0;
     }
 }

@@ -4,8 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * A database manager for nurse accounts.
  */
 
 /**
@@ -17,6 +16,7 @@ public class NurseDB extends UserDB
     public NurseDB(String _user)
     {
        super(_user);
+       userTableName="NURSES";
     }
     
     //Gets the doctor's used verification code
