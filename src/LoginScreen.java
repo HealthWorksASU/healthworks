@@ -12,29 +12,11 @@ import javax.swing.JOptionPane;
  * @author Scott
  */
 public class LoginScreen extends javax.swing.JFrame {
-    private final String HOST = "jdbc:derby://localhost:1527/information";
-    private String uName = "healthworks";
-    private String password = "healthworks";
-    private Connection con;
-    private Statement stmt;
     /**
      * Creates new form LoginScreen
      */
     public LoginScreen() {
         initComponents();
-        try
-        {
-            
-            con = DriverManager.getConnection(HOST,uName,password);
-            stmt = con.createStatement();
-        }
-        catch(SQLException e)
-       {
-           
-           JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-           java.awt.EventQueue.invokeLater(new Utilities.RunnableFrameDisposer(this));
-        
-       }
     }
 
     /**
@@ -93,7 +75,13 @@ public class LoginScreen extends javax.swing.JFrame {
 
         jLabel5.setText("Login as:");
 
-        role.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Patient", "Nurse", "Doctor" }));
+        role.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Patient", "Nurse", "Doctor" }));
+        role.setSelectedIndex(-1);
+        role.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                roleActionPerformed(evt);
+            }
+        });
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/MockupLogo.png"))); // NOI18N
 
@@ -180,62 +168,83 @@ public class LoginScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_recoveryMouseClicked
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-        
+       String accountName=username.getText();
+       String accountPassword=pass.getText();
+       int selected=role.getSelectedIndex();
+       
        try
        {
-           if(username.getText().equals(""))
-               JOptionPane.showMessageDialog(LoginScreen.this, "Please enter a username");
-           else if(username.getText().equals(""))
-               JOptionPane.showMessageDialog(LoginScreen.this, "Please enter a password");
-           else if(role.getSelectedItem().equals(" "))
-               JOptionPane.showMessageDialog(LoginScreen.this, "Please Select if you are a Patient, Doctor or Nurrse");
-           else if(role.getSelectedItem().equals("Doctor"))
-           {
-               String sql = "SELECT * FROM DOCTORS WHERE USERNAME=\'"+username.getText()+
-                    "\' AND PASSWORD=\'"+pass.getText()+"\'";
-               ResultSet rs = stmt.executeQuery(sql);
-               if(!rs.next())
-                   JOptionPane.showMessageDialog(LoginScreen.this, "Username and password does not match");
-               else
-               {
-                   new DoctorView(username.getText(),pass.getText()).setVisible(true);
-                   this.dispose();
-               }
+           if(accountName.equals("")) {
+               JOptionPane.showMessageDialog(this, "Please enter a username");
+               return;
            }
-           else if(role.getSelectedItem().equals("Patient"))
-           {
-               String sql = "SELECT * FROM PATIENTS WHERE USERNAME=\'"+username.getText()+
-                    "\' AND PASSWORD=\'"+pass.getText()+"\'";
-               ResultSet rs = stmt.executeQuery(sql);
-               if(!rs.next())
-                   JOptionPane.showMessageDialog(LoginScreen.this, "Username and password does not match");
-               else
-               {
-                   new PatientPanel(username.getText(),pass.getText()).setVisible(true);
-                   this.dispose();
-               }
+           else if(accountName.equals("")) {
+               JOptionPane.showMessageDialog(this, "Please enter a password");
+               return;
            }
-           else if(role.getSelectedItem().equals("Nurse"))
-           {
-               String sql = "SELECT * FROM NURSES WHERE USERNAME=\'"+username.getText()+
-                    "\' AND PASSWORD=\'"+pass.getText()+"\'";
-               ResultSet rs = stmt.executeQuery(sql);
-               if(!rs.next())
-                   JOptionPane.showMessageDialog(LoginScreen.this, "Username and password does not match");
-               else
-               {
-                   new NurseView(username.getText(),pass.getText()).setVisible(true);
-                   this.dispose();
-               }
+           else if(selected==-1) {
+               JOptionPane.showMessageDialog(this, "Please select if you are a patient, doctor, or nurse.");
+               return;
            }
-       }catch(SQLException e)
+           
+           UserDB account;
+           String selectedType;
+           
+           switch(selected)
+           {
+               case 0:
+                   account=new DoctorDB(accountName);
+                   selectedType="Doctor";
+                   break;
+               case 1:
+                   account=new NurseDB(accountName);
+                   selectedType="Nurse";
+                   break;
+               case 2:
+                   account=new PatientDB(accountName);
+                   selectedType="Patient";
+                   break;
+               default:
+                   JOptionPane.showMessageDialog(this, "A fall-through error has occurred.");
+                   return;
+           }
+           
+           if (!account.accountExists())
+           {
+               JOptionPane.showMessageDialog(this,"The "+selectedType+" account "+accountName+" does not exist.");
+           }
+           else if (account.verifyPassword(accountPassword))
+           {
+               JOptionPane.showMessageDialog(this,"Incorrect password.");
+           }
+           else
+           {
+               switch(selected)
+                {
+                    case 0:
+                        new DoctorView(accountName,accountPassword).setVisible(true);
+                        break;
+                    case 1:
+                        new NurseView(accountName,accountPassword).setVisible(true);
+                        break;
+                    case 2:
+                        new PatientPanel(accountName,accountPassword).setVisible(true);
+                        break;
+                }
+           }
+           
+       }
+      catch(SQLException e)
        {
            JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-        this.dispose();
-        return;
+            this.dispose();
        }
             
     }//GEN-LAST:event_loginActionPerformed
+
+    private void roleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_roleActionPerformed
 
     /**
      * @param args the command line arguments
@@ -266,6 +275,7 @@ public class LoginScreen extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new LoginScreen().setVisible(true);
             }
