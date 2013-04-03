@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.*;
 import javax.swing.JOptionPane;
 
-public class PatientDB 
+public class PatientDB extends UserDB
 {
     private final String HOST = "jdbc:derby://localhost:1527/information";
     private String uName = "healthworks";
@@ -24,6 +24,7 @@ public class PatientDB
         
     public PatientDB(String username)
     {
+        super(username);
         this.username = username;
         //to open the PATIENTS table to store information
         try

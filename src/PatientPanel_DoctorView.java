@@ -15,6 +15,11 @@ public class PatientPanel_DoctorView extends javax.swing.JFrame {
     public PatientPanel_DoctorView() {
         initComponents();
     }
+    
+    public PatientPanel_DoctorView(String doctorName, String doctorPassword, String patientAccountName)
+    {
+        initComponents();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

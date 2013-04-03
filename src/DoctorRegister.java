@@ -1,12 +1,5 @@
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JOptionPane;
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -71,11 +64,6 @@ public class DoctorRegister extends javax.swing.JFrame {
         EnterVerificationCodePrompt.setText("Enter the verification code provided by your administrator:");
 
         verificationCodeField.setText("d0GHyWui4");
-        verificationCodeField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                verificationCodeFieldActionPerformed(evt);
-            }
-        });
 
         RegisterAccountButton.setText("Register Account");
         RegisterAccountButton.addActionListener(new java.awt.event.ActionListener() {
@@ -203,12 +191,9 @@ public class DoctorRegister extends javax.swing.JFrame {
         // TODO add your handling code here:
         try
        {
-        final String HOST = "jdbc:derby://localhost:1527/information";
-        String uName = "healthworks";
-        String password = "healthworks";
-        Connection con = DriverManager.getConnection(HOST,uName,password);
-        
         String id = accountNameField.getText();
+        DoctorDB doc = new DoctorDB(id);
+        
         String pass = desiredPasswordField.getText();
         String passConfirm = confirmPasswordField.getText();
         String emailID = accountEmailField.getText();
@@ -232,47 +217,26 @@ public class DoctorRegister extends javax.swing.JFrame {
             inv="The passwords that you entered do not match.";
             flag=true;
         }
+        else if (doc.accountExists())
+        {
+            inv="The requested username is already in use.";
+            flag=true;
+        }
+        else if (!doc.takeVerificationCode(verificationCode))
+        {
+            inv="Invalid or in-use verification code. Please check your code and enter it again.";
+            flag=true;
+        }
+        
         if (flag)
         {
             JOptionPane.showMessageDialog(DoctorRegister.this,inv);
             return;
         }
-        //A prepared statement is used to prevent SQL injection attacks and other malformed strings.
-        PreparedStatement prep = con.prepareStatement("SELECT * FROM DOCTORS WHERE username= ? ", 
-                ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-        prep.setString(1,id);
-        ResultSet rs = prep.executeQuery();
-        
-        
-        if(rs.isBeforeFirst()){ //error if id in use
-            JOptionPane.showMessageDialog(DoctorRegister.this, "The requested username is already in use.");
-            return;
-        }
-        
-        prep = con.prepareStatement("SELECT * FROM VERIFICATION_TABLES WHERE verification_code = ? ", ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-        prep.setString(1,verificationCode);
-        rs=prep.executeQuery();        
-        if(!rs.isBeforeFirst()) {
-            JOptionPane.showMessageDialog(DoctorRegister.this,"Invalid verification code. Please check your code and enter it again.");
-            return;
-        }
-        else
-        {
-            prep = con.prepareStatement("DROP ? ON VERIFICATION_CODES");
-            prep.setString(1,verificationCode);
-            prep.executeUpdate();
-        }
         //Insert!
-        prep = con.prepareStatement("INSERT INTO DOCTORS(USERNAME,PASSWORD,EMAIL,FIRSTNAME,LASTNAME,VERIFICATION) VALUES(?,?,?,?,?,?)");
-
-        prep.setString(1,id);
-        prep.setString(2,pass);
-        prep.setString(3,emailID);
-        prep.setString(4,firstName);
-        prep.setString(5,lastName);
-        prep.setString(6,verificationCode);
+        doc.createAccount(firstName, lastName, pass, emailID);
+        doc.setVerificationCode(verificationCode);
         
-        prep.executeUpdate();
         JOptionPane.showMessageDialog(DoctorRegister.this,"Success! Your account has been registered.");
         //Close this GUI and bring up the login.
         this.dispose();
@@ -280,13 +244,9 @@ public class DoctorRegister extends javax.swing.JFrame {
        }
        catch(SQLException e)
        {
-           JOptionPane.showMessageDialog(DoctorRegister.this,"There was a network problem registering your account.\nDetails: "+e.toString());
+           JOptionPane.showMessageDialog(DoctorRegister.this,"There was a network problem registering your account.\n Details: "+e.toString());
         }
     }//GEN-LAST:event_RegisterAccountButtonActionPerformed
-
-    private void verificationCodeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verificationCodeFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_verificationCodeFieldActionPerformed
 
     /**
      * @param args the command line arguments

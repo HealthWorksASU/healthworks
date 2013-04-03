@@ -30,9 +30,9 @@ public class LoginScreen extends javax.swing.JFrame {
         }
         catch(SQLException e)
        {
+           
            JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-        this.dispose();
-        return;
+           java.awt.EventQueue.invokeLater(new Utilities.RunnableFrameDisposer(this));
         
        }
     }

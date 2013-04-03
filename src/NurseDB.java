@@ -1,3 +1,8 @@
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -7,18 +12,31 @@
  *
  * @author DaMania
  */
-public class NurseDB 
+public class NurseDB extends UserDB
 {
-    public NurseDB(String tableName)
+    public NurseDB(String _user)
     {
-        //open the nurse table to set/get information
+       super(_user);
     }
-    public void setName(String first, String last)
+    
+    //Gets the doctor's used verification code
+    public String getDoctor() throws SQLException
     {
-        
+       ensureConnection();
+        PreparedStatement prep = con.prepareStatement("SELECT doctor FROM "+userTableName+" WHERE username= ? ", 
+                ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+        prep.setString(1,user);
+        ResultSet rs = prep.executeQuery();
+        return rs.getString("doctor");
     }
-    public void setAccount(String userName, String password, String email)
+    //Sets the doctor's used verification code
+    public void setDoctor(String docAccountName) throws SQLException
     {
-        
+        ensureConnection();
+        PreparedStatement prep = con.prepareStatement("UPDATE "+userTableName+" SET doctor = ? WHERE username = ?");
+
+        prep.setString(1,docAccountName);
+        prep.setString(2,user);
+        prep.executeUpdate();
     }
 }

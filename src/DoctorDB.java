@@ -1,3 +1,7 @@
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -7,18 +11,52 @@
  *
  * @author DaMania
  */
-public class DoctorDB 
+public class DoctorDB extends UserDB
 {
-    public DoctorDB(String tableName)
+    
+    public DoctorDB(String _user)
     {
-        //open the nurse table to set/get information
+        super(_user);
+        userTableName="DOCTORS";
     }
-    public void setName(String first, String last)
+    
+    //Gets the doctor's used verification code
+    public String getVerificationCode() throws SQLException
     {
-        
+       ensureConnection();
+        PreparedStatement prep = con.prepareStatement("SELECT verification FROM "+userTableName+" WHERE username= ? ", 
+                ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+        prep.setString(1,user);
+        ResultSet rs = prep.executeQuery();
+        return rs.getString("verification");
     }
-    public void setAccount(String userName, String password, String email)
+    //Sets the doctor's used verification code
+    public void setVerificationCode(String code) throws SQLException
     {
-        
+        ensureConnection();
+        PreparedStatement prep = con.prepareStatement("UPDATE "+userTableName+" SET verification = ? WHERE username = ?");
+
+        prep.setString(1,code);
+        prep.setString(2,user);
+        prep.executeUpdate();
+    }
+    
+    //Returns true if the verification code was valid and was taken, false otherwise
+    public boolean takeVerificationCode(String code) throws SQLException
+    {
+        PreparedStatement prep = con.prepareStatement("SELECT * FROM VERIFICATION_TABLES WHERE verification_code = ? ", 
+                ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+        prep.setString(1,code);
+        ResultSet rs=prep.executeQuery();        
+        if(!rs.isBeforeFirst()) {
+            return false;
+        }
+        else
+        {
+            prep = con.prepareStatement("DROP ? ON VERIFICATION_CODES");
+            prep.setString(1,code);
+            prep.executeUpdate();
+            return true;
+        }
     }
 }

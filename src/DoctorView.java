@@ -1,16 +1,11 @@
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.JOptionPane;
-import java.util.ArrayList;
-import java.lang.Exception;
-import java.util.Collections;
-import java.util.Comparator;
 
 /*
  * To change this template, choose Tools | Templates
@@ -27,30 +22,22 @@ public class DoctorView extends javax.swing.JFrame {
     
     private String loginName="NOACCOUNT";
     private String loginPassword="NOPASSWORD";
-    private Connection con=null;
-    private HashMap<String,String> nurseNameMapping=new HashMap<String,String>(); //Maps nurses "FirstName LastName" to the user account
-    private HashMap<String,String> patientNameMapping=new HashMap<String,String>(); //Ditto for patients
     
-    private class UserInfo implements Comparable {
-        public int compareTo(Object b){UserInfo c=(UserInfo)b;return (firstname+" "+lastname+" "+username).compareTo(c.firstname+" "+c.lastname+" "+c.username);}
-        public String firstname; public String lastname; public String username; 
-        public UserInfo(String f, String l, String u){firstname=f;lastname=l;username=u;}
-    }
+    
     
     private ArrayList<UserInfo> myPatients=new ArrayList<UserInfo>();
     private ArrayList<UserInfo> allPatients=new ArrayList<UserInfo>();
+    
     private ArrayList<UserInfo> myNurses=new ArrayList<UserInfo>();
     private ArrayList<UserInfo> allNurses=new ArrayList<UserInfo>();
-    private ArrayList<UserInfo> nurseView=new ArrayList<UserInfo>();
-    private ArrayList<UserInfo> patientView=new ArrayList<UserInfo>();
     
-    /**
-     * Creates new form DoctorView
-     */
+    private ArrayList<UserInfo> patientView=new ArrayList<UserInfo>();
+    private ArrayList<UserInfo> nurseView=new ArrayList<UserInfo>();
+    
+    // TEST CONSTRUCTOR ONLY: actual constructor with account name and password should be called.
     public DoctorView() {
         initComponents();
-        //Constructor for test. Populates with TEST data. Actual constructor accepting two strings should be called in actual application.
-        //Test initializers
+        //Populate with mock data
         SignedInAsNotifier.setText("TEST MODE ONLY");
         String[] s_allPatientsFirst={"Michael","Dan","Robert","Shawn","Olga","Eileen","Joan"};
         String[] s_allPatientsLast={"Cook","McDonald","Seavey","Boehm","Adkins","Barkley","Pangburn"};
@@ -65,8 +52,6 @@ public class DoctorView extends javax.swing.JFrame {
             UserInfo nurse=new UserInfo(s_allNursesFirst[i],s_allNursesLast[i],s_allNursesUser[i]);
             allPatients.add(patient);
             allNurses.add(nurse);
-            nurseNameMapping.put(nurse.firstname+" "+nurse.lastname,nurse.username);
-            patientNameMapping.put(patient.firstname+" "+patient.lastname,patient.username);
             if(i<4)
             {
                 myPatients.add(patient);
@@ -82,60 +67,38 @@ public class DoctorView extends javax.swing.JFrame {
         UpdatePatientScrollList();
      }
     
+    
+    
+    
     public DoctorView(String accountName, String accountPassword)
     {
-        initComponents();
-        loginName=accountName;
-        loginPassword=accountPassword;
-        SignedInAsNotifier.setText("Signed in as: "+accountName);
+        this.initComponents();
+        this.loginName=accountName;
+        this.loginPassword=accountPassword;
+        this.SignedInAsNotifier.setText("Signed in as: "+accountName);
         //Attempt to retrieve information from database
-        final String HOST = "jdbc:derby://localhost:1527/information";
-        String uName = "healthworks";
-        String password = "healthworks";
         try{
-            con = DriverManager.getConnection(HOST,uName,password);
-            PreparedStatement prep = con.prepareStatement("SELECT username, firstname, lastname, doctor FROM NURSES",
-                        ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-            prep.setString(1,accountName);
-            ResultSet rs = prep.executeQuery();
-            while(rs.next())
-            {
-                UserInfo nurse=new UserInfo(rs.getString("firstname"),rs.getString("lastname"),rs.getString("username"));
-                allNurses.add(nurse);
-                if (rs.getString("doctor").equals(accountName))
-                {
-                   myNurses.add(nurse);   
-                }
-                nurseNameMapping.put(nurse.firstname+" "+nurse.lastname,nurse.username);
-            }
-            //Get all patients
-            prep=con.prepareStatement("SELECT username, firstname, lastname, doctor FROM Patients",ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-            rs=prep.executeQuery();
-            while(rs.next())
-            {
-                UserInfo patient=new UserInfo(rs.getString("firstname"),rs.getString("lastname"),rs.getString("username"));
-                allPatients.add(patient);
-                if (rs.getString("doctor").equals(accountName))
-                {
-                   myPatients.add(patient);   
-                }
-                patientNameMapping.put(patient.firstname+" "+patient.lastname,patient.username);
-            }
+            ResultSet rs;
+            //Get all nurses
+            rs = NurseDB.getFromAllAccounts("username, firstname, lastname, doctor");
+            Utilities.helperStoreUserData(rs,this.allNurses,this.myNurses,accountName);
             
-            Collections.sort((List)myPatients);
-            Collections.sort((List)allPatients);
-            Collections.sort((List)myNurses);
-            Collections.sort((List)allNurses);
+            //Get all patients
+            rs = PatientDB.getFromAllAccounts("username, firstname, lastname, doctor");
+            Utilities.helperStoreUserData(rs,this.allPatients,this.myPatients,accountName);
+            
+            Collections.sort((List)this.myPatients);
+            Collections.sort((List)this.allPatients);
+            Collections.sort((List)this.myNurses);
+            Collections.sort((List)this.allNurses);
+            
             UpdateNurseScrollList();
             UpdatePatientScrollList();
-            
-            
         }
         catch(SQLException e)
         {
-        JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-        this.dispose();
-        return;
+            JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            java.awt.EventQueue.invokeLater(new Utilities.RunnableFrameDisposer(this));
         }
     }
 
@@ -335,34 +298,15 @@ public class DoctorView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private static void helperListMatch(String match, ArrayList<UserInfo> source,ArrayList<UserInfo> listView)
-    {
-        for(UserInfo elem : source)
-        {
-            if ((elem.firstname+" "+elem.lastname).toLowerCase().contains(match.toLowerCase())==true)
-            {
-                listView.add(elem);
-            }
-        }
-    }
     
-    private void updateGenericPersonnelListing(javax.swing.JComboBox categorySelector, javax.swing.JList UIList, javax.swing.JTextField searchField, ArrayList<UserInfo> allList, ArrayList<UserInfo> myList, final ArrayList<UserInfo> listView)
-    {
-        listView.clear();
-        helperListMatch(searchField.getText(),(categorySelector.getSelectedIndex()==0)? myList : allList, listView);
-        UIList.setModel(new javax.swing.AbstractListModel() {
-            public int getSize() { return listView.size(); }
-            public Object getElementAt(int i) {UserInfo j=listView.get(i); return j.firstname+' '+j.lastname; }
-            });
-    }
     private void UpdateNurseScrollList()
     {
-        updateGenericPersonnelListing(NurseCategorySelector,NurseList,NurseSearchField,allNurses,myNurses,nurseView);
+        Utilities.updateGenericPersonnelListing(NurseCategorySelector,NurseList,NurseSearchField,allNurses,myNurses,nurseView);
     }
     
     private void UpdatePatientScrollList()
     {
-       updateGenericPersonnelListing(PatientCategorySelector,PatientList,PatientSearchField,allPatients,myPatients,patientView);
+       Utilities.updateGenericPersonnelListing(PatientCategorySelector,PatientList,PatientSearchField,allPatients,myPatients,patientView);
     }
     
     private void NurseAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseAddButtonActionPerformed
@@ -371,27 +315,52 @@ public class DoctorView extends javax.swing.JFrame {
     }//GEN-LAST:event_NurseAddButtonActionPerformed
 
     private void NurseDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseDeleteButtonActionPerformed
-        String nurseName=(String)NurseList.getSelectedValue();
-        if (nurseName!=null)
+        int i=NurseList.getSelectedIndex();
+        if (i==-1) 
         {
-            int confirm=JOptionPane.showConfirmDialog(this, "Are you sure you want to delete "+nurseName+" from your list of nurses?");
-            if (confirm==JOptionPane.YES_OPTION){
-                //...
+            JOptionPane.showMessageDialog(this, "Please first select a nurse to delete.");
+            return;
+        }
+        
+        UserInfo nurse=nurseView.get(i);
+        int confirm=JOptionPane.showConfirmDialog(this, "Are you sure you want to delete the account "+
+              nurse.username+" belonging to " + nurse.firstname + " " + nurse.lastname +  "?");
+        if (confirm==JOptionPane.YES_OPTION){
+                myNurses.remove(nurse);
+                allNurses.remove(nurse);
+                NurseDB ndb = new NurseDB(nurse.username);
+                try
+                {
+                    if (ndb.accountExists())
+                    {
+                        ndb.deleteUser();
+                        JOptionPane.showMessageDialog(this, "Successfully deleted "+nurse.username+".");
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(this, "Could not delete "+nurse.username+" because the user has already been deleted.");
+                    }
+                }
+                catch(SQLException e)
+                {
+                    JOptionPane.showMessageDialog(this, "Could not delete "+nurse.username+" due to network problems.\nDetails: "+e.getMessage());
+                }
             }
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(this, "Please select a nurse to delete.");
-        }
     }//GEN-LAST:event_NurseDeleteButtonActionPerformed
 
     private void ViewInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewInfoButtonActionPerformed
         // TODO add your handling code here:
+        new PatientPanel_DoctorView(loginName,loginPassword,patientView.get(PatientList.getSelectedIndex()).username).setVisible(true);
     }//GEN-LAST:event_ViewInfoButtonActionPerformed
-
+  
+    //Because Swing does not provide for event ordering and problems occur if the event is
+    //not processed by Swing before it is processed by this class, invokeLater is used to only
+    //update the scrollable after all events are processed in the following four methods.
+    
     private void NurseCategorySelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseCategorySelectorActionPerformed
-        // TODO add your handling code here:
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 UpdateNurseScrollList();
             }});
@@ -400,32 +369,34 @@ public class DoctorView extends javax.swing.JFrame {
     private void PatientCategorySelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PatientCategorySelectorActionPerformed
         // TODO add your handling code here:
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 UpdatePatientScrollList();
             }});
     }//GEN-LAST:event_PatientCategorySelectorActionPerformed
 
     private void NurseSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NurseSearchFieldKeyTyped
-        // TODO add your handling code here:
-        //UpdateNurseScrollList(Character.toString(evt.getKeyChar()));
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 UpdateNurseScrollList();
             }});
     }//GEN-LAST:event_NurseSearchFieldKeyTyped
 
     private void PatientSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PatientSearchFieldKeyTyped
-        // TODO add your handling code here:   
+
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 UpdatePatientScrollList();
             }});
     }//GEN-LAST:event_PatientSearchFieldKeyTyped
 
     private void LogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButtonActionPerformed
-        // TODO add your handling code here:
+
         this.dispose();
-        (new LoginScreen()).setVisible(true);
+        new LoginScreen().setVisible(true);
     }//GEN-LAST:event_LogoutButtonActionPerformed
 
     /**
@@ -457,6 +428,7 @@ public class DoctorView extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new DoctorView().setVisible(true);
             }
