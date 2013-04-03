@@ -272,7 +272,8 @@ public class PatientDB extends UserDB
             bplow.removeAll(Collections.singleton(null));
             bphigh.removeAll(Collections.singleton(null));
             
-            latest = bphigh.lastElement() + "/" + bplow.lastElement() + " mmHg";
+            if(!bphigh.isEmpty()) 
+                latest = bphigh.lastElement() + "/" + bplow.lastElement() + " mmHg";
            
         }
         catch(SQLException e)
@@ -314,8 +315,8 @@ public class PatientDB extends UserDB
                 sugar.add(rs.getString("SUGAR"));
             
             sugar.removeAll(Collections.singleton(null));
-            
-            latest = sugar.lastElement() + " mmol/L";
+            if(!sugar.isEmpty())
+                latest = sugar.lastElement() + " mmol/L";
            
         }
         catch(SQLException e)
