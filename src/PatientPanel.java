@@ -21,7 +21,7 @@ public class PatientPanel extends javax.swing.JFrame {
     private Connection con;
     private Statement stmt;
     private ResultSet rs;
-    private Vector<String> bpV,bpLow,bpHigh,sugarV,sugarL,weightV,weightL;
+    private Vector<String> bpV,bpLow,bpHigh,sugarV,sugarL,weightV,weightL,pres;
     private String bloodPress;
     private String user;
     private PatientDB patient;
@@ -50,28 +50,18 @@ public class PatientPanel extends javax.swing.JFrame {
             
             sql = "SELECT * FROM P"+userName;
             rs = stmt.executeQuery(sql);
-            
-            bpV = new Vector();
-            bpLow = new Vector();
-            bpHigh = new Vector();
-            sugarV = new Vector();
-            sugarL = new Vector();
-            weightV = new Vector();
-            weightL = new Vector();
-            
+
             patient = new PatientDB(userName);
-            
-            
-            while(rs.next())
-            {
-                bpV.add(rs.getString("bp"));
-                sugarV.add(rs.getString("sugartime"));
-                weightV.add(rs.getString("weighttime"));
-            }
+  
+            bpV = patient.getBP();
+            sugarV = patient.getSugar();
+            weightV = patient.getWeight();
+            pres = patient.getDrugs();
             
             bpEntries.setListData(bpV);
             sugarList.setListData(sugarV);
             weightEntry.setListData(weightV);
+            drug.setListData(pres);
             
         }
         catch(SQLException e)
@@ -103,9 +93,6 @@ public class PatientPanel extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
@@ -195,12 +182,6 @@ public class PatientPanel extends javax.swing.JFrame {
         jLabel4.setText("Sugar Level: ");
 
         jLabel5.setText("Weight: ");
-
-        jLabel6.setText("mmHg");
-
-        jLabel7.setText("mmol/L");
-
-        jLabel8.setText("kg");
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel9.setText("Latest Statistics");
@@ -514,12 +495,7 @@ public class PatientPanel extends javax.swing.JFrame {
                                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(30, 30, 30)
-                                .addComponent(jLabel3)
-                                .addGap(32, 32, 32)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel8)))
+                                .addComponent(jLabel3))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -580,17 +556,14 @@ public class PatientPanel extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel6)
                             .addComponent(bp))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(sugar))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jLabel8)
                             .addComponent(weight))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -631,36 +604,19 @@ public class PatientPanel extends javax.swing.JFrame {
                 upper = JOptionPane.showInputDialog(frame, "Enter a VALID UPPER blood pressure(50-230) mmHg:");
             
             String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
-            bpV.add("["+timeStamp+"] "+lower+"/"+upper+"mmHg");
-            bpLow.add(lower);
-            bpHigh.add(upper);
+            String time  = "["+timeStamp+"] "+lower+"/"+upper+"mmHg";
+            bpV.add(time);
+            //bpLow.add(lower);
+            //bpHigh.add(upper);
             bpEntries.setListData(bpV);
-            patient.setBPTIME(bpV);
-            patient.setHighBP(bpHigh);
-            patient.setLowBP(bpLow);
+            patient.setBP(time,upper,lower);
+            bp.setText(lower+"/"+upper+"mmHg");
+
         }
         catch(NumberFormatException e)
         {
             JOptionPane.showMessageDialog(this,"Enter only numbers"); 
         }
-        /*try
-        {
-            String sql = "SELECT * FROM P"+user;
-            rs = stmt.executeQuery(sql);
-            
-            rs.moveToInsertRow();
-            //rs.updateString("BP", getBP());
-            rs.insertRow();
-            //bpV.add(getBP());
-            bpEntries.setListData(bpV);
-        }
-        catch(SQLException e)
-        {
-            JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            //this.dispose();
-            return;
-        }*/
     }//GEN-LAST:event_newBPActionPerformed
 
     private void newSugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSugarActionPerformed
@@ -673,11 +629,13 @@ public class PatientPanel extends javax.swing.JFrame {
                 sugarEntry = JOptionPane.showInputDialog(frame, "Enter a VALID sugar level mmol/L:");
             
             String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
-            sugarV.add("["+timeStamp+"] "+sugarEntry+"mmHg");
-            sugarL.add(sugarEntry);
+            String time = "["+timeStamp+"] "+sugarEntry+"mmol/L";
+            sugarV.add(time);
+            //sugarL.add(sugarEntry);
             sugarList.setListData(sugarV);
-            patient.setSugar(sugarL);
-            patient.setSugarTime(sugarV);
+            patient.setSugar(time,sugarEntry);
+            //patient.setSugarTime(sugarV);
+            sugar.setText(sugarEntry+"mmol/L");
         }
         catch(NumberFormatException e)
         {
@@ -695,11 +653,12 @@ public class PatientPanel extends javax.swing.JFrame {
                 weightEntry = JOptionPane.showInputDialog(frame, "Enter a VALID sugar level mmol/L:");
             
             String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
-            weightV.add("["+timeStamp+"] "+weightEntry+"mmHg");
+            weightV.add("["+timeStamp+"] "+weightEntry+"kg");
             weightL.add(weightEntry);
             this.weightEntry.setListData(weightV);
             patient.setWeight(weightL);
             patient.setSugarTime(weightV);
+            weight.setText(weightEntry+"kg");
         }
         catch(NumberFormatException e)
         {
@@ -774,9 +733,6 @@ public class PatientPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JList jList2;
     private javax.swing.JList jList3;
