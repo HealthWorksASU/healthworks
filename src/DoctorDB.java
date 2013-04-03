@@ -3,8 +3,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * A database manager interface for doctor accounts.
  */
 
 /**

@@ -1,12 +1,9 @@
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* A generic manager for a user database.
  */
 
 /**
