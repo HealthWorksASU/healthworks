@@ -159,8 +159,8 @@ public class PatientDB extends UserDB
             PreparedStatement pstmt = con.prepareStatement("INSERT INTO P"+username+" (BP, LOWBP, HIGHBP) VALUES(?,?,?)");
  
                 pstmt.setString(1,bp);
-                pstmt.setString(2,bpHigh);
-                pstmt.setString(3,bpLow);
+                pstmt.setString(2,bpLow);
+                pstmt.setString(3,bpHigh);
                 pstmt.executeUpdate();
 
         }
@@ -189,17 +189,23 @@ public class PatientDB extends UserDB
             return;
         }
     }
-    public void setSugarTime(Vector<String> sugarTime)
+    public void setWeight(String weight, String weightTime)
     {
-        
-    }
-    public void setWeight(Vector<String> weight)
-    {
-        
-    }
-    public void setWeightTime(Vector<String> weightTime)
-    {
-        
+        try
+        {
+            PreparedStatement pstmt = con.prepareStatement("INSERT INTO P"+username+" (WEIGHTTIME, WEIGHT) VALUES(?,?)");
+ 
+                pstmt.setString(1,weightTime);
+                pstmt.setString(2,weight);
+                pstmt.executeUpdate();
+
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+            return;
+        }
     }
     public void setDrugs(Vector<String> drugs)
     {
@@ -251,13 +257,23 @@ public class PatientDB extends UserDB
     }
     public String getLatestBP()
     {
-        /*try
+        Vector<String> bplow = new Vector();
+        Vector<String> bphigh = new Vector();
+        String latest = "--";
+        try
         {
             rs = stmt.executeQuery(sql);
             while(rs.next())
-                
+            {
+                bplow.add(rs.getString("LOWBP"));
+                bphigh.add(rs.getString("HIGHBP"));
+            }
             
-            bpV.removeAll(Collections.singleton(null));
+            bplow.removeAll(Collections.singleton(null));
+            bphigh.removeAll(Collections.singleton(null));
+            
+            if(!bphigh.isEmpty()) 
+                latest = bphigh.lastElement() + "/" + bplow.lastElement() + " mmHg";
            
         }
         catch(SQLException e)
@@ -265,8 +281,8 @@ public class PatientDB extends UserDB
             System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
             e.printStackTrace();
         }
-        */
-        return new String();
+        
+        return latest;
     }
     public Vector<String> getSugar()
     {
@@ -288,6 +304,29 @@ public class PatientDB extends UserDB
         
         return sugarV;
     }
+    public String getLatestSugar()
+    {
+        Vector<String> sugar = new Vector();
+        String latest = "--";
+        try
+        {
+            rs = stmt.executeQuery(sql);
+            while(rs.next())
+                sugar.add(rs.getString("SUGAR"));
+            
+            sugar.removeAll(Collections.singleton(null));
+            if(!sugar.isEmpty())
+                latest = sugar.lastElement() + " mmol/L";
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return latest;
+    }
     public Vector<String> getWeight()
     {
         Vector<String> weightV = new Vector();
@@ -307,6 +346,30 @@ public class PatientDB extends UserDB
         }
         
         return weightV;
+    }
+    public String getLatestWeight()
+    {
+        Vector<String> weight = new Vector();
+        String latest = "--";
+        try
+        {
+            rs = stmt.executeQuery(sql);
+            while(rs.next())
+                weight.add(rs.getString("WEIGHT"));
+            
+            weight.removeAll(Collections.singleton(null));
+            
+            if(!weight.isEmpty())
+                latest = weight.lastElement() + " kg";    
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return latest;
     }
     public Vector<String> getDrugs()
     {
