@@ -1,3 +1,9 @@
+
+import java.sql.*;
+import javax.swing.*;
+import java.util.*;
+import java.text.*;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -9,19 +15,71 @@
  */
 public class PatientPanel_NurseView extends javax.swing.JFrame {
 
+    private final String HOST = "jdbc:derby://localhost:1527/information";
+    private String uName = "healthworks";
+    private String password = "healthworks";
+    private Connection con;
+    private Statement stmt;
+    private ResultSet rs;
+    private Vector<String> bpV,bpLow,bpHigh,sugarV,sugarL,weightV,weightL,pres;
+    private String bloodPress;
+    private String user,nurseLogin,nursePass;
+    private PatientDB patient;
     /**
      * Creates new form PatientPanel
      */
     public PatientPanel_NurseView() {
         initComponents();
     }
-
     
-    public PatientPanel_NurseView(String doctorName, String doctorPassword, String patientAccountName)
+    public PatientPanel_NurseView(String nurseLogin, String pass, String userName)
     {
         initComponents();
+        try
+        {
+            user = userName;
+            con = DriverManager.getConnection(HOST,uName,password);
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            String sql = "SELECT * FROM PATIENTS WHERE USERNAME=\'"+user+"\'";
+            rs = stmt.executeQuery(sql);
+            rs.next();
+            
+            this.nurseLogin = nurseLogin;
+            nursePass = pass;
+            userLabel.setText(nurseLogin);
+            name.setText(rs.getString("Firstname") + " "+ rs.getString("Lastname"));
+            address.setText("<html>"+rs.getString("Address")+",<BR>"+rs.getString("city")
+                    +" "+rs.getString("state")+"-"+rs.getString("zip")+"<BR>Phone "+rs.getString("Primephone"));
+            
+            sql = "SELECT * FROM P"+userName;
+            rs = stmt.executeQuery(sql);
+
+            patient = new PatientDB(userName);
+  
+            bpV = patient.getBP();
+            sugarV = patient.getSugar();
+            weightV = patient.getWeight();
+            pres = patient.getDrugs();
+            
+            bp.setText(patient.getLatestBP());
+            sugar.setText(patient.getLatestSugar());
+            weight.setText(patient.getLatestWeight());
+            
+            bpList.setListData(bpV);
+            sugarList.setListData(sugarV);
+            weightList.setListData(weightV);
+            PrescriptionList.setListData(pres);
+            
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+            //this.dispose();
+            return;
+        }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,501 +89,629 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        canvas1 = new java.awt.Canvas();
-        canvas2 = new java.awt.Canvas();
-        jLabel12 = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jList3 = new javax.swing.JList();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        jList5 = new javax.swing.JList();
-        jLabel11 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        jList6 = new javax.swing.JList();
-        jLabel13 = new javax.swing.JLabel();
-        jButton8 = new javax.swing.JButton();
-        jLabel14 = new javax.swing.JLabel();
-        jButton9 = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jScrollPane9 = new javax.swing.JScrollPane();
-        jList7 = new javax.swing.JList();
-        jLabel15 = new javax.swing.JLabel();
-        jButton12 = new javax.swing.JButton();
-        jLabel16 = new javax.swing.JLabel();
-        jButton13 = new javax.swing.JButton();
-        jLabel10 = new javax.swing.JLabel();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        jLabel17 = new javax.swing.JLabel();
-        udpatePersonalInfo = new javax.swing.JButton();
-        jLabel19 = new javax.swing.JLabel();
+        PrescriptionsLabel = new javax.swing.JLabel();
+        PrescriptionsPane = new javax.swing.JScrollPane();
+        PrescriptionList = new javax.swing.JList();
+        CommentsObservationsLabel = new javax.swing.JLabel();
+        AddObservationPane = new javax.swing.JScrollPane();
+        AddObservationPaneTextArea = new javax.swing.JTextArea();
+        SendObservationButton = new javax.swing.JButton();
+        LatestBloodPressureLabel = new javax.swing.JLabel();
+        LatestSugarLevelLabel = new javax.swing.JLabel();
+        LatestWeightLabel = new javax.swing.JLabel();
+        LatestStatisticsLabel = new javax.swing.JLabel();
+        DataPane = new javax.swing.JTabbedPane();
+        BloodPressurePanel = new javax.swing.JPanel();
+        MonthlyAverageBloodPressureLabel = new javax.swing.JLabel();
+        RecentBloodPressureEntriesPane = new javax.swing.JScrollPane();
+        bpList = new javax.swing.JList();
+        RecentBPEntriesLabel = new javax.swing.JLabel();
+        newBP = new javax.swing.JButton();
+        CreateBPGraphButton = new javax.swing.JButton();
+        deleteBP = new javax.swing.JButton();
+        SugarLevelPanel = new javax.swing.JPanel();
+        CreateSLGraphButton = new javax.swing.JButton();
+        SugarLevelPane = new javax.swing.JScrollPane();
+        sugarList = new javax.swing.JList();
+        MonthlySLAverageLabel = new javax.swing.JLabel();
+        RecentSLEntriesLabel = new javax.swing.JLabel();
+        newSugar = new javax.swing.JButton();
+        deleteSugar = new javax.swing.JButton();
+        WeightPanel = new javax.swing.JPanel();
+        WeightCreateGraphButton = new javax.swing.JButton();
+        WeightEntriesScrollPane = new javax.swing.JScrollPane();
+        weightList = new javax.swing.JList();
+        WeightMonthlyAverageLabel = new javax.swing.JLabel();
+        RecentWeightEntriesLabel = new javax.swing.JLabel();
+        newWeight = new javax.swing.JButton();
+        deleteWeight = new javax.swing.JButton();
+        name = new javax.swing.JLabel();
+        CommentsViewScrollPane = new javax.swing.JScrollPane();
+        CommentsViewPane = new javax.swing.JTextPane();
+        back = new javax.swing.JButton();
+        address = new javax.swing.JLabel();
+        updatePersonalInfo = new javax.swing.JButton();
+        bp = new javax.swing.JLabel();
+        sugar = new javax.swing.JLabel();
+        weight = new javax.swing.JLabel();
+        userLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(651, 752));
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(651, 752));
-        setPreferredSize(new java.awt.Dimension(651, 752));
         setResizable(false);
 
-        jLabel1.setText("Prescriptions");
+        PrescriptionsLabel.setText("Prescriptions");
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        PrescriptionList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Isoniazid", "Thallium", "Benzodiazepine", "Atropine" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(jList1);
+        PrescriptionsPane.setViewportView(PrescriptionList);
 
-        jLabel2.setText("Comments/Observations");
+        CommentsObservationsLabel.setText("Comments/Observations");
 
-        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        AddObservationPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        jTextArea2.setLineWrap(true);
-        jTextArea2.setRows(5);
-        jTextArea2.setText("Quisque a vestibulum tortor? ");
-        jTextArea2.setWrapStyleWord(true);
-        jScrollPane3.setViewportView(jTextArea2);
+        AddObservationPaneTextArea.setColumns(20);
+        AddObservationPaneTextArea.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        AddObservationPaneTextArea.setLineWrap(true);
+        AddObservationPaneTextArea.setRows(5);
+        AddObservationPaneTextArea.setText("Quisque a vestibulum tortor? ");
+        AddObservationPaneTextArea.setWrapStyleWord(true);
+        AddObservationPane.setViewportView(AddObservationPaneTextArea);
 
-        jButton1.setText("Send");
+        SendObservationButton.setText("Send");
 
-        jLabel3.setText("Blood Pressure: ");
+        LatestBloodPressureLabel.setText("Blood Pressure: ");
 
-        jLabel4.setText("Sugar Level: ");
+        LatestSugarLevelLabel.setText("Sugar Level: ");
 
-        jLabel5.setText("Weight: ");
+        LatestWeightLabel.setText("Weight: ");
 
-        jLabel6.setText("90 mmHg");
+        LatestStatisticsLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        LatestStatisticsLabel.setText("Latest Statistics");
 
-        jLabel7.setText("2 mmol/L");
+        MonthlyAverageBloodPressureLabel.setText("30-day Average: 88.86 mmHg");
 
-        jLabel8.setText("60 kg");
-
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel9.setText("Latest Statistics");
-
-        jLabel12.setText("30-day Average: 88.86 mmHg");
-
-        jList2.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane4.setViewportView(jList2);
-
-        jList3.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane5.setViewportView(jList3);
-
-        jList5.setModel(new javax.swing.AbstractListModel() {
+        bpList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "[2013-02-09 8:04 PM] 90 mmHg", "[2013-02-08 9:27 PM] 103.5 mmHg", "[2013-02-07 10:13 AM] 91.1 mmHg", "[2013-02-06 5:07 PM] 89.3 mmHg", "[2013-02-05 4:03 PM] 86.4 mmHg", " ", " " };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane7.setViewportView(jList5);
+        RecentBloodPressureEntriesPane.setViewportView(bpList);
 
-        jLabel11.setText("Recent Blood Pressure Entries");
+        RecentBPEntriesLabel.setText("Recent Blood Pressure Entries");
 
-        jButton2.setText("New Entry");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        newBP.setText("New Entry");
+        newBP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                newBPActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Edit Selected");
-
-        jButton4.setText("Delete Selected");
-
-        jButton5.setText("Create Graph");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        CreateBPGraphButton.setText("Create Graph");
+        CreateBPGraphButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                CreateBPGraphButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel11))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel12)))
-                .addContainerGap(66, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+        deleteBP.setText("Delete Selected");
+        deleteBP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBPActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout BloodPressurePanelLayout = new javax.swing.GroupLayout(BloodPressurePanel);
+        BloodPressurePanel.setLayout(BloodPressurePanelLayout);
+        BloodPressurePanelLayout.setHorizontalGroup(
+            BloodPressurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BloodPressurePanelLayout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(newBP)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(CreateBPGraphButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
+            .addGroup(BloodPressurePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane7)
+                .addComponent(RecentBloodPressureEntriesPane)
                 .addContainerGap())
+            .addGroup(BloodPressurePanelLayout.createSequentialGroup()
+                .addGroup(BloodPressurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(BloodPressurePanelLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(MonthlyAverageBloodPressureLabel))
+                    .addGroup(BloodPressurePanelLayout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(RecentBPEntriesLabel))
+                    .addGroup(BloodPressurePanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(deleteBP)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        BloodPressurePanelLayout.setVerticalGroup(
+            BloodPressurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(BloodPressurePanelLayout.createSequentialGroup()
                 .addGap(39, 39, 39)
-                .addComponent(jLabel12)
-                .addGap(11, 11, 11)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(jLabel11)
+                .addComponent(MonthlyAverageBloodPressureLabel)
+                .addGap(6, 6, 6)
+                .addGroup(BloodPressurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newBP, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CreateBPGraphButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
+                .addGap(17, 17, 17)
+                .addComponent(RecentBPEntriesLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addComponent(RecentBloodPressureEntriesPane, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(deleteBP))
         );
 
-        jTabbedPane1.addTab("Blood Pressure", jPanel1);
+        DataPane.addTab("Blood Pressure", BloodPressurePanel);
 
-        jButton6.setText("Create Graph");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        CreateSLGraphButton.setText("Create Graph");
+        CreateSLGraphButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                CreateSLGraphButtonActionPerformed(evt);
             }
         });
 
-        jButton7.setText("Delete Selected");
-
-        jList6.setModel(new javax.swing.AbstractListModel() {
+        sugarList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "[2013-02-09 8:04 PM] 1.86 mmol/L", "[2013-02-08 9:27 PM] 1.93 mmol/L", "[2013-02-07 10:13 AM] 2.15 mmol/L", "[2013-02-06 5:07 PM] 2.3 mmol/L", "[2013-02-05 4:03 PM] 1.6 mmol/L", " ", " " };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane8.setViewportView(jList6);
+        SugarLevelPane.setViewportView(sugarList);
 
-        jLabel13.setText("30-day Average: 2.97 mmol/L");
+        MonthlySLAverageLabel.setText("30-day Average: 2.97 mmol/L");
 
-        jButton8.setText("Edit Selected");
+        RecentSLEntriesLabel.setText("Recent Sugar Level Entries");
 
-        jLabel14.setText("Recent Sugar Level Entries");
-
-        jButton9.setText("New Entry");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        newSugar.setText("New Entry");
+        newSugar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                newSugarActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton7))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel13))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel14)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jButton9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane8)
+        deleteSugar.setText("Delete Selected");
+        deleteSugar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteSugarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout SugarLevelPanelLayout = new javax.swing.GroupLayout(SugarLevelPanel);
+        SugarLevelPanel.setLayout(SugarLevelPanelLayout);
+        SugarLevelPanelLayout.setHorizontalGroup(
+            SugarLevelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(SugarLevelPanelLayout.createSequentialGroup()
+                .addGroup(SugarLevelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(SugarLevelPanelLayout.createSequentialGroup()
+                        .addGroup(SugarLevelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(SugarLevelPanelLayout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(RecentSLEntriesLabel))
+                            .addGroup(SugarLevelPanelLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(MonthlySLAverageLabel))
+                            .addGroup(SugarLevelPanelLayout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(newSugar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 176, Short.MAX_VALUE))
+                    .addGroup(SugarLevelPanelLayout.createSequentialGroup()
+                        .addContainerGap(212, Short.MAX_VALUE)
+                        .addComponent(CreateSLGraphButton, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(21, 21, 21))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SugarLevelPanelLayout.createSequentialGroup()
+                .addComponent(SugarLevelPane)
                 .addContainerGap())
+            .addGroup(SugarLevelPanelLayout.createSequentialGroup()
+                .addComponent(deleteSugar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        SugarLevelPanelLayout.setVerticalGroup(
+            SugarLevelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(SugarLevelPanelLayout.createSequentialGroup()
                 .addGap(39, 39, 39)
-                .addComponent(jLabel13)
+                .addComponent(MonthlySLAverageLabel)
+                .addGap(7, 7, 7)
+                .addGroup(SugarLevelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(CreateSLGraphButton, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                    .addComponent(newSugar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(RecentSLEntriesLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton8)
-                    .addComponent(jButton7))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addComponent(SugarLevelPane, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(deleteSugar))
         );
 
-        jTabbedPane1.addTab("Sugar Level", jPanel2);
+        DataPane.addTab("Sugar Level", SugarLevelPanel);
 
-        jButton10.setText("Create Graph");
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        WeightCreateGraphButton.setText("Create Graph");
+        WeightCreateGraphButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                WeightCreateGraphButtonActionPerformed(evt);
             }
         });
 
-        jButton11.setText("Delete Selected");
-
-        jList7.setModel(new javax.swing.AbstractListModel() {
+        weightList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "[2013-02-09 8:04 PM] 60 kg", "[2013-02-08 9:27 PM] 58 kg", "[2013-02-07 10:13 AM] 62 kg", "[2013-02-06 5:07 PM] 64 kg", "[2013-02-05 4:03 PM] 59 kg", " ", " " };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane9.setViewportView(jList7);
+        WeightEntriesScrollPane.setViewportView(weightList);
 
-        jLabel15.setText("30-day Average: 58 kg");
+        WeightMonthlyAverageLabel.setText("30-day Average: 58 kg");
 
-        jButton12.setText("Edit Selected");
+        RecentWeightEntriesLabel.setText("Recent Weight Entries");
 
-        jLabel16.setText("Recent Weight Entries");
-
-        jButton13.setText("New Entry");
-        jButton13.addActionListener(new java.awt.event.ActionListener() {
+        newWeight.setText("New Entry");
+        newWeight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton13ActionPerformed(evt);
+                newWeightActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel15)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jButton13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
-                                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel16))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton11)))
-                .addGap(26, 26, 26))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane9)
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(jLabel15)
-                .addGap(7, 7, 7)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+        deleteWeight.setText("Delete Selected");
+        deleteWeight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteWeightActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout WeightPanelLayout = new javax.swing.GroupLayout(WeightPanel);
+        WeightPanel.setLayout(WeightPanelLayout);
+        WeightPanelLayout.setHorizontalGroup(
+            WeightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(WeightPanelLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel16)
+                .addComponent(WeightMonthlyAverageLabel)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, WeightPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(WeightCreateGraphButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
+            .addGroup(WeightPanelLayout.createSequentialGroup()
+                .addGroup(WeightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(WeightPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(WeightEntriesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE))
+                    .addGroup(WeightPanelLayout.createSequentialGroup()
+                        .addGroup(WeightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(WeightPanelLayout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(newWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(WeightPanelLayout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(RecentWeightEntriesLabel)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(WeightPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(deleteWeight)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        WeightPanelLayout.setVerticalGroup(
+            WeightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(WeightPanelLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addComponent(WeightMonthlyAverageLabel)
+                .addGap(7, 7, 7)
+                .addGroup(WeightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(WeightCreateGraphButton, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                    .addComponent(newWeight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(RecentWeightEntriesLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton12)
-                    .addComponent(jButton11))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addComponent(WeightEntriesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(deleteWeight))
         );
 
-        jTabbedPane1.addTab("Weight", jPanel3);
+        DataPane.addTab("Weight", WeightPanel);
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel10.setText("Luis Gonzalez");
+        name.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        name.setText("Luis Gonzalez");
 
-        jTextPane1.setEditable(false);
-        jTextPane1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jTextPane1.setText("[DrHouse] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut accumsan orci in tellus rutrum tempus. \n[Luis] Donec non quam justo, at scelerisque ante? \n[DrHouse] Aliquam erat volutpat. Donec porttitor, elit sit amet accumsan consequat, massa augue varius nulla, quis ornare quam quam a erat.");
-        jScrollPane6.setViewportView(jTextPane1);
+        CommentsViewPane.setEditable(false);
+        CommentsViewPane.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        CommentsViewPane.setText("[DrHouse] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut accumsan orci in tellus rutrum tempus. \n[You] Donec non quam justo, at scelerisque ante? \n[DrHouse] Aliquam erat volutpat. Donec porttitor, elit sit amet accumsan consequat, massa augue varius nulla, quis ornare quam quam a erat.");
+        CommentsViewScrollPane.setViewportView(CommentsViewPane);
 
-        jLabel17.setText("<html>200 S Ash Ave,<BR>Phoenix AZ - 85011<BR>Phone (480)-555-5555<html>");
-
-        udpatePersonalInfo.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
-        udpatePersonalInfo.setText("Edit Personal Info");
-        udpatePersonalInfo.addActionListener(new java.awt.event.ActionListener() {
+        back.setText("Back");
+        back.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                udpatePersonalInfoActionPerformed(evt);
+                backActionPerformed(evt);
             }
         });
 
-        jLabel19.setText("Signed in as Nurse Mary");
+        address.setText("<html>200 S Ash Ave,<BR>Phoenix AZ - 85011<BR>Phone (480)-555-5555<html>");
+
+        updatePersonalInfo.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
+        updatePersonalInfo.setText("Edit Personal Info");
+        updatePersonalInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updatePersonalInfoActionPerformed(evt);
+            }
+        });
+
+        bp.setText("--");
+
+        sugar.setText("--");
+
+        weight.setText("--");
+
+        userLabel.setText("nurseID");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(SendObservationButton)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
+                                    .addComponent(LatestSugarLevelLabel)
+                                    .addComponent(LatestWeightLabel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel7)))
-                            .addComponent(jLabel9)))
+                                    .addComponent(bp)
+                                    .addComponent(sugar)
+                                    .addComponent(weight)))
+                            .addComponent(LatestStatisticsLabel)
+                            .addComponent(DataPane, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(udpatePersonalInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(48, 48, 48)
-                        .addComponent(jLabel10)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1)
+                        .addGap(30, 30, 30)
+                        .addComponent(LatestBloodPressureLabel))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addComponent(jButton1))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(updatePersonalInfo))
+                        .addGap(65, 65, 65)
+                        .addComponent(name)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(CommentsViewScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(AddObservationPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(CommentsObservationsLabel)
+                                    .addComponent(PrescriptionsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(PrescriptionsLabel))
+                                .addContainerGap())))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(userLabel)
+                                .addGap(17, 17, 17))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(back)
+                                .addContainerGap())))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel19)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(udpatePersonalInfo)
-                .addGap(26, 26, 26)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updatePersonalInfo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(userLabel)
+                        .addGap(4, 4, 4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(back)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(name)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(PrescriptionsLabel)))))
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
+                        .addGap(0, 237, Short.MAX_VALUE)
+                        .addComponent(CommentsObservationsLabel)
                         .addGap(7, 7, 7)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(CommentsViewScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addGap(31, 31, 31))
+                        .addComponent(AddObservationPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9)
+                        .addComponent(PrescriptionsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(LatestStatisticsLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel6))
+                            .addComponent(LatestBloodPressureLabel)
+                            .addComponent(bp))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel7))
+                            .addComponent(LatestSugarLevelLabel)
+                            .addComponent(sugar))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel8))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(57, 57, 57))))
+                            .addComponent(LatestWeightLabel)
+                            .addComponent(weight))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(DataPane, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(SendObservationButton)
+                .addGap(31, 31, 31))
         );
 
-        jTabbedPane1.getAccessibleContext().setAccessibleName("Blood Pressure");
+        DataPane.getAccessibleContext().setAccessibleName("Blood Pressure");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void CreateBPGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBPGraphButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_CreateBPGraphButtonActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void CreateSLGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateSLGraphButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_CreateSLGraphButtonActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    private void WeightCreateGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WeightCreateGraphButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton10ActionPerformed
+    }//GEN-LAST:event_WeightCreateGraphButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void newBPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBPActionPerformed
+        //JOptionPane to be implemented here
+        String lower,upper;
+        JFrame frame = new JFrame();
+        try
+        {
+            lower = JOptionPane.showInputDialog(frame, "Enter lower blood pressure bound (mmHg):");
+            while(Integer.parseInt(lower)<50 || Integer.parseInt(lower) > 230)
+                lower = JOptionPane.showInputDialog(frame, "Enter a VALID LOWEER blood pressure(50-230) mmHg:");
+            
+            upper = JOptionPane.showInputDialog(frame, "Enter an upper blood pressure bound (mmHg):");
+            while(Integer.parseInt(upper)<50 || Integer.parseInt(upper)>230 || (Integer.parseInt(upper) < Integer.parseInt(lower)))
+                upper = JOptionPane.showInputDialog(frame, "Enter a VALID UPPER blood pressure(50-230) mmHg:");
+            
+            String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
+            String time  = "["+timeStamp+"] "+lower+"/"+upper+"mmHg";
+            bpV.add(time);
+            //bpLow.add(lower);
+            //bpHigh.add(upper);
+            bpList.setListData(bpV);
+            patient.setBP(time,upper,lower);
+            bp.setText(patient.getLatestBP());
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton9ActionPerformed
+        }
+        catch(NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this,"Enter only numbers"); 
+        }
+    }//GEN-LAST:event_newBPActionPerformed
 
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton13ActionPerformed
+    private void newSugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSugarActionPerformed
+        String sugarEntry;
+        JFrame frame = new JFrame();
+        try
+        {
+            sugarEntry = JOptionPane.showInputDialog(frame, "Enter sugar level (mmol/L):");
+            while(Integer.parseInt(sugarEntry)<0)
+                sugarEntry = JOptionPane.showInputDialog(frame, "Enter a VALID sugar level mmol/L:");
+            
+            String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
+            String time = "["+timeStamp+"] "+sugarEntry+"mmol/L";
+            sugarV.add(time);
+            //sugarL.add(sugarEntry);
+            sugarList.setListData(sugarV);
+            patient.setSugar(time,sugarEntry);
+            //patient.setSugarTime(sugarV);
+            sugar.setText(patient.getLatestSugar());
+        }
+        catch(NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this,"Enter only numbers"); 
+        }
+    }//GEN-LAST:event_newSugarActionPerformed
 
-    private void udpatePersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_udpatePersonalInfoActionPerformed
+    private void newWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newWeightActionPerformed
+       String weightEntry;
+        JFrame frame = new JFrame();
+        try
+        {
+            weightEntry = JOptionPane.showInputDialog(frame, "Enter sugar level (mmol/L):");
+            while(Integer.parseInt(weightEntry)<0)
+                weightEntry = JOptionPane.showInputDialog(frame, "Enter a VALID sugar level mmol/L:");
+            
+            String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
+            String time = "["+timeStamp+"] "+weightEntry+"kg";
+            weightV.add(time);
+            //weightL.add(weightEntry);
+            this.weightList.setListData(weightV);
+            patient.setWeight(weightEntry,time);
+            weight.setText(patient.getLatestWeight());
+        }
+        catch(NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this,"Enter only numbers"); 
+        }
+    }//GEN-LAST:event_newWeightActionPerformed
+
+    private void updatePersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatePersonalInfoActionPerformed
         new PatientEditInfo().setVisible(true);
-    }//GEN-LAST:event_udpatePersonalInfoActionPerformed
+    }//GEN-LAST:event_updatePersonalInfoActionPerformed
+
+    private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
+
+            this.dispose();
+            new NurseView(nurseLogin,nursePass).setVisible(true);  
+    }//GEN-LAST:event_backActionPerformed
+
+    private void deleteWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteWeightActionPerformed
+        String select = (String)weightList.getSelectedValue();
+        int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this?", "Delete Weight Entry",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION)
+        {
+            if(patient.searchAndDeleteWeight(select))
+            {
+                JOptionPane.showMessageDialog(this, "Entry Deleted");
+                weightV = patient.getWeight();
+                weightList.setListData(weightV);
+                weight.setText(patient.getLatestWeight());
+            }
+            else
+                JOptionPane.showMessageDialog(this, "Entry could not be deleted");
+        }
+    }//GEN-LAST:event_deleteWeightActionPerformed
+
+    private void deleteSugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSugarActionPerformed
+        String select = (String)sugarList.getSelectedValue();
+        int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this?", "Delete Sugar Entry",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION)
+        {
+            if(patient.searchAndDeleteSugar(select))
+            {
+                JOptionPane.showMessageDialog(this, "Entry Deleted");
+                sugarV = patient.getSugar();
+                sugarList.setListData(sugarV);
+                sugar.setText(patient.getLatestSugar());
+            }
+            else
+                JOptionPane.showMessageDialog(this, "Entry could not be deleted");
+        }
+    }//GEN-LAST:event_deleteSugarActionPerformed
+
+    private void deleteBPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBPActionPerformed
+        String select = (String)bpList.getSelectedValue();
+        int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this?", "Delete BP Entry",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION)
+        {
+            if(patient.searchAndDeleteBP(select))
+            {
+                JOptionPane.showMessageDialog(this, "Entry Deleted");
+                bpV = patient.getBP();
+                bpList.setListData(bpV);
+                bp.setText(patient.getLatestBP());
+            }
+            else
+                JOptionPane.showMessageDialog(this, "Entry could not be deleted");
+        }
+    }//GEN-LAST:event_deleteBPActionPerformed
 
     /**
      * @param args the command line arguments
@@ -562,59 +748,51 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Canvas canvas1;
-    private java.awt.Canvas canvas2;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
-    private javax.swing.JList jList3;
-    private javax.swing.JList jList5;
-    private javax.swing.JList jList6;
-    private javax.swing.JList jList7;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JScrollPane jScrollPane9;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JButton udpatePersonalInfo;
+    private javax.swing.JScrollPane AddObservationPane;
+    private javax.swing.JTextArea AddObservationPaneTextArea;
+    private javax.swing.JPanel BloodPressurePanel;
+    private javax.swing.JLabel CommentsObservationsLabel;
+    private javax.swing.JTextPane CommentsViewPane;
+    private javax.swing.JScrollPane CommentsViewScrollPane;
+    private javax.swing.JButton CreateBPGraphButton;
+    private javax.swing.JButton CreateSLGraphButton;
+    private javax.swing.JTabbedPane DataPane;
+    private javax.swing.JLabel LatestBloodPressureLabel;
+    private javax.swing.JLabel LatestStatisticsLabel;
+    private javax.swing.JLabel LatestSugarLevelLabel;
+    private javax.swing.JLabel LatestWeightLabel;
+    private javax.swing.JLabel MonthlyAverageBloodPressureLabel;
+    private javax.swing.JLabel MonthlySLAverageLabel;
+    private static javax.swing.JList PrescriptionList;
+    private javax.swing.JLabel PrescriptionsLabel;
+    private javax.swing.JScrollPane PrescriptionsPane;
+    private javax.swing.JLabel RecentBPEntriesLabel;
+    private javax.swing.JScrollPane RecentBloodPressureEntriesPane;
+    private javax.swing.JLabel RecentSLEntriesLabel;
+    private javax.swing.JLabel RecentWeightEntriesLabel;
+    private javax.swing.JButton SendObservationButton;
+    private javax.swing.JScrollPane SugarLevelPane;
+    private javax.swing.JPanel SugarLevelPanel;
+    private javax.swing.JButton WeightCreateGraphButton;
+    private javax.swing.JScrollPane WeightEntriesScrollPane;
+    private javax.swing.JLabel WeightMonthlyAverageLabel;
+    private javax.swing.JPanel WeightPanel;
+    private static javax.swing.JLabel address;
+    protected static javax.swing.JButton back;
+    private static javax.swing.JLabel bp;
+    private javax.swing.JList bpList;
+    private javax.swing.JButton deleteBP;
+    private javax.swing.JButton deleteSugar;
+    private static javax.swing.JButton deleteWeight;
+    private static javax.swing.JLabel name;
+    private javax.swing.JButton newBP;
+    private static javax.swing.JButton newSugar;
+    private static javax.swing.JButton newWeight;
+    private static javax.swing.JLabel sugar;
+    private static javax.swing.JList sugarList;
+    private javax.swing.JButton updatePersonalInfo;
+    private javax.swing.JLabel userLabel;
+    private static javax.swing.JLabel weight;
+    private javax.swing.JList weightList;
     // End of variables declaration//GEN-END:variables
 }
