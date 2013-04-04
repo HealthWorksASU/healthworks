@@ -36,10 +36,10 @@ public class PatientRegister extends javax.swing.JFrame
         effDate.setText("");
         fName.setText("");
         lName.setText("");
-        primPhone.setText("XXX-XXX-XXXX");
-        otherPhone.setText("XXX-XXX-XXXX");
-        phoneNum.setText("XXX-XXX-XXXX");
-        ePhone.setText("XXX-XXX-XXXX");
+        primPhone.setText("XXXXXXXXXX");
+        otherPhone.setText("XXXXXXXXXX");
+        phoneNum.setText("XXXXXXXXXX");
+        ePhone.setText("XXXXXXXXXX");
         zip.setText("");
         age.setText("XXX");
         persEmail.setText("");
