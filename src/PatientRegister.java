@@ -170,7 +170,9 @@ public class PatientRegister extends javax.swing.JFrame
         f = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(615, 630));
         setMinimumSize(new java.awt.Dimension(615, 630));
+        setPreferredSize(new java.awt.Dimension(615, 630));
         setResizable(false);
 
         jLabel3.setText("Enter desired account name:");
