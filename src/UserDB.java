@@ -116,7 +116,14 @@ abstract class UserDB {
     {
         return queryField("PASSWORD");
     }
-    
+    public String getFirstName() throws SQLException
+    {
+        return queryField("firstname");
+    }
+    public String getLasrName() throws SQLException
+    {
+        return queryField("lastname");
+    }
     public boolean verifyPassword(String inputPW) throws SQLException
     {
         return inputPW.compareTo(getPassword())==0;
