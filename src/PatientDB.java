@@ -13,15 +13,7 @@ import javax.swing.JOptionPane;
 
 public class PatientDB extends UserDB
 {
-    private final String HOST = "jdbc:derby://localhost:1527/information";
-    private String uName = "healthworks";
-    private String password = "healthworks";
-    private Connection con;
-    private Statement stmt;
-    private ResultSet rs, rsPat;  
-    private PreparedStatement prep;
     private String username;
-    private String sql;
     private String latestBP,latestSugar,latestWeight;
         
     public PatientDB(String username)
@@ -29,135 +21,68 @@ public class PatientDB extends UserDB
         super(username);
         this.userTableName="PATIENTS";
         this.username = username;
-        //to open the PATIENTS table to store information
-        try
-        {
-            con = DriverManager.getConnection(HOST,uName,password);
-            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-            
-            //con.setAutoCommit(false);
-   
-            sql = "SELECT * FROM P"+username;
-            
-            prep = con.prepareStatement("INSERT INTO PATIENTS(FIRSTNAME,LASTNAME,PRIMEPHONE,OTHERPHONE,DOB,AGE,GENDER,STATUS,PERSONALEMAIL,"+
-                    "ADDRESS,CITY,STATE,ZIP,EMERGENCYNAME,EMERGENCYPH,EMERGENCYREL,USERNAME,PASSWORD,EMAIL,DOCTOR," +  
-                    "INSURANCE,INSUREDNAME,DATEOFBIRTH,SOCSEC,RELATION,PHONENUM,POLICYNUM,GROUPNUM,EFFDATE)"+
-                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }      
     }
-    public void setPersonalInfo(String first, String last,String primePhone, String otherPhone, String gender, String status, String age, String birth, String pEmail)
+    
+    public void createTable() throws SQLException
     {
-        try
-        {   
-            prep.setString(1, first);
-            prep.setString(2, last);
-            prep.setString(3, primePhone);
-            prep.setString(4, otherPhone);
-            prep.setString(5, birth);
-            prep.setString(6, age);
-            prep.setString(7, gender);
-            prep.setString(8, status);
-            prep.setString(9, pEmail);
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
+        String createTable = "CREATE TABLE PATIENTS_"+username+" (id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                        + "bp VARCHAR(255), sugar VARCHAR(255), weight VARCHAR(255), drugs VARCHAR(255), observations VARCHAR(2500), "
+                        + "LOWBP VARCHAR(2500), HIGHBP VARCHAR(2500), SUGARTIME VARCHAR(2500), WEIGHTTIME VARCHAR(2500))";
+        PreparedStatement prep = con.prepareStatement(createTable);
+        prep.executeUpdate();
     }
-    public void setAddress(String add, String city, String state, String zip)
+    
+    public void setPersonalInfo(String first, String last,String primePhone, 
+            String otherPhone, String gender, String status, String age, 
+            String birth, String pEmail) throws SQLException
     {
-        try
-        {         
-            prep.setString(10, add);
-            prep.setString(11, city);
-            prep.setString(12, state);
-            prep.setString(13, zip);   
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
+        setField("firstname",first);
+        setField("lastname",last);
+        setField("primephone",primePhone);
+        setField("otherphone",otherPhone);
+        setField("dob",birth);
+        setField("age",age);
+        setField("gender",gender);
+        setField("status",status);
+        setField("personalemail",pEmail);
     }
-    public void setEmergencyInfo(String name, String number, String relation)
+    public void setAddress(String add, String city, String state, String zip) throws SQLException
     {
-        try
-        {
-            prep.setString(14, name);
-            prep.setString(15, number);
-            prep.setString(16, relation);
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
+        setField("address",add);
+        setField("city",city);
+        setField("state",state);
+        setField("zip",zip);
     }
-    public void setInsuranceInfo(String insurance, String name, String birth, String ssn, String relation, String phone, String policy, String group, String date)
+    public void setEmergencyInfo(String name, String number, String relation) throws SQLException
     {
-        try
-        {
-            prep.setString(21, insurance);
-            prep.setString(22, name);
-            prep.setString(23, birth);
-            prep.setString(24, ssn);
-            prep.setString(25, relation);
-            prep.setString(26, phone);
-            prep.setString(27, policy);
-            prep.setString(28, group);
-            prep.setString(29, date);
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
+        setField("emergencyname",name);
+        setField("emergencyph",number);
+        setField("emergencyrel",relation);
     }
-    public void setRegistrationInfo(String id, String pass, String doctor, String email)
+    public void setInsuranceInfo(String insurance, String name, String birth, 
+            String ssn, String relation, String phone, String policy, 
+            String group, String date) throws SQLException
     {
-        try
-        {  
-            prep.setString(17, id);
-            prep.setString(18, pass);
-            prep.setString(19, email);   
-            prep.setString(20, doctor); 
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
+        setField("insurance",insurance);
+        setField("insuredname",name);
+        setField("dateofbirth",birth);
+        setField("socsec",ssn);
+        setField("relation",relation);
+        setField("phonenum",phone);
+        setField("policynum",policy);
+        setField("groupnum",group);
+        setField("effdate",date);
     }
-    public void update()
+    public void setDoctor(String doctor) throws SQLException
     {
-        try
-        {
-            prep.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
+        setField("doctor",doctor);
     }
+    
     public void setBP(String bp, String bpHigh, String bpLow)
     {
         try
         {
-            PreparedStatement pstmt = con.prepareStatement("INSERT INTO P"+username+" (BP, LOWBP, HIGHBP) VALUES(?,?,?)");
+            PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (BP, LOWBP, HIGHBP) VALUES(?,?,?)");
  
                 pstmt.setString(1,bp);
                 pstmt.setString(2,bpLow);
@@ -176,7 +101,7 @@ public class PatientDB extends UserDB
     {
         try
         {
-            PreparedStatement pstmt = con.prepareStatement("INSERT INTO P"+username+" (SUGARTIME, SUGAR) VALUES(?,?)");
+            PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (SUGARTIME, SUGAR) VALUES(?,?)");
  
                 pstmt.setString(1,sugarTime);
                 pstmt.setString(2,sugar);
@@ -194,7 +119,7 @@ public class PatientDB extends UserDB
     {
         try
         {
-            PreparedStatement pstmt = con.prepareStatement("INSERT INTO P"+username+" (WEIGHTTIME, WEIGHT) VALUES(?,?)");
+            PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (WEIGHTTIME, WEIGHT) VALUES(?,?)");
  
                 pstmt.setString(1,weightTime);
                 pstmt.setString(2,weight);
@@ -210,11 +135,12 @@ public class PatientDB extends UserDB
     }
     public boolean searchAndDeleteWeight(String toRemove)
     {
-        String remove = "DELETE FROM P"+username+" WHERE WEIGHTTIME = \'"+toRemove+"\'";
+        String remove = "DELETE FROM PATIENTS_"+username+" WHERE WEIGHTTIME = \'"+toRemove+"\'";
         
         try
         {
-            stmt.executeUpdate(remove);
+            PreparedStatement prep=con.prepareStatement(remove);
+            prep.executeUpdate();
             return true;
         }
         catch(SQLException e)
@@ -224,11 +150,12 @@ public class PatientDB extends UserDB
     }
     public boolean searchAndDeleteSugar(String toRemove)
     {
-        String remove = "DELETE FROM P"+username+" WHERE SUGARTIME = \'"+toRemove+"\'";
+        String remove = "DELETE FROM PATIENTS_"+username+" WHERE SUGARTIME = \'"+toRemove+"\'";
         
         try
         {
-            stmt.executeUpdate(remove);
+            PreparedStatement prep=con.prepareStatement(remove);
+            prep.executeUpdate();
             return true;
         }
         catch(SQLException e)
@@ -242,7 +169,8 @@ public class PatientDB extends UserDB
         
         try
         {
-            stmt.executeUpdate(remove);
+            PreparedStatement prep=con.prepareStatement(remove);
+            prep.executeUpdate();
             return true;
         }
         catch(SQLException e)
@@ -283,7 +211,8 @@ public class PatientDB extends UserDB
         Vector<String> bpV = new Vector();
         try
         {
-            rs = stmt.executeQuery(sql);
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
             while(rs.next())
                 bpV.add(rs.getString("BP"));
             
@@ -305,7 +234,8 @@ public class PatientDB extends UserDB
         String latest = "--";
         try
         {
-            rs = stmt.executeQuery(sql);
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
             while(rs.next())
             {
                 bplow.add(rs.getString("LOWBP"));
@@ -332,7 +262,8 @@ public class PatientDB extends UserDB
         Vector<String> sugarV = new Vector();
         try
         {
-            rs = stmt.executeQuery(sql);
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
             while(rs.next())
                 sugarV.add(rs.getString("SUGARTIME"));
             
@@ -353,7 +284,8 @@ public class PatientDB extends UserDB
         String latest = "--";
         try
         {
-            rs = stmt.executeQuery(sql);
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
             while(rs.next())
                 sugar.add(rs.getString("SUGAR"));
             
@@ -375,7 +307,8 @@ public class PatientDB extends UserDB
         Vector<String> weightV = new Vector();
         try
         {
-            rs = stmt.executeQuery(sql);
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
             while(rs.next())
                 weightV.add(rs.getString("WEIGHTTIME"));
            
@@ -396,7 +329,8 @@ public class PatientDB extends UserDB
         String latest = "--";
         try
         {
-            rs = stmt.executeQuery(sql);
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
             while(rs.next())
                 weight.add(rs.getString("WEIGHT"));
             
@@ -419,7 +353,8 @@ public class PatientDB extends UserDB
         Vector<String> pres = new Vector();
         try
         {
-            rs = stmt.executeQuery(sql);
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
             while(rs.next())
                 pres.add(rs.getString("DRUGS"));
             

@@ -240,7 +240,7 @@ public class DoctorRegister extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(DoctorRegister.this,"Success! Your account has been registered.");
         //Close this GUI and bring up the login.
         this.dispose();
-        new LoginScreen().setVisible(true);
+        //new LoginScreen().setVisible(true);
        }
        catch(SQLException e)
        {

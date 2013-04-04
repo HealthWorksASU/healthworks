@@ -21,6 +21,33 @@ public class PatientRegister extends javax.swing.JFrame
         initComponents();
         buttonGroup1.add(m);
         buttonGroup1.add(f);
+        userID.setText("");
+        password.setText("");
+        confirmPassword.setText("");
+        email.setText("");
+        insuranceName.setSelectedItem(-1);
+        name.setText("");
+        DOB.setText("");
+        socSec.setText("XXXXXXXXX");
+        relationTo.setText("");
+        policyNum.setText("");
+        effDate.setText("");
+        fName.setText("");
+        lName.setText("");
+        primPhone.setText("XXX-XXX-XXXX");
+        otherPhone.setText("XXX-XXX-XXXX");
+        phoneNum.setText("XXX-XXX-XXXX");
+        ePhone.setText("XXX-XXX-XXXX");
+        zip.setText("");
+        age.setText("XXX");
+        persEmail.setText("");
+        address.setText("");
+        city.setText("");
+        state.setText("");
+        eName.setText("");
+        eRelation.setText("");
+        
+        
     }
 
     /**
@@ -583,11 +610,11 @@ public class PatientRegister extends javax.swing.JFrame
     private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
        try
        {
-        final String HOST = "jdbc:derby://localhost:1527/information";
-        String uName = "healthworks";
-        String password = "healthworks";
-        Connection con = DriverManager.getConnection(HOST,uName,password);
-        Statement stmt = con.createStatement();
+        //final String HOST = "jdbc:derby://localhost:1527/information";
+        //String uName = "healthworks";
+        //String password = "healthworks";
+        //Connection con = DriverManager.getConnection(HOST,uName,password);
+        //Statement stmt = con.createStatement();
         
         long pPhone,oPhone,emPhone,phoneNumber; int Zip,Age;
         boolean flag = false;
@@ -614,7 +641,7 @@ public class PatientRegister extends javax.swing.JFrame
         }
         catch(NumberFormatException e)
         {
-            JOptionPane.showMessageDialog(PatientRegister.this, "Enter a valiud phone number");
+            JOptionPane.showMessageDialog(PatientRegister.this, "Enter a valid phone number");
             return;
         }
         try
@@ -642,20 +669,25 @@ public class PatientRegister extends javax.swing.JFrame
         String emName = eName.getText();
         String emRelation = eRelation.getText();
 
-        String sql = "SELECT * FROM Patients";
-        ResultSet rs = stmt.executeQuery(sql);
+        //String sql = "SELECT * FROM Patients";
+        //ResultSet rs = stmt.executeQuery(sql);
         
         //checks if user id is taken or not
-        while(rs.next())
+        //while(rs.next())
+        //{
+         //   String dbID = rs.getString("USERNAME");
+           // if(dbID.equals(id))
+            //{
+            //    flag = true;
+            //    break;
+           // }
+       // }
+        PatientDB newPatient= new PatientDB(id);
+        if (newPatient.accountExists())
         {
-            String dbID = rs.getString("USERNAME");
-            if(dbID.equals(id))
-            {
-                flag = true;
-                break;
-            }
+            JOptionPane.showMessageDialog(PatientRegister.this, "The username "+id+" has already been taken.");
+            return;
         }
-
         //validating all entries
         if(socSec.getText().length() != 9 )
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a valid 9 digit Social Security number");
@@ -726,25 +758,23 @@ public class PatientRegister extends javax.swing.JFrame
                 String doc = (String)(docList.getSelectedItem());
                 String status = (String)(marraige.getSelectedItem());
                 String gender;
-                if(m.isSelected())
-                    gender = "0";
-                else
-                    gender = "1";
+                if(m.isSelected()) {
+                        gender = "0";
+                    }
+                else {
+                       gender = "1";
+                    }
           
-                PatientDB newPatient = new PatientDB(id);
-
-                newPatient.setRegistrationInfo(id, pass, doc, emailID);
+                newPatient.createAccount(first,last,pass,emailID);
+                newPatient.createTable();
+                newPatient.setDoctor(doc);
                 newPatient.setEmergencyInfo(emName, ePhone.getText(), emRelation);
                 newPatient.setPersonalInfo(first,last,primPhone.getText(),otherPhone.getText(),gender,status,age.getText(),dateBirth.getText(),pEmail);
                 newPatient.setInsuranceInfo(insurance, insuredName, dateOfBirth,socSec.getText(),relation,phoneNum.getText(),policyNumber,groupNumber,effectiveDate);
                 newPatient.setAddress(add, City, State, zip.getText());
-                newPatient.update();
+
                 
-                String createTable = "CREATE TABLE P"+id+" (id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
-                        + "bp VARCHAR(255), sugar VARCHAR(255), weight VARCHAR(255), drugs VARCHAR(255), observations VARCHAR(2500), "
-                        + "LOWBP VARCHAR(2500), HIGHBP VARCHAR(2500), SUGARTIME VARCHAR(2500), WEIGHTTIME VARCHAR(2500))";
-                stmt.executeUpdate(createTable);
-                
+                JOptionPane.showMessageDialog(this,"Registration successful!");
                 dispose();
         }
        }

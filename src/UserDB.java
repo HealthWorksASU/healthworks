@@ -47,7 +47,6 @@ abstract class UserDB {
         
         ensureConnection();
         PreparedStatement prep = con.prepareStatement("INSERT INTO "+userTableName+"(USERNAME,PASSWORD,EMAIL,FIRSTNAME,LASTNAME) VALUES(?,?,?,?,?)");
-
         prep.setString(1,user);
         prep.setString(2,password);
         prep.setString(3,email);
@@ -55,6 +54,7 @@ abstract class UserDB {
         prep.setString(5,lastName);
         
         prep.executeUpdate();
+        
     }
     public void setAccountDetails(String firstName, String lastName, String password, String email) throws SQLException
     {
@@ -95,6 +95,16 @@ abstract class UserDB {
         ResultSet rs=prep.executeQuery();
         rs.next();
         return rs.getString(field);
+    }
+    
+    protected void setField(String field, String value) throws SQLException
+    {
+        ensureConnection();
+        PreparedStatement prep = con.prepareStatement("UPDATE "+userTableName+" SET "+field+" = ? WHERE username = ?");
+
+        prep.setString(1,value);
+        prep.setString(2,user);
+        prep.executeUpdate();
     }
     
     public String getEmail() throws SQLException

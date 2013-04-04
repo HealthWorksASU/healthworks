@@ -45,15 +45,15 @@ public class DoctorDB extends UserDB
         PreparedStatement prep = con.prepareStatement("SELECT * FROM VERIFICATION_TABLES WHERE verification_code = ? ", 
                 ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
         prep.setString(1,code);
-        ResultSet rs=prep.executeQuery();        
+        ResultSet rs=prep.executeQuery(); 
         if(!rs.isBeforeFirst()) {
             return false;
         }
         else
         {
-            prep = con.prepareStatement("DROP ? ON VERIFICATION_CODES");
-            prep.setString(1,code);
-            prep.executeUpdate();
+            PreparedStatement stmt = con.prepareStatement("DELETE FROM VERIFICATION_TABLES WHERE verification_code = ?");
+            stmt.setString(1,code);
+            stmt.executeUpdate();
             return true;
         }
     }
