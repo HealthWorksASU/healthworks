@@ -16,7 +16,6 @@ public class DoctorDB extends UserDB
     {
         super(_user);
         this.userTableName="DOCTORS";
-        System.out.println("DOCTOR CONSTRUCTOR:"+userTableName);
     }
     
     //Gets the doctor's used verification code

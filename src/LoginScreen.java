@@ -231,6 +231,7 @@ public class LoginScreen extends javax.swing.JFrame {
                         new PatientPanel(accountName,accountPassword).setVisible(true);
                         break;
                 }
+               this.dispose();
            }
            
        }

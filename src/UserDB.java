@@ -14,7 +14,7 @@ abstract class UserDB {
     protected static final String databaseHOST="jdbc:derby://localhost:1527/information";
     protected static final String databaseUserName="healthworks";
     protected static final String databaseUserPassword="healthworks";
-    protected String userTableName; //Overriding classes should change this
+    protected String userTableName; //Overriding classes should change this in their constructor
     
     protected String user;
     protected Connection con;
@@ -35,7 +35,7 @@ abstract class UserDB {
     public boolean accountExists() throws SQLException
     {
         ensureConnection();
-        PreparedStatement prep = con.prepareStatement("SELECT * FROM "+userTableName+" WHERE username= ? ", 
+        PreparedStatement prep = con.prepareStatement("SELECT 1 FROM "+userTableName+" WHERE username= ? ", 
                 ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
         prep.setString(1,user);
         ResultSet rs = prep.executeQuery();
@@ -87,7 +87,7 @@ abstract class UserDB {
         return rs;
     }
     
-    private String queryField(String field) throws SQLException
+    protected String queryField(String field) throws SQLException
     {
         ensureConnection();
         PreparedStatement prep = con.prepareStatement("SELECT "+field+" FROM "+userTableName+" WHERE username = ?");

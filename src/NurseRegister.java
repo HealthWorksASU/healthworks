@@ -17,14 +17,23 @@ public class NurseRegister extends javax.swing.JFrame {
      */
     private String doctorAccountName="NOACCOUNT";
     private String doctorLoginPassword="NOPASSWORD";
+    private DoctorView parent;
     
     public NurseRegister() {
         initComponents();
+        accountName.setText("");
+        password.setText("");
+        FirstName.setText("");
+        LastName.setText("");
+        email.setText("");
+        confirmPass.setText("");
+        
     }
-    public NurseRegister(String docName, String docPW){
+    public NurseRegister(String docName, String docPW,DoctorView _parent){
         this(); //Delegate constructor
         doctorAccountName=docName;
         doctorLoginPassword=docPW;
+        parent=_parent;
     }
 
     /**
@@ -227,6 +236,8 @@ public class NurseRegister extends javax.swing.JFrame {
         nurse.createAccount(firstName, lastName, pass, emailID);
         nurse.setDoctor(doctorAccountName);
         JOptionPane.showMessageDialog(this,"Success! The account " +id+ " has been registered.");
+        this.dispose();
+        this.parent.NurseAddedByRegisterForm(new UserInfo(firstName,lastName,id));
        }
        catch(SQLException e)
        {

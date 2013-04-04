@@ -310,9 +310,17 @@ public class DoctorView extends javax.swing.JFrame {
     
     private void NurseAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseAddButtonActionPerformed
 
-        new NurseRegister(loginName,loginPassword).setVisible(true);
+        new NurseRegister(loginName,loginPassword,this).setVisible(true);
     }//GEN-LAST:event_NurseAddButtonActionPerformed
 
+    public void NurseAddedByRegisterForm(UserInfo nurse)
+    {
+        allNurses.add(nurse);
+        myNurses.add(nurse);
+        Collections.sort((List)this.myNurses);
+        Collections.sort((List)this.allNurses);
+        UpdateNurseScrollList();
+    }
     private void NurseDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NurseDeleteButtonActionPerformed
         int i=NurseList.getSelectedIndex();
         if (i==-1) 
@@ -333,6 +341,7 @@ public class DoctorView extends javax.swing.JFrame {
                     if (ndb.accountExists())
                     {
                         ndb.deleteUser();
+                        UpdateNurseScrollList();
                         JOptionPane.showMessageDialog(this, "Successfully deleted "+nurse.username+".");
                     }
                     else
