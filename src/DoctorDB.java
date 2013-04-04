@@ -12,11 +12,11 @@ import java.sql.SQLException;
  */
 public class DoctorDB extends UserDB
 {
-    
     public DoctorDB(String _user)
     {
         super(_user);
-        userTableName="DOCTORS";
+        this.userTableName="DOCTORS";
+        System.out.println("DOCTOR CONSTRUCTOR:"+userTableName);
     }
     
     //Gets the doctor's used verification code

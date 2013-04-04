@@ -16,7 +16,7 @@ public class NurseDB extends UserDB
     public NurseDB(String _user)
     {
        super(_user);
-       userTableName="NURSES";
+       this.userTableName="NURSES";
     }
     
     //Gets the doctor's used verification code

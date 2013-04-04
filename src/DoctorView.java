@@ -79,11 +79,11 @@ public class DoctorView extends javax.swing.JFrame {
         try{
             ResultSet rs;
             //Get all nurses
-            rs = NurseDB.getFromAllAccounts("username, firstname, lastname, doctor");
+            rs = new NurseDB("").getFromAllAccounts("username, firstname, lastname, doctor");
             Utilities.helperStoreUserData(rs,this.allNurses,this.myNurses,accountName);
             
             //Get all patients
-            rs = PatientDB.getFromAllAccounts("username, firstname, lastname, doctor");
+            rs = new PatientDB("").getFromAllAccounts("username, firstname, lastname, doctor");
             Utilities.helperStoreUserData(rs,this.allPatients,this.myPatients,accountName);
             
             Collections.sort((List)this.myPatients);
@@ -96,7 +96,7 @@ public class DoctorView extends javax.swing.JFrame {
         }
         catch(SQLException e)
         {
-            JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            JOptionPane.showMessageDialog(this,"(1)Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
             java.awt.EventQueue.invokeLater(new Utilities.RunnableFrameDisposer(this));
         }
     }

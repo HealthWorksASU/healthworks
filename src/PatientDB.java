@@ -27,6 +27,7 @@ public class PatientDB extends UserDB
     public PatientDB(String username)
     {
         super(username);
+        this.userTableName="PATIENTS";
         this.username = username;
         //to open the PATIENTS table to store information
         try

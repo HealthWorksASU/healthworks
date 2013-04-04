@@ -17,6 +17,8 @@ public class LoginScreen extends javax.swing.JFrame {
      */
     public LoginScreen() {
         initComponents();
+        username.setText("");
+        pass.setText("");
     }
 
     /**
@@ -189,10 +191,9 @@ public class LoginScreen extends javax.swing.JFrame {
            
            UserDB account;
            String selectedType;
-           
            switch(selected)
            {
-               case 0:
+               case 2:
                    account=new DoctorDB(accountName);
                    selectedType="Doctor";
                    break;
@@ -200,7 +201,7 @@ public class LoginScreen extends javax.swing.JFrame {
                    account=new NurseDB(accountName);
                    selectedType="Nurse";
                    break;
-               case 2:
+               case 0:
                    account=new PatientDB(accountName);
                    selectedType="Patient";
                    break;
@@ -208,12 +209,11 @@ public class LoginScreen extends javax.swing.JFrame {
                    JOptionPane.showMessageDialog(this, "A fall-through error has occurred.");
                    return;
            }
-           
            if (!account.accountExists())
            {
                JOptionPane.showMessageDialog(this,"The "+selectedType+" account "+accountName+" does not exist.");
            }
-           else if (account.verifyPassword(accountPassword))
+           else if (!account.verifyPassword(accountPassword))
            {
                JOptionPane.showMessageDialog(this,"Incorrect password.");
            }
@@ -221,13 +221,13 @@ public class LoginScreen extends javax.swing.JFrame {
            {
                switch(selected)
                 {
-                    case 0:
+                    case 2:
                         new DoctorView(accountName,accountPassword).setVisible(true);
                         break;
                     case 1:
                         new NurseView(accountName,accountPassword).setVisible(true);
                         break;
-                    case 2:
+                    case 0:
                         new PatientPanel(accountName,accountPassword).setVisible(true);
                         break;
                 }

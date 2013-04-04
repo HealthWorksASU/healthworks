@@ -14,7 +14,7 @@ abstract class UserDB {
     protected static final String databaseHOST="jdbc:derby://localhost:1527/information";
     protected static final String databaseUserName="healthworks";
     protected static final String databaseUserPassword="healthworks";
-    protected static String userTableName; //Overriding classes should change this
+    protected String userTableName; //Overriding classes should change this
     
     protected String user;
     protected Connection con;
@@ -46,7 +46,7 @@ abstract class UserDB {
     {
         
         ensureConnection();
-        PreparedStatement prep = con.prepareStatement("INSERT INTO DOCTORS(USERNAME,PASSWORD,EMAIL,FIRSTNAME,LASTNAME) VALUES(?,?,?,?,?)");
+        PreparedStatement prep = con.prepareStatement("INSERT INTO "+userTableName+"(USERNAME,PASSWORD,EMAIL,FIRSTNAME,LASTNAME) VALUES(?,?,?,?,?)");
 
         prep.setString(1,user);
         prep.setString(2,password);
@@ -78,7 +78,7 @@ abstract class UserDB {
         prep.executeUpdate();
     }
     
-    public static ResultSet getFromAllAccounts(String dataToGet) throws SQLException
+    public ResultSet getFromAllAccounts(String dataToGet) throws SQLException
     {
         Connection tempCon = DriverManager.getConnection(databaseHOST,databaseUserName,databaseUserPassword);
         PreparedStatement prep = tempCon.prepareStatement("SELECT "+dataToGet+" FROM "+userTableName,
@@ -93,6 +93,7 @@ abstract class UserDB {
         PreparedStatement prep = con.prepareStatement("SELECT "+field+" FROM "+userTableName+" WHERE username = ?");
         prep.setString(1,user);
         ResultSet rs=prep.executeQuery();
+        rs.next();
         return rs.getString(field);
     }
     
@@ -103,7 +104,7 @@ abstract class UserDB {
     
     private String getPassword() throws SQLException
     {
-        return queryField("password");
+        return queryField("PASSWORD");
     }
     
     public boolean verifyPassword(String inputPW) throws SQLException

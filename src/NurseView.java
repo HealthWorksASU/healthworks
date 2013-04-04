@@ -77,11 +77,11 @@ public class NurseView extends javax.swing.JFrame {
             String assignedDoctor=nurseDBManager.getDoctor();
             ResultSet rs;
             //Get all doctors.
-            rs = DoctorDB.getFromAllAccounts("username, firstname, lastname");
+            rs = new DoctorDB("").getFromAllAccounts("username, firstname, lastname");
             Utilities.helperStoreUserData(rs,this.allDoctors,this.myDoctors,assignedDoctor,"username"); //All doctors whose username matches assignedDoctor
             
             //Get all patients
-            rs = PatientDB.getFromAllAccounts("username, firstname, lastname, doctor");
+            rs = new PatientDB("").getFromAllAccounts("username, firstname, lastname, doctor");
             Utilities.helperStoreUserData(rs,this.allPatients,this.myPatients,accountName);
             
             Collections.sort((List)this.myPatients);
