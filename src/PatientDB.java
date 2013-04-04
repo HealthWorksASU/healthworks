@@ -182,7 +182,7 @@ public class PatientDB extends UserDB
     {
         try
         {
-            PreparedStatement pstmt = con.prepareStatement("INSERT INTO P"+username+" (DRUGS) VALUES(?)");
+            PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (DRUGS) VALUES(?)");
  
                 pstmt.setString(1,drugs);
                 pstmt.executeUpdate();
@@ -201,7 +201,8 @@ public class PatientDB extends UserDB
         
         try
         {
-            stmt.executeUpdate(remove);
+            PreparedStatement prep=con.prepareStatement(remove);
+            prep.executeUpdate();
             return true;
         }
         catch(SQLException e)
