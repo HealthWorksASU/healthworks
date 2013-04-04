@@ -32,6 +32,7 @@ public class PatientRegister extends javax.swing.JFrame
         socSec.setText("XXXXXXXXX");
         relationTo.setText("");
         policyNum.setText("");
+        groupNum.setText("");
         effDate.setText("");
         fName.setText("");
         lName.setText("");
