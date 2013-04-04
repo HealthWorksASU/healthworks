@@ -9,6 +9,7 @@
  */
 
 import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
 
@@ -18,6 +19,8 @@ public class PatientRegister extends javax.swing.JFrame
      * Creates new form PatientRegister
      */
     private NurseView parent=null;
+    private ArrayList<UserInfo> names;
+    
     public PatientRegister(NurseView _parent) {
         initComponents();
         buttonGroup1.add(m);
@@ -49,6 +52,29 @@ public class PatientRegister extends javax.swing.JFrame
         eName.setText("");
         eRelation.setText("");
         parent=_parent;
+        ResultSet rs;
+        names = new ArrayList();
+        ArrayList<String> displayNames = new ArrayList();
+        try
+        {
+           rs = new DoctorDB("").getFromAllAccounts("firstname, lastname, username");
+           while(rs.next())
+           {
+               String first = rs.getString("firstname");
+               String last = rs.getString("lastname");
+               String user = rs.getString("username");
+               names.add(new UserInfo(first,last,user));
+               displayNames.add(first+" "+last);
+           }
+           docList.setModel(new javax.swing.DefaultComboBoxModel(displayNames.toArray()));
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(this,"Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+             this.dispose();
+             return;
+        }
         
     }
     public PatientRegister()
@@ -144,9 +170,7 @@ public class PatientRegister extends javax.swing.JFrame
         f = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(615, 630));
         setMinimumSize(new java.awt.Dimension(615, 630));
-        setPreferredSize(new java.awt.Dimension(615, 630));
         setResizable(false);
 
         jLabel3.setText("Enter desired account name:");
@@ -317,6 +341,11 @@ public class PatientRegister extends javax.swing.JFrame
         jLabel34.setText("Register");
 
         docList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Doctor", "Dr. Rachna Singh", "Dr. Joe Smith", "Dr. Robert House" }));
+        docList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                docListActionPerformed(evt);
+            }
+        });
 
         m.setText("M");
 
@@ -761,7 +790,7 @@ public class PatientRegister extends javax.swing.JFrame
             JOptionPane.showMessageDialog(PatientRegister.this, "Please select your gender");
         else
         {  
-                String doc = (String)(docList.getSelectedItem());
+                String doc = names.get(docList.getSelectedIndex()).username;
                 String status = (String)(marraige.getSelectedItem());
                 String gender;
                 if(m.isSelected()) {
@@ -814,6 +843,10 @@ public class PatientRegister extends javax.swing.JFrame
     private void phoneNumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNumActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_phoneNumActionPerformed
+
+    private void docListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_docListActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_docListActionPerformed
 
     /**
      * @param args the command line arguments
