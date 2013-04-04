@@ -208,6 +208,48 @@ public class PatientDB extends UserDB
             return;
         }
     }
+    public boolean searchAndDeleteWeight(String toRemove)
+    {
+        String remove = "DELETE FROM P"+username+" WHERE WEIGHTTIME = \'"+toRemove+"\'";
+        
+        try
+        {
+            stmt.executeUpdate(remove);
+            return true;
+        }
+        catch(SQLException e)
+        {
+            return false;
+        }  
+    }
+    public boolean searchAndDeleteSugar(String toRemove)
+    {
+        String remove = "DELETE FROM P"+username+" WHERE SUGARTIME = \'"+toRemove+"\'";
+        
+        try
+        {
+            stmt.executeUpdate(remove);
+            return true;
+        }
+        catch(SQLException e)
+        {
+            return false;
+        }  
+    }
+    public boolean searchAndDeleteBP(String toRemove)
+    {
+        String remove = "DELETE FROM P"+username+" WHERE BP = \'"+toRemove+"\'";
+        
+        try
+        {
+            stmt.executeUpdate(remove);
+            return true;
+        }
+        catch(SQLException e)
+        {
+            return false;
+        }  
+    }
     public void setDrugs(Vector<String> drugs)
     {
         
