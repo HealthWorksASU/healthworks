@@ -31,6 +31,11 @@ public class PatientDB extends UserDB
         PreparedStatement prep = con.prepareStatement(createTable);
         prep.executeUpdate();
     }
+    public void deleteTable() throws SQLException
+    {
+        PreparedStatement prep = con.prepareStatement("DROP TABLE PATIENTS_"+username);
+        prep.executeUpdate();
+    }
     
     public void setPersonalInfo(String first, String last,String primePhone, 
             String otherPhone, String gender, String status, String age, 

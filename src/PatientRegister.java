@@ -17,7 +17,8 @@ public class PatientRegister extends javax.swing.JFrame
     /**
      * Creates new form PatientRegister
      */
-    public PatientRegister() {
+    private NurseView parent=null;
+    public PatientRegister(NurseView _parent) {
         initComponents();
         buttonGroup1.add(m);
         buttonGroup1.add(f);
@@ -46,8 +47,12 @@ public class PatientRegister extends javax.swing.JFrame
         state.setText("");
         eName.setText("");
         eRelation.setText("");
+        parent=_parent;
         
-        
+    }
+    public PatientRegister()
+    {
+        this((NurseView)null);
     }
 
     /**
@@ -773,7 +778,9 @@ public class PatientRegister extends javax.swing.JFrame
                 newPatient.setInsuranceInfo(insurance, insuredName, dateOfBirth,socSec.getText(),relation,phoneNum.getText(),policyNumber,groupNumber,effectiveDate);
                 newPatient.setAddress(add, City, State, zip.getText());
 
-                
+                if (parent!=null) {
+                    parent.PatientAddedByRegisterForm(new UserInfo(first,last,id));
+                }
                 JOptionPane.showMessageDialog(this,"Registration successful!");
                 dispose();
         }

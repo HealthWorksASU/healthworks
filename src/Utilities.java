@@ -34,7 +34,8 @@ public class Utilities {
             {
                 UserInfo user=new UserInfo(rs.getString("firstname"),rs.getString("lastname"),rs.getString("username"));
                 allList.add(user);
-                if (rs.getString(matchTableColumn).equals(matchString))
+                String comp=rs.getString(matchTableColumn);
+                if (comp!=null && comp.equals(matchString))
                 {
                    myList.add(user);   
                 }

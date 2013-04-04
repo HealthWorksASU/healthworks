@@ -16,6 +16,14 @@ public class DoctorRegister extends javax.swing.JFrame {
      */
     public DoctorRegister() {
         initComponents();
+        accountNameField.setText("");
+        firstNameField.setText("");
+        lastNameField.setText("");
+        desiredPasswordField.setText("");
+        confirmPasswordField.setText("");
+        accountEmailField.setText("");
+        verificationCodeField.setText("");
+        
     }
 
     /**
