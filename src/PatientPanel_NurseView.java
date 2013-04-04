@@ -51,7 +51,7 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             address.setText("<html>"+rs.getString("Address")+",<BR>"+rs.getString("city")
                     +" "+rs.getString("state")+"-"+rs.getString("zip")+"<BR>Phone "+rs.getString("Primephone"));
             
-            sql = "SELECT * FROM P"+userName;
+            sql = "SELECT * FROM PATIENTS_"+userName;
             rs = stmt.executeQuery(sql);
 
             patient = new PatientDB(userName);
