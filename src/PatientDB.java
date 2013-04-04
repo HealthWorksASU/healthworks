@@ -250,9 +250,36 @@ public class PatientDB extends UserDB
             return false;
         }  
     }
-    public void setDrugs(Vector<String> drugs)
+    public void setDrugs(String drugs)
     {
+        try
+        {
+            PreparedStatement pstmt = con.prepareStatement("INSERT INTO P"+username+" (DRUGS) VALUES(?)");
+ 
+                pstmt.setString(1,drugs);
+                pstmt.executeUpdate();
+
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+    }
+     public boolean searchAndDeletePrescription(String toRemove)
+    {
+        String remove = "DELETE FROM P"+username+" WHERE DRUGS = \'"+toRemove+"\'";
         
+        try
+        {
+            stmt.executeUpdate(remove);
+            return true;
+        }
+        catch(SQLException e)
+        {
+            return false;
+        }  
     }
     public void setObservations(Vector<String> obs)
     {
