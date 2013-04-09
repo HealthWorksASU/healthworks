@@ -25,6 +25,7 @@ public class PatientDB extends UserDB
     
     public void createTable() throws SQLException
     {
+        ensureConnection();
         String createTable = "CREATE TABLE PATIENTS_"+username+" (id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                         + "bp VARCHAR(255), sugar VARCHAR(255), weight VARCHAR(255), drugs VARCHAR(255), observations VARCHAR(2500), "
                         + "LOWBP VARCHAR(2500), HIGHBP VARCHAR(2500), SUGARTIME VARCHAR(2500), WEIGHTTIME VARCHAR(2500))";

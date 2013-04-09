@@ -39,11 +39,11 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         {
             user = userName;
             con = DriverManager.getConnection(HOST,uName,password);
-            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);           
             String sql = "SELECT * FROM PATIENTS WHERE USERNAME=\'"+user+"\'";
             rs = stmt.executeQuery(sql);
             rs.next();
-            
+
             this.nurseLogin = nurseLogin;
             nursePass = pass;
             userLabel.setText(nurseLogin);

@@ -69,21 +69,21 @@
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="CommentsViewScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="AddObservationPane" alignment="1" pref="231" max="32767" attributes="0"/>
+                          <Component id="AddObservationPane" alignment="1" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="CommentsObservationsLabel" min="-2" max="-2" attributes="0"/>
                                   <Component id="PrescriptionsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="PrescriptionsPane" min="-2" pref="108" max="-2" attributes="0"/>
+                                      <Component id="PrescriptionsPane" min="-2" pref="135" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="addPres" min="-2" max="-2" attributes="0"/>
-                                          <Component id="deletePres" min="-2" max="-2" attributes="0"/>
+                                          <Component id="addPres" alignment="0" min="-2" pref="84" max="-2" attributes="0"/>
+                                          <Component id="deletePres" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="33" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -468,16 +468,17 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="WeightEntriesScrollPane" pref="330" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="WeightCreateGraphButton" alignment="1" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="WeightMonthlyAverageLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="WeightEntriesScrollPane" alignment="0" pref="330" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="WeightMonthlyAverageLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
-                          <Component id="WeightCreateGraphButton" alignment="1" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
