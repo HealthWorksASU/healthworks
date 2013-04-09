@@ -513,6 +513,11 @@ public class PatientPanel_DoctorView extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(this,"Enter only numbers"); 
         }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_addPresActionPerformed
 
     private void deletePresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePresActionPerformed

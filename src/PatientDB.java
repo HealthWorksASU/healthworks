@@ -83,67 +83,44 @@ public class PatientDB extends UserDB
         setField("doctor",doctor);
     }
     
-    public void setBP(String bp, String bpHigh, String bpLow)
+    public void setBP(String bp, String bpHigh, String bpLow) throws SQLException
     {
-        try
-        {
+        ensureConnection();
             PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (BP, LOWBP, HIGHBP) VALUES(?,?,?)");
  
                 pstmt.setString(1,bp);
                 pstmt.setString(2,bpLow);
                 pstmt.setString(3,bpHigh);
                 pstmt.executeUpdate();
-
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
     }
-    public void setSugar(String sugarTime, String sugar)
+    public void setSugar(String sugarTime, String sugar) throws SQLException
     {
-        try
-        {
+           ensureConnection();
             PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (SUGARTIME, SUGAR) VALUES(?,?)");
  
                 pstmt.setString(1,sugarTime);
                 pstmt.setString(2,sugar);
                 pstmt.executeUpdate();
 
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
     }
-    public void setWeight(String weight, String weightTime)
+    public void setWeight(String weight, String weightTime) throws SQLException
     {
-        try
-        {
-            PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (WEIGHTTIME, WEIGHT) VALUES(?,?)");
+        ensureConnection();
+            
+        PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (WEIGHTTIME, WEIGHT) VALUES(?,?)");
  
                 pstmt.setString(1,weightTime);
                 pstmt.setString(2,weight);
                 pstmt.executeUpdate();
 
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
     }
     public boolean searchAndDeleteWeight(String toRemove)
     {
         String remove = "DELETE FROM PATIENTS_"+username+" WHERE WEIGHTTIME = \'"+toRemove+"\'";
-        
+
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement(remove);
             prep.executeUpdate();
             return true;
@@ -151,7 +128,7 @@ public class PatientDB extends UserDB
         catch(SQLException e)
         {
             return false;
-        }  
+        }
     }
     public boolean searchAndDeleteSugar(String toRemove)
     {
@@ -159,6 +136,7 @@ public class PatientDB extends UserDB
         
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement(remove);
             prep.executeUpdate();
             return true;
@@ -166,7 +144,8 @@ public class PatientDB extends UserDB
         catch(SQLException e)
         {
             return false;
-        }  
+        } 
+
     }
     public boolean searchAndDeleteBP(String toRemove)
     {
@@ -174,6 +153,7 @@ public class PatientDB extends UserDB
         
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement(remove);
             prep.executeUpdate();
             return true;
@@ -183,22 +163,13 @@ public class PatientDB extends UserDB
             return false;
         }  
     }
-    public void setDrugs(String drugs)
+    public void setDrugs(String drugs) throws SQLException
     {
-        try
-        {
+        ensureConnection();
             PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (DRUGS) VALUES(?)");
  
                 pstmt.setString(1,drugs);
                 pstmt.executeUpdate();
-
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
-            e.printStackTrace();
-            return;
-        }
     }
      public boolean searchAndDeletePrescription(String toRemove)
     {
@@ -206,6 +177,7 @@ public class PatientDB extends UserDB
         
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement(remove);
             prep.executeUpdate();
             return true;
@@ -241,9 +213,11 @@ public class PatientDB extends UserDB
     }
     public Vector<String> getBP()
     {
+        
         Vector<String> bpV = new Vector();
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
             ResultSet rs=prep.executeQuery();
             while(rs.next())
@@ -262,11 +236,13 @@ public class PatientDB extends UserDB
     }
     public String getLatestBP()
     {
+        
         Vector<String> bplow = new Vector();
         Vector<String> bphigh = new Vector();
         String latest = "--";
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
             ResultSet rs=prep.executeQuery();
             while(rs.next())
@@ -295,6 +271,7 @@ public class PatientDB extends UserDB
         Vector<String> sugarV = new Vector();
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
             ResultSet rs=prep.executeQuery();
             while(rs.next())
@@ -317,6 +294,7 @@ public class PatientDB extends UserDB
         String latest = "--";
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
             ResultSet rs=prep.executeQuery();
             while(rs.next())
@@ -340,6 +318,7 @@ public class PatientDB extends UserDB
         Vector<String> weightV = new Vector();
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
             ResultSet rs=prep.executeQuery();
             while(rs.next())
@@ -362,6 +341,7 @@ public class PatientDB extends UserDB
         String latest = "--";
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
             ResultSet rs=prep.executeQuery();
             while(rs.next())
@@ -386,6 +366,7 @@ public class PatientDB extends UserDB
         Vector<String> pres = new Vector();
         try
         {
+            ensureConnection();
             PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
             ResultSet rs=prep.executeQuery();
             while(rs.next())

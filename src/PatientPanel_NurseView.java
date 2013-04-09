@@ -579,11 +579,11 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         try
         {
             lower = JOptionPane.showInputDialog(frame, "Enter lower blood pressure bound (mmHg):");
-            while(Integer.parseInt(lower)<50 || Integer.parseInt(lower) > 230)
+            while(Double.parseDouble(lower)<50 || Double.parseDouble(lower) > 230)
                 lower = JOptionPane.showInputDialog(frame, "Enter a VALID LOWEER blood pressure(50-230) mmHg:");
             
             upper = JOptionPane.showInputDialog(frame, "Enter an upper blood pressure bound (mmHg):");
-            while(Integer.parseInt(upper)<50 || Integer.parseInt(upper)>230 || (Integer.parseInt(upper) < Integer.parseInt(lower)))
+            while(Double.parseDouble(upper)<50 || Double.parseDouble(upper)>230 || (Double.parseDouble(upper) < Double.parseDouble(lower)))
                 upper = JOptionPane.showInputDialog(frame, "Enter a VALID UPPER blood pressure(50-230) mmHg:");
             
             String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
@@ -600,6 +600,11 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(this,"Enter only numbers"); 
         }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_newBPActionPerformed
 
     private void newSugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSugarActionPerformed
@@ -608,7 +613,7 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         try
         {
             sugarEntry = JOptionPane.showInputDialog(frame, "Enter sugar level (mmol/L):");
-            while(Integer.parseInt(sugarEntry)<0)
+            while(Double.parseDouble(sugarEntry)<0)
                 sugarEntry = JOptionPane.showInputDialog(frame, "Enter a VALID sugar level mmol/L:");
             
             String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
@@ -624,6 +629,11 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(this,"Enter only numbers"); 
         }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_newSugarActionPerformed
 
     private void newWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newWeightActionPerformed
@@ -632,8 +642,8 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         try
         {
             weightEntry = JOptionPane.showInputDialog(frame, "Enter sugar level (mmol/L):");
-            while(Integer.parseInt(weightEntry)<0)
-                weightEntry = JOptionPane.showInputDialog(frame, "Enter a VALID sugar level mmol/L:");
+            while(Double.parseDouble(weightEntry)<0 || Double.parseDouble(weightEntry) > 400)
+                weightEntry = JOptionPane.showInputDialog(frame, "Enter a VALID weight kg:");
             
             String timeStamp = new SimpleDateFormat("yyyy/MM/dd hh:mm a").format(Calendar.getInstance().getTime());
             String time = "["+timeStamp+"] "+weightEntry+"kg";
@@ -646,6 +656,11 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         catch(NumberFormatException e)
         {
             JOptionPane.showMessageDialog(this,"Enter only numbers"); 
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
         }
     }//GEN-LAST:event_newWeightActionPerformed
 
