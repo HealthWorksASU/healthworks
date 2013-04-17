@@ -188,9 +188,13 @@ public class PatientDB extends UserDB
             return false;
         }  
     }
-    public void setObservations(Vector<String> obs)
+    public void setObservations(String observation) throws SQLException
     {
-        
+        ensureConnection();
+            PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (OBSERVATIONS) VALUES(?)");
+ 
+                pstmt.setString(1,observation);
+                pstmt.executeUpdate();
     }
     public Vector<Object> getPersonalInfo()
     {
@@ -386,7 +390,25 @@ public class PatientDB extends UserDB
     }
     public Vector<String> getObservations()
     {
-        return new Vector<String>();
+        Vector<String> obs = new Vector();
+        try
+        {
+            ensureConnection();
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
+            while(rs.next())
+                obs.add(rs.getString("OBSERVATIONS"));
+            
+            obs.removeAll(Collections.singleton(null));
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return obs;
     }
     
 }

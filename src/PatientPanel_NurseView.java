@@ -3,6 +3,8 @@ import java.sql.*;
 import javax.swing.*;
 import java.util.*;
 import java.text.*;
+import javax.swing.text.BadLocationException;
+import java.awt.*;
 
 /*
  * To change this template, choose Tools | Templates
@@ -21,10 +23,11 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
     private Connection con;
     private Statement stmt;
     private ResultSet rs;
-    private Vector<String> bpV,bpLow,bpHigh,sugarV,sugarL,weightV,weightL,pres;
+    private Vector<String> bpV,bpLow,bpHigh,sugarV,sugarL,weightV,weightL,pres,obs;
     private String bloodPress;
     private String user,nurseLogin,nursePass;
     private PatientDB patient;
+    private String nurseFirst;
     /**
      * Creates new form PatientPanel
      */
@@ -32,7 +35,7 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         initComponents();
     }
     
-    public PatientPanel_NurseView(String nurseLogin, String pass, String userName)
+    public PatientPanel_NurseView(String nurseLogin, String pass, String userName, String first)
     {
         initComponents();
         try
@@ -54,21 +57,29 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             sql = "SELECT * FROM PATIENTS_"+userName;
             rs = stmt.executeQuery(sql);
 
+            CommentsViewPane.setText("");
+            AddObservationPaneTextArea.setText("");
             patient = new PatientDB(userName);
   
             bpV = patient.getBP();
             sugarV = patient.getSugar();
             weightV = patient.getWeight();
             pres = patient.getDrugs();
+            obs = patient.getObservations();
             
             bp.setText(patient.getLatestBP());
             sugar.setText(patient.getLatestSugar());
             weight.setText(patient.getLatestWeight());
+            Iterator i = obs.iterator();
+            while(i.hasNext())
+                CommentsViewPane.getDocument().insertString(CommentsViewPane.getCaretPosition(), (String)i.next(), null);
             
             bpList.setListData(bpV);
             sugarList.setListData(sugarV);
             weightList.setListData(weightV);
             PrescriptionList.setListData(pres);
+            
+            nurseFirst = first;
             
         }
         catch(SQLException e)
@@ -77,6 +88,10 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             e.printStackTrace();
             //this.dispose();
             return;
+        }
+        catch(BadLocationException e)
+        {
+            JOptionPane.showMessageDialog(this, e);
         }
     }
 
@@ -159,6 +174,11 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         AddObservationPaneTextArea.setRows(5);
         AddObservationPaneTextArea.setText("Quisque a vestibulum tortor? ");
         AddObservationPaneTextArea.setWrapStyleWord(true);
+        AddObservationPaneTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                AddObservationPaneTextAreaKeyPressed(evt);
+            }
+        });
         AddObservationPane.setViewportView(AddObservationPaneTextArea);
 
         SendObservationButton.setText("Send");
@@ -727,6 +747,34 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Entry could not be deleted");
         }
     }//GEN-LAST:event_deleteBPActionPerformed
+
+    private void AddObservationPaneTextAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AddObservationPaneTextAreaKeyPressed
+        try
+        {
+            String chat = AddObservationPaneTextArea.getText();
+            if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER)
+            {
+                if(chat.equals(""))
+                    JOptionPane.showMessageDialog(this, "Please enter a obervasation first");
+                else
+                {
+                    chat = "[Nurse "+nurseFirst+"] "+chat;
+                    obs.add(chat);
+                    CommentsViewPane.getDocument().insertString(CommentsViewPane.getCaretPosition(),chat,null);
+                    AddObservationPaneTextArea.setText("");
+                    patient.setObservations(chat);
+                }
+            }
+        }
+        catch(BadLocationException e)
+        {
+            JOptionPane.showMessageDialog(this, e);
+        } 
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(this, e);
+        }
+    }//GEN-LAST:event_AddObservationPaneTextAreaKeyPressed
 
     /**
      * @param args the command line arguments

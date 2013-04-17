@@ -358,7 +358,23 @@ public class DoctorView extends javax.swing.JFrame {
 
     private void ViewInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewInfoButtonActionPerformed
         // TODO add your handling code here:
-        new PatientPanel_DoctorView(loginName,loginPassword,patientView.get(PatientList.getSelectedIndex()).username).setVisible(true);
+        
+        try
+        {
+            DoctorDB doc = new DoctorDB(loginName);
+            String last = doc.getLastName();
+            int i=PatientList.getSelectedIndex();
+            if (i==-1)
+            {
+                JOptionPane.showMessageDialog(this, "Please select a patient to view.");
+                return;
+            }
+            new PatientPanel_DoctorView(loginName,loginPassword,patientView.get(i).username,last).setVisible(true);
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(this,e);
+        }
     }//GEN-LAST:event_ViewInfoButtonActionPerformed
   
     //Because Swing does not provide for event ordering and problems occur if the event is

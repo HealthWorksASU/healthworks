@@ -362,13 +362,22 @@ public class NurseView extends javax.swing.JFrame {
         UpdatePatientScrollList();
     }
     private void ViewInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewInfoButtonActionPerformed
-         int i=PatientList.getSelectedIndex();
-        if (i==-1)
+        try
         {
-            JOptionPane.showMessageDialog(this, "Please select a patient to view.");
-            return;
+            String first = nurseDBManager.getFirstName(); 
+            int i=PatientList.getSelectedIndex();
+            if (i==-1)
+            {
+                JOptionPane.showMessageDialog(this, "Please select a patient to view.");
+                return;
+            }
+            new PatientPanel_NurseView(loginName,loginPassword,patientView.get(i).username,first).setVisible(true);
         }
-        new PatientPanel_NurseView(loginName,loginPassword,patientView.get(i).username).setVisible(true);
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(this,e);
+        }
+                
     }//GEN-LAST:event_ViewInfoButtonActionPerformed
 
     private void DoctorSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DoctorSearchFieldKeyTyped

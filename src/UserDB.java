@@ -87,6 +87,16 @@ abstract class UserDB {
         return rs;
     }
     
+    public ResultSet getFromAccount(String dataToGet) throws SQLException
+    {
+        Connection tempCon = DriverManager.getConnection(databaseHOST,databaseUserName,databaseUserPassword);
+        PreparedStatement prep = tempCon.prepareStatement("SELECT "+dataToGet+" FROM "+userTableName+" WHERE username = ?",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+        prep.setString(1,user);
+        ResultSet rs = prep.executeQuery();
+        return rs;
+    }
+    
     protected String queryField(String field) throws SQLException
     {
         ensureConnection();
@@ -120,7 +130,7 @@ abstract class UserDB {
     {
         return queryField("firstname");
     }
-    public String getLasrName() throws SQLException
+    public String getLastName() throws SQLException
     {
         return queryField("lastname");
     }
