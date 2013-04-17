@@ -28,6 +28,8 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
     private String user,nurseLogin,nursePass;
     private PatientDB patient;
     private String nurseFirst;
+    private String sAvg,bpHighAvg,bpLowAvg,wAvg;
+    DecimalFormat fmt = new DecimalFormat("#.##");
     /**
      * Creates new form PatientPanel
      */
@@ -66,6 +68,11 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             weightV = patient.getWeight();
             pres = patient.getDrugs();
             obs = patient.getObservations();
+            sAvg = fmt.format(patient.getSugarAverage());
+            wAvg = fmt.format(patient.getWeightAverage());
+            double[] a = patient.getBPAverage();
+            bpHighAvg = fmt.format(a[1]);
+            bpLowAvg = fmt.format(a[0]);
             
             bp.setText(patient.getLatestBP());
             sugar.setText(patient.getLatestSugar());
@@ -73,6 +80,9 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             Iterator i = obs.iterator();
             while(i.hasNext())
                 CommentsViewPane.getDocument().insertString(CommentsViewPane.getCaretPosition(), (String)i.next(), null);
+            sugarAvg.setText(sAvg);
+            bpAve.setText(bpHighAvg + "/" + bpLowAvg);
+            weightAvg.setText(wAvg);
             
             bpList.setListData(bpV);
             sugarList.setListData(sugarV);
@@ -124,6 +134,8 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         newBP = new javax.swing.JButton();
         CreateBPGraphButton = new javax.swing.JButton();
         deleteBP = new javax.swing.JButton();
+        bpAve = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         SugarLevelPanel = new javax.swing.JPanel();
         CreateSLGraphButton = new javax.swing.JButton();
         SugarLevelPane = new javax.swing.JScrollPane();
@@ -132,6 +144,8 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         RecentSLEntriesLabel = new javax.swing.JLabel();
         newSugar = new javax.swing.JButton();
         deleteSugar = new javax.swing.JButton();
+        sugarAvg = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         WeightPanel = new javax.swing.JPanel();
         WeightCreateGraphButton = new javax.swing.JButton();
         WeightEntriesScrollPane = new javax.swing.JScrollPane();
@@ -140,6 +154,8 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         RecentWeightEntriesLabel = new javax.swing.JLabel();
         newWeight = new javax.swing.JButton();
         deleteWeight = new javax.swing.JButton();
+        weightAvg = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         name = new javax.swing.JLabel();
         CommentsViewScrollPane = new javax.swing.JScrollPane();
         CommentsViewPane = new javax.swing.JTextPane();
@@ -192,7 +208,7 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         LatestStatisticsLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         LatestStatisticsLabel.setText("Latest Statistics");
 
-        MonthlyAverageBloodPressureLabel.setText("30-day Average: 88.86 mmHg");
+        MonthlyAverageBloodPressureLabel.setText("10 Entry Average:");
 
         bpList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "[2013-02-09 8:04 PM] 90 mmHg", "[2013-02-08 9:27 PM] 103.5 mmHg", "[2013-02-07 10:13 AM] 91.1 mmHg", "[2013-02-06 5:07 PM] 89.3 mmHg", "[2013-02-05 4:03 PM] 86.4 mmHg", " ", " " };
@@ -224,6 +240,10 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             }
         });
 
+        bpAve.setText("jLabel1");
+
+        jLabel2.setText("mmHg");
+
         javax.swing.GroupLayout BloodPressurePanelLayout = new javax.swing.GroupLayout(BloodPressurePanel);
         BloodPressurePanel.setLayout(BloodPressurePanelLayout);
         BloodPressurePanelLayout.setHorizontalGroup(
@@ -242,20 +262,27 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
                 .addGroup(BloodPressurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(BloodPressurePanelLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(MonthlyAverageBloodPressureLabel))
+                        .addComponent(MonthlyAverageBloodPressureLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bpAve)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2))
                     .addGroup(BloodPressurePanelLayout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addComponent(RecentBPEntriesLabel))
                     .addGroup(BloodPressurePanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(deleteBP)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(115, Short.MAX_VALUE))
         );
         BloodPressurePanelLayout.setVerticalGroup(
             BloodPressurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BloodPressurePanelLayout.createSequentialGroup()
                 .addGap(39, 39, 39)
-                .addComponent(MonthlyAverageBloodPressureLabel)
+                .addGroup(BloodPressurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(MonthlyAverageBloodPressureLabel)
+                    .addComponent(bpAve)
+                    .addComponent(jLabel2))
                 .addGap(6, 6, 6)
                 .addGroup(BloodPressurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newBP, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -284,7 +311,7 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         });
         SugarLevelPane.setViewportView(sugarList);
 
-        MonthlySLAverageLabel.setText("30-day Average: 2.97 mmol/L");
+        MonthlySLAverageLabel.setText("10 Entry Average:");
 
         RecentSLEntriesLabel.setText("Recent Sugar Level Entries");
 
@@ -302,6 +329,10 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             }
         });
 
+        sugarAvg.setText("jLabel1");
+
+        jLabel3.setText("mmol/L");
+
         javax.swing.GroupLayout SugarLevelPanelLayout = new javax.swing.GroupLayout(SugarLevelPanel);
         SugarLevelPanel.setLayout(SugarLevelPanelLayout);
         SugarLevelPanelLayout.setHorizontalGroup(
@@ -309,20 +340,24 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             .addGroup(SugarLevelPanelLayout.createSequentialGroup()
                 .addGroup(SugarLevelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(SugarLevelPanelLayout.createSequentialGroup()
+                        .addContainerGap(212, Short.MAX_VALUE)
+                        .addComponent(CreateSLGraphButton, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(SugarLevelPanelLayout.createSequentialGroup()
                         .addGroup(SugarLevelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(SugarLevelPanelLayout.createSequentialGroup()
                                 .addGap(29, 29, 29)
                                 .addComponent(RecentSLEntriesLabel))
                             .addGroup(SugarLevelPanelLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(MonthlySLAverageLabel))
-                            .addGroup(SugarLevelPanelLayout.createSequentialGroup()
                                 .addGap(28, 28, 28)
-                                .addComponent(newSugar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 176, Short.MAX_VALUE))
-                    .addGroup(SugarLevelPanelLayout.createSequentialGroup()
-                        .addContainerGap(212, Short.MAX_VALUE)
-                        .addComponent(CreateSLGraphButton, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(newSugar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(SugarLevelPanelLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(MonthlySLAverageLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sugarAvg)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(21, 21, 21))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SugarLevelPanelLayout.createSequentialGroup()
                 .addComponent(SugarLevelPane)
@@ -335,7 +370,10 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             SugarLevelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SugarLevelPanelLayout.createSequentialGroup()
                 .addGap(39, 39, 39)
-                .addComponent(MonthlySLAverageLabel)
+                .addGroup(SugarLevelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(MonthlySLAverageLabel)
+                    .addComponent(sugarAvg)
+                    .addComponent(jLabel3))
                 .addGap(7, 7, 7)
                 .addGroup(SugarLevelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(CreateSLGraphButton, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
@@ -364,7 +402,7 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
         });
         WeightEntriesScrollPane.setViewportView(weightList);
 
-        WeightMonthlyAverageLabel.setText("30-day Average: 58 kg");
+        WeightMonthlyAverageLabel.setText("10 Entry Average:");
 
         RecentWeightEntriesLabel.setText("Recent Weight Entries");
 
@@ -382,6 +420,10 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             }
         });
 
+        weightAvg.setText("jLabel1");
+
+        jLabel4.setText("kg");
+
         javax.swing.GroupLayout WeightPanelLayout = new javax.swing.GroupLayout(WeightPanel);
         WeightPanel.setLayout(WeightPanelLayout);
         WeightPanelLayout.setHorizontalGroup(
@@ -389,6 +431,10 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             .addGroup(WeightPanelLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(WeightMonthlyAverageLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(weightAvg)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, WeightPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -418,7 +464,10 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             WeightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(WeightPanelLayout.createSequentialGroup()
                 .addGap(39, 39, 39)
-                .addComponent(WeightMonthlyAverageLabel)
+                .addGroup(WeightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(WeightMonthlyAverageLabel)
+                    .addComponent(weightAvg)
+                    .addComponent(jLabel4))
                 .addGap(7, 7, 7)
                 .addGroup(WeightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(WeightCreateGraphButton, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
@@ -614,6 +663,10 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             bpList.setListData(bpV);
             patient.setBP(time,upper,lower);
             bp.setText(patient.getLatestBP());
+            double[] a = patient.getBPAverage();
+            bpHighAvg = fmt.format(a[1]);
+            bpLowAvg = fmt.format(a[0]);
+            bpAve.setText(bpHighAvg + "/" + bpLowAvg);
 
         }
         catch(NumberFormatException e)
@@ -644,6 +697,8 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             patient.setSugar(time,sugarEntry);
             //patient.setSugarTime(sugarV);
             sugar.setText(patient.getLatestSugar());
+            sAvg = fmt.format(patient.getSugarAverage());
+            sugarAvg.setText(sAvg);
         }
         catch(NumberFormatException e)
         {
@@ -672,6 +727,8 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
             this.weightList.setListData(weightV);
             patient.setWeight(weightEntry,time);
             weight.setText(patient.getLatestWeight());
+            wAvg = fmt.format(patient.getWeightAverage());
+            weightAvg.setText(wAvg);
         }
         catch(NumberFormatException e)
         {
@@ -706,6 +763,8 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
                 weightV = patient.getWeight();
                 weightList.setListData(weightV);
                 weight.setText(patient.getLatestWeight());
+                wAvg = fmt.format(patient.getWeightAverage());
+                weightAvg.setText(wAvg);
             }
             else
                 JOptionPane.showMessageDialog(this, "Entry could not be deleted");
@@ -724,6 +783,8 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
                 sugarV = patient.getSugar();
                 sugarList.setListData(sugarV);
                 sugar.setText(patient.getLatestSugar());
+                sAvg = fmt.format(patient.getSugarAverage());
+                sugarAvg.setText(sAvg);
             }
             else
                 JOptionPane.showMessageDialog(this, "Entry could not be deleted");
@@ -742,6 +803,10 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
                 bpV = patient.getBP();
                 bpList.setListData(bpV);
                 bp.setText(patient.getLatestBP());
+                double[] a = patient.getBPAverage();
+                bpHighAvg = fmt.format(a[1]);
+                bpLowAvg = fmt.format(a[0]);
+                bpAve.setText(bpHighAvg + "/" + bpLowAvg);
             }
             else
                 JOptionPane.showMessageDialog(this, "Entry could not be deleted");
@@ -843,19 +908,25 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
     private static javax.swing.JLabel address;
     protected static javax.swing.JButton back;
     private static javax.swing.JLabel bp;
+    private javax.swing.JLabel bpAve;
     private javax.swing.JList bpList;
     private javax.swing.JButton deleteBP;
     private javax.swing.JButton deleteSugar;
     private static javax.swing.JButton deleteWeight;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private static javax.swing.JLabel name;
     private javax.swing.JButton newBP;
     private static javax.swing.JButton newSugar;
     private static javax.swing.JButton newWeight;
     private static javax.swing.JLabel sugar;
+    private javax.swing.JLabel sugarAvg;
     private static javax.swing.JList sugarList;
     private javax.swing.JButton updatePersonalInfo;
     private javax.swing.JLabel userLabel;
     private static javax.swing.JLabel weight;
+    private javax.swing.JLabel weightAvg;
     private javax.swing.JList weightList;
     // End of variables declaration//GEN-END:variables
 }

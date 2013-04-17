@@ -286,8 +286,14 @@
                                   <Component id="RecentBloodPressureEntriesPane" alignment="0" pref="330" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="MonthlyAverageBloodPressureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="RecentBPEntriesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="RecentBPEntriesLabel" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="MonthlyAverageBloodPressureLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="bpAve" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
@@ -301,7 +307,11 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="MonthlyAverageBloodPressureLabel" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="MonthlyAverageBloodPressureLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="bpAve" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="CreateBPGraphButton" min="-2" pref="41" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -316,7 +326,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="MonthlyAverageBloodPressureLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="30-day Average: 88.86 mmHg"/>
+                <Property name="text" type="java.lang.String" value="10 Entry Average:"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="RecentBloodPressureEntriesPane">
@@ -356,6 +366,16 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CreateBPGraphButtonActionPerformed"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JLabel" name="bpAve">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jLabel1"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel4">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="mmHg"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="SugarLevelPanel">
@@ -390,6 +410,10 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="MonthlySLAverageLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="sugarAvg" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -397,7 +421,11 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="MonthlySLAverageLabel" min="-2" pref="17" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="MonthlySLAverageLabel" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
+                          <Component id="sugarAvg" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="CreateSLGraphButton" min="-2" pref="37" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -447,12 +475,22 @@
             </Container>
             <Component class="javax.swing.JLabel" name="MonthlySLAverageLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="30-day Average: 2.97 mmol/L"/>
+                <Property name="text" type="java.lang.String" value="10 Entry Average:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="RecentSLEntriesLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Recent Sugar Level Entries"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="sugarAvg">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jLabel1"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel2">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="mmol/L"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -478,6 +516,10 @@
                                   <Component id="WeightEntriesScrollPane" alignment="0" pref="330" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Component id="WeightMonthlyAverageLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="weightAvg" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
@@ -495,7 +537,11 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="WeightMonthlyAverageLabel" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="WeightMonthlyAverageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="weightAvg" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="WeightCreateGraphButton" min="-2" pref="37" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -542,12 +588,22 @@
             </Container>
             <Component class="javax.swing.JLabel" name="WeightMonthlyAverageLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="30-day Average: 58 kg"/>
+                <Property name="text" type="java.lang.String" value="10 Entry Average:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="RecentWeightEntriesLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Recent Weight Entries"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="weightAvg">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jLabel1"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel3">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="kg"/>
               </Properties>
             </Component>
           </SubComponents>

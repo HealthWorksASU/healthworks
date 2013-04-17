@@ -260,7 +260,7 @@ public class PatientDB extends UserDB
             bphigh.removeAll(Collections.singleton(null));
             
             if(!bphigh.isEmpty()) 
-                latest = bphigh.lastElement() + "/" + bplow.lastElement() + " mmHg";
+                latest = bplow.lastElement() + "/" + bphigh.lastElement() + " mmHg";
            
         }
         catch(SQLException e)
@@ -270,6 +270,62 @@ public class PatientDB extends UserDB
         }
         
         return latest;
+    }
+    public double[] getBPAverage()
+    {
+        
+        Vector<String> bplow = new Vector();
+        Vector<String> bphigh = new Vector();
+        double lAve=0,hAve = 0;
+        try
+        {
+            ensureConnection();
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
+            while(rs.next())
+            {
+                bplow.add(rs.getString("LOWBP"));
+                bphigh.add(rs.getString("HIGHBP"));
+            }
+            
+            bplow.removeAll(Collections.singleton(null));
+            bphigh.removeAll(Collections.singleton(null));
+            
+            double sumHigh = 0, sumLow = 0;
+            int count = 0;
+            if(!bphigh.isEmpty()) 
+            {
+                for(int i = bplow.size()-1;i>=0 && count<10;i--)
+                {
+                    sumHigh += Double.parseDouble(bphigh.get(i));
+                    sumLow += Double.parseDouble(bplow.get(i));
+                    count++;
+                }
+                
+                if(bplow.size() <= 10)
+                {
+                    lAve = sumLow/bplow.size();
+                    hAve = sumHigh/bphigh.size();
+                }
+                else
+                {
+                    hAve = sumHigh/10;
+                    lAve = sumLow/10;
+                }
+            }
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        double[] ave = new double[2];
+        ave[1] = lAve;
+        ave[0] = hAve;
+        
+        return ave;
     }
     public Vector<String> getSugar()
     {
@@ -318,6 +374,44 @@ public class PatientDB extends UserDB
         
         return latest;
     }
+    public double getSugarAverage()
+    {
+        Vector<String> sugar = new Vector();
+        double ave=0;;
+        try
+        {
+            ensureConnection();
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
+            while(rs.next())
+                sugar.add(rs.getString("SUGAR"));
+            
+            double sum = 0;
+            int count = 0;
+            sugar.removeAll(Collections.singleton(null));
+            if(!sugar.isEmpty())
+            {
+                for(int i = sugar.size()-1;i>=0 && count<10;i--)
+                {
+                    sum += Double.parseDouble(sugar.get(i));
+                    count++;
+                }
+                
+                if(sugar.size() <= 10)
+                    ave = sum/sugar.size();
+                else
+                    ave = sum/10;
+            }
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return ave;
+    }
     public Vector<String> getWeight()
     {
         Vector<String> weightV = new Vector();
@@ -365,6 +459,43 @@ public class PatientDB extends UserDB
         }
         
         return latest;
+    }
+    public double getWeightAverage()
+    {
+        Vector<String> weight = new Vector();
+        double ave=0;
+        try
+        {
+            ensureConnection();
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
+            while(rs.next())
+                weight.add(rs.getString("WEIGHT"));
+            
+            weight.removeAll(Collections.singleton(null));
+            
+            int count = 0;
+            double sum = 0;
+            if(!weight.isEmpty())
+                for(int i = weight.size()-1;i>=0 && count<10;i--)
+                {
+                    sum += Double.parseDouble(weight.get(i));
+                    count++;
+                }
+                
+                if(weight.size() <= 10)
+                    ave = sum/weight.size();
+                else
+                    ave = sum/10;    
+           
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return ave;
     }
     public Vector<String> getDrugs()
     {
