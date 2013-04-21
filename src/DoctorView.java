@@ -79,12 +79,15 @@ public class DoctorView extends javax.swing.JFrame {
         try{
             ResultSet rs;
             //Get all nurses
-            rs = new NurseDB("").getFromAllAccounts("username, firstname, lastname, doctor");
+            NurseDB nurseTemp=new NurseDB("");
+            rs = nurseTemp.getFromAllAccounts("username, firstname, lastname, doctor");
             Utilities.helperStoreUserData(rs,this.allNurses,this.myNurses,accountName);
-            
+            nurseTemp.closeConnection();
             //Get all patients
-            rs = new PatientDB("").getFromAllAccounts("username, firstname, lastname, doctor");
+            PatientDB patientTemp=new PatientDB("");
+            rs = patientTemp.getFromAllAccounts("username, firstname, lastname, doctor");
             Utilities.helperStoreUserData(rs,this.allPatients,this.myPatients,accountName);
+            patientTemp.closeConnection();
             
             Collections.sort((List)this.myPatients);
             Collections.sort((List)this.allPatients);
@@ -348,6 +351,7 @@ public class DoctorView extends javax.swing.JFrame {
                     {
                         JOptionPane.showMessageDialog(this, "Could not delete "+nurse.username+" because the user has already been deleted.");
                     }
+                    ndb.closeConnection();
                 }
                 catch(SQLException e)
                 {
@@ -363,6 +367,7 @@ public class DoctorView extends javax.swing.JFrame {
         {
             DoctorDB doc = new DoctorDB(loginName);
             String last = doc.getLastName();
+            doc.closeConnection();
             int i=PatientList.getSelectedIndex();
             if (i==-1)
             {

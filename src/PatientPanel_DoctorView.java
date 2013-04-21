@@ -562,7 +562,8 @@ public class PatientPanel_DoctorView extends javax.swing.JFrame {
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
 
             this.dispose();
-            new DoctorView(docLogin,docPass).setVisible(true);  
+            //Following is unnecessary, the doctor should not have closed his view in the first place
+            //new DoctorView(docLogin,docPass).setVisible(true);  
     }//GEN-LAST:event_backActionPerformed
 
     private void addPresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPresActionPerformed

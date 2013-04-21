@@ -32,6 +32,13 @@ abstract class UserDB {
         }
     }
     
+    protected void closeConnection() throws SQLException
+    {
+        if (con!=null) {
+            con.close();
+        }
+    }
+    
     public boolean accountExists() throws SQLException
     {
         ensureConnection();
@@ -80,8 +87,9 @@ abstract class UserDB {
     
     public ResultSet getFromAllAccounts(String dataToGet) throws SQLException
     {
-        Connection tempCon = DriverManager.getConnection(databaseHOST,databaseUserName,databaseUserPassword);
-        PreparedStatement prep = tempCon.prepareStatement("SELECT "+dataToGet+" FROM "+userTableName,
+        //Connection tempCon = DriverManager.getConnection(databaseHOST,databaseUserName,databaseUserPassword);
+        ensureConnection();
+        PreparedStatement prep = con.prepareStatement("SELECT "+dataToGet+" FROM "+userTableName,
                     ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
         ResultSet rs = prep.executeQuery();
         return rs;
@@ -89,8 +97,9 @@ abstract class UserDB {
     
     public ResultSet getFromAccount(String dataToGet) throws SQLException
     {
-        Connection tempCon = DriverManager.getConnection(databaseHOST,databaseUserName,databaseUserPassword);
-        PreparedStatement prep = tempCon.prepareStatement("SELECT "+dataToGet+" FROM "+userTableName+" WHERE username = ?",
+        //Connection tempCon = DriverManager.getConnection(databaseHOST,databaseUserName,databaseUserPassword);
+        ensureConnection();
+        PreparedStatement prep = con.prepareStatement("SELECT "+dataToGet+" FROM "+userTableName+" WHERE username = ?",
                     ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
         prep.setString(1,user);
         ResultSet rs = prep.executeQuery();

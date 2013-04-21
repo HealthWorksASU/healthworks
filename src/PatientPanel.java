@@ -20,7 +20,7 @@ public class PatientPanel extends javax.swing.JFrame {
     private final String HOST = "jdbc:derby://localhost:1527/information";
     private String uName = "healthworks";
     private String password = "healthworks";
-    private Connection con;
+    //private Connection con;
     private Statement stmt;
     private ResultSet rs;
     private Vector<String> bpV,bpLow,bpHigh,sugarV,sugarL,weightV,weightL,pres,obs;
@@ -42,7 +42,7 @@ public class PatientPanel extends javax.swing.JFrame {
         try
         {
             user = userName;
-            con = DriverManager.getConnection(HOST,uName,password);
+            Connection con = DriverManager.getConnection(HOST,uName,password);
             stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
             String sql = "SELECT * FROM PATIENTS WHERE USERNAME=\'"+user+"\'";
             rs = stmt.executeQuery(sql);
@@ -54,7 +54,9 @@ public class PatientPanel extends javax.swing.JFrame {
             
             sql = "SELECT * FROM PATIENTS_"+userName;
             rs = stmt.executeQuery(sql);
-
+            
+            con.close();
+            
             CommentsViewPane.setText("");
             AddObservationPaneTextArea.setText("");
             patient = new PatientDB(userName);
@@ -73,6 +75,9 @@ public class PatientPanel extends javax.swing.JFrame {
             bp.setText(patient.getLatestBP());
             sugar.setText(patient.getLatestSugar());
             weight.setText(patient.getLatestWeight());
+            
+            patient.closeConnection(); //We can close it here for efficiency because it'll simply reopen if necessary
+            
             Iterator i = obs.iterator();
             while(i.hasNext())
                 CommentsViewPane.getDocument().insertString(CommentsViewPane.getCaretPosition(), (String)i.next(), null);
@@ -632,7 +637,7 @@ public class PatientPanel extends javax.swing.JFrame {
         {
             lower = JOptionPane.showInputDialog(frame, "Enter lower blood pressure bound (mmHg):");
             while(Double.parseDouble(lower)<50 || Double.parseDouble(lower) > 230)
-                lower = JOptionPane.showInputDialog(frame, "Enter a VALID LOWEER blood pressure(50-230) mmHg:");
+                lower = JOptionPane.showInputDialog(frame, "Enter a VALID LOWER blood pressure(50-230) mmHg:");
             
             upper = JOptionPane.showInputDialog(frame, "Enter an upper blood pressure bound (mmHg):");
             while(Double.parseDouble(upper)<50 || Double.parseDouble(upper)>230 || (Double.parseDouble(upper) < Double.parseDouble(lower)))
@@ -732,6 +737,9 @@ public class PatientPanel extends javax.swing.JFrame {
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (response == JOptionPane.YES_OPTION)
         {
+            try {patient.closeConnection();}
+            catch (SQLException e) {}
+            
             this.dispose();
             new LoginScreen().setVisible(true);
         }  

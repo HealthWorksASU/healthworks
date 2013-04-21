@@ -77,12 +77,15 @@ public class NurseView extends javax.swing.JFrame {
             String assignedDoctor=nurseDBManager.getDoctor();
             ResultSet rs;
             //Get all doctors.
-            rs = new DoctorDB("").getFromAllAccounts("username, firstname, lastname");
+            DoctorDB tempDoctor=new DoctorDB("");
+            rs = tempDoctor.getFromAllAccounts("username, firstname, lastname");
             Utilities.helperStoreUserData(rs,this.allDoctors,this.myDoctors,assignedDoctor,"username"); //All doctors whose username matches assignedDoctor
-            
+            tempDoctor.closeConnection();
             //Get all patients
-            rs = new PatientDB("").getFromAllAccounts("username, firstname, lastname, doctor");
+            PatientDB tempPatient=new PatientDB("");
+            rs = tempPatient.getFromAllAccounts("username, firstname, lastname, doctor");
             Utilities.helperStoreUserData(rs,this.allPatients,this.myPatients,accountName);
+            tempPatient.closeConnection();
             
             Collections.sort((List)this.myPatients);
             Collections.sort((List)this.allPatients);
@@ -342,6 +345,7 @@ public class NurseView extends javax.swing.JFrame {
             {
                 JOptionPane.showMessageDialog(this,"Unable to launch mail program.\nPlease manually email: "+docEmail);
             }
+            ddb.closeConnection();
         }
         catch (SQLException e)
         {
@@ -413,6 +417,8 @@ public class NurseView extends javax.swing.JFrame {
     }//GEN-LAST:event_DoctorCategorySelectorActionPerformed
 
     private void LogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButtonActionPerformed
+        try {nurseDBManager.closeConnection();}
+        catch (SQLException e) {}
         this.dispose();
         new LoginScreen().setVisible(true);
     }//GEN-LAST:event_LogoutButtonActionPerformed
@@ -445,6 +451,7 @@ public class NurseView extends javax.swing.JFrame {
                     {
                         JOptionPane.showMessageDialog(this, "Could not delete "+patient.username+" because the user has already been deleted.");
                     }
+                    ndb.closeConnection();
                 }
                 catch(SQLException e)
                 {
