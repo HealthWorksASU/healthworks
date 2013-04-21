@@ -817,7 +817,7 @@ public class PatientPanel extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Please enter a obervasation first");
                 else
                 {
-                    chat = "["+patient.getFirstName()+"] "+chat;
+                    chat = "\n["+patient.getFirstName()+"] "+chat;
                     obs.add(chat);
                     CommentsViewPane.getDocument().insertString(CommentsViewPane.getCaretPosition(),chat,null);
                     AddObservationPaneTextArea.setText("");
