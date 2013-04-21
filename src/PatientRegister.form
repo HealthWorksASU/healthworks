@@ -611,6 +611,7 @@
             <StringItem index="6" value="Other"/>
           </StringArray>
         </Property>
+        <Property name="selectedIndex" type="int" value="-1"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="insuranceNameActionPerformed"/>
@@ -800,15 +801,15 @@
     <Component class="javax.swing.JComboBox" name="marraige">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="6">
-            <StringItem index="0" value=" "/>
-            <StringItem index="1" value="Single"/>
-            <StringItem index="2" value="Married"/>
-            <StringItem index="3" value="Widowed"/>
-            <StringItem index="4" value="Separated"/>
-            <StringItem index="5" value="Divorced"/>
+          <StringArray count="5">
+            <StringItem index="0" value="Single"/>
+            <StringItem index="1" value="Married"/>
+            <StringItem index="2" value="Widowed"/>
+            <StringItem index="3" value="Separated"/>
+            <StringItem index="4" value="Divorced"/>
           </StringArray>
         </Property>
+        <Property name="selectedIndex" type="int" value="-1"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
@@ -871,13 +872,13 @@
     <Component class="javax.swing.JComboBox" name="docList">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Select Doctor"/>
-            <StringItem index="1" value="Dr. Rachna Singh"/>
-            <StringItem index="2" value="Dr. Joe Smith"/>
-            <StringItem index="3" value="Dr. Robert House"/>
+          <StringArray count="3">
+            <StringItem index="0" value="Dr. Rachna Singh"/>
+            <StringItem index="1" value="Dr. Joe Smith"/>
+            <StringItem index="2" value="Dr. Robert House"/>
           </StringArray>
         </Property>
+        <Property name="selectedIndex" type="int" value="-1"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="docListActionPerformed"/>

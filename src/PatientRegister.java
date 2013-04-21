@@ -251,6 +251,7 @@ public class PatientRegister extends javax.swing.JFrame
         jLabel17.setText("Insurance:");
 
         insuranceName.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Aetna", "IHC", "Humana", "Assurant", "Kaisser", "UnitedHealthOne", "Other" }));
+        insuranceName.setSelectedIndex(-1);
         insuranceName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 insuranceNameActionPerformed(evt);
@@ -320,7 +321,8 @@ public class PatientRegister extends javax.swing.JFrame
         effDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("M/d/yyyy"))));
         effDate.setText("6/8/2012");
 
-        marraige.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Single", "Married", "Widowed", "Separated", "Divorced" }));
+        marraige.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Single", "Married", "Widowed", "Separated", "Divorced" }));
+        marraige.setSelectedIndex(-1);
 
         jLabel31.setText("Insured's Social Security:");
 
@@ -342,7 +344,8 @@ public class PatientRegister extends javax.swing.JFrame
         jLabel34.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         jLabel34.setText("Register");
 
-        docList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Doctor", "Dr. Rachna Singh", "Dr. Joe Smith", "Dr. Robert House" }));
+        docList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Dr. Rachna Singh", "Dr. Joe Smith", "Dr. Robert House" }));
+        docList.setSelectedIndex(-1);
         docList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 docListActionPerformed(evt);
@@ -706,19 +709,6 @@ public class PatientRegister extends javax.swing.JFrame
         String emName = eName.getText();
         String emRelation = eRelation.getText();
 
-        //String sql = "SELECT * FROM Patients";
-        //ResultSet rs = stmt.executeQuery(sql);
-        
-        //checks if user id is taken or not
-        //while(rs.next())
-        //{
-         //   String dbID = rs.getString("USERNAME");
-           // if(dbID.equals(id))
-            //{
-            //    flag = true;
-            //    break;
-           // }
-       // }
         PatientDB newPatient= new PatientDB(id);
         if (newPatient.accountExists())
         {
@@ -728,6 +718,8 @@ public class PatientRegister extends javax.swing.JFrame
         //validating all entries
         if(socSec.getText().length() != 9 )
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a valid 9 digit Social Security number");
+        else if(insuranceName.getSelectedIndex() == -1)
+            JOptionPane.showMessageDialog(PatientRegister.this, "Please enter an Insurance Name");
         else if(insuranceName.getSelectedItem().equals("Other"))
         {
             if(otherName.getText().equals(""))
@@ -736,7 +728,7 @@ public class PatientRegister extends javax.swing.JFrame
             }
             insurance = otherName.getText();
         }
-        else if(marraige.getSelectedItem().equals(" "))
+        else if(marraige.getSelectedIndex() == -1)
             JOptionPane.showMessageDialog(PatientRegister.this, "Please select a Maratial Status");
         else if(first.equals(""))
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter a First Name");
@@ -786,7 +778,7 @@ public class PatientRegister extends javax.swing.JFrame
             JOptionPane.showMessageDialog(PatientRegister.this, "Please enter an email address to recover your account");
         else if(!(pass.equals(passConfirm)))
             JOptionPane.showMessageDialog(PatientRegister.this, "Passwords do not match");
-        else if(docList.getSelectedItem().equals("Select Doctor"))
+        else if(docList.getSelectedIndex() == -1)
             JOptionPane.showMessageDialog(PatientRegister.this, "Please select a doctor");
         else if(buttonGroup1.getSelection() == null)
             JOptionPane.showMessageDialog(PatientRegister.this, "Please select your gender");

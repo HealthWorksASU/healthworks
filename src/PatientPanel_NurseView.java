@@ -747,7 +747,7 @@ public class PatientPanel_NurseView extends javax.swing.JFrame {
     }//GEN-LAST:event_newWeightActionPerformed
 
     private void updatePersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatePersonalInfoActionPerformed
-        new PatientEditInfo().setVisible(true);
+        new PatientEditInfo(user).setVisible(true);
     }//GEN-LAST:event_updatePersonalInfoActionPerformed
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
