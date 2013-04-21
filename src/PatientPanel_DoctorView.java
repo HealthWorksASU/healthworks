@@ -190,6 +190,11 @@ public class PatientPanel_DoctorView extends javax.swing.JFrame {
         AddObservationPane.setViewportView(AddObservationPaneTextArea);
 
         SendObservationButton.setText("Send");
+        SendObservationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SendObservationButtonActionPerformed(evt);
+            }
+        });
 
         LatestBloodPressureLabel.setText("Blood Pressure: ");
 
@@ -632,6 +637,31 @@ public class PatientPanel_DoctorView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e);
         }
     }//GEN-LAST:event_AddObservationPaneTextAreaKeyPressed
+
+    private void SendObservationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendObservationButtonActionPerformed
+        try
+        {
+            String chat = AddObservationPaneTextArea.getText();
+            if(chat.equals(""))
+                JOptionPane.showMessageDialog(this, "Please enter a obervasation first");
+            else
+            {
+                chat = "\n[Dr. "+docLast+"] "+chat;
+                obs.add(chat);
+                CommentsViewPane.getDocument().insertString(CommentsViewPane.getCaretPosition(),chat,null);
+                AddObservationPaneTextArea.setText("");
+                patient.setObservations(chat);
+            }
+        }
+        catch(BadLocationException e)
+        {
+            JOptionPane.showMessageDialog(this, e);
+        } 
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(this, e);
+        }
+    }//GEN-LAST:event_SendObservationButtonActionPerformed
 
     /**
      * @param args the command line arguments
