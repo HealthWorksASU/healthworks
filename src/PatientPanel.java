@@ -708,7 +708,7 @@ public class PatientPanel extends javax.swing.JFrame {
         JFrame frame = new JFrame();
         try
         {
-            weightEntry = JOptionPane.showInputDialog(frame, "Enter sugar level (mmol/L):");
+            weightEntry = JOptionPane.showInputDialog(frame, "Enter weight (kg):");
             while(Double.parseDouble(weightEntry)<0 || Double.parseDouble(weightEntry) > 400)
                 weightEntry = JOptionPane.showInputDialog(frame, "Enter a VALID weight kg:");
             

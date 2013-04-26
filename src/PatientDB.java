@@ -150,7 +150,7 @@ public class PatientDB extends UserDB
     }
     public boolean searchAndDeleteBP(String toRemove)
     {
-        String remove = "DELETE FROM P"+username+" WHERE BP = \'"+toRemove+"\'";
+        String remove = "DELETE FROM PATIENTS_"+username+" WHERE BP = \'"+toRemove+"\'";
         
         try
         {
@@ -161,6 +161,7 @@ public class PatientDB extends UserDB
         }
         catch(SQLException e)
         {
+            System.out.println(e.getMessage());
             return false;
         }  
     }
@@ -174,7 +175,7 @@ public class PatientDB extends UserDB
     }
      public boolean searchAndDeletePrescription(String toRemove)
     {
-        String remove = "DELETE FROM P"+username+" WHERE DRUGS = \'"+toRemove+"\'";
+        String remove = "DELETE FROM PATIENTS_"+username+" WHERE DRUGS = \'"+toRemove+"\'";
         
         try
         {
