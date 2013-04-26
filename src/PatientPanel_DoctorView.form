@@ -286,7 +286,7 @@
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="RecentBloodPressureEntriesPane" alignment="0" pref="330" max="32767" attributes="0"/>
+                                  <Component id="RecentBloodPressureEntriesPane" alignment="0" pref="338" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="RecentBPEntriesLabel" min="-2" max="-2" attributes="0"/>
@@ -320,7 +320,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="RecentBPEntriesLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="RecentBloodPressureEntriesPane" pref="309" max="32767" attributes="0"/>
+                      <Component id="RecentBloodPressureEntriesPane" pref="326" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -395,7 +395,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="SugarLevelPane" alignment="1" pref="336" max="32767" attributes="0"/>
+                          <Component id="SugarLevelPane" alignment="1" pref="348" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -434,7 +434,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="RecentSLEntriesLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="SugarLevelPane" pref="312" max="32767" attributes="0"/>
+                      <Component id="SugarLevelPane" pref="327" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -516,7 +516,7 @@
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="WeightEntriesScrollPane" alignment="0" pref="330" max="32767" attributes="0"/>
+                                  <Component id="WeightEntriesScrollPane" alignment="0" pref="338" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Component id="WeightMonthlyAverageLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
@@ -550,7 +550,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="RecentWeightEntriesLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="WeightEntriesScrollPane" pref="313" max="32767" attributes="0"/>
+                      <Component id="WeightEntriesScrollPane" pref="330" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

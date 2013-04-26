@@ -554,14 +554,17 @@ public class PatientPanel_DoctorView extends javax.swing.JFrame {
 
     private void CreateBPGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBPGraphButtonActionPerformed
         // TODO add your handling code here:
+        new CreateGraph(new ArrayList<String>(bpV),new ArrayList<String>(weightV),new ArrayList<String>(sugarV),0).setVisible(true);
     }//GEN-LAST:event_CreateBPGraphButtonActionPerformed
 
     private void CreateSLGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateSLGraphButtonActionPerformed
         // TODO add your handling code here:
+        new CreateGraph(new ArrayList<String>(bpV),new ArrayList<String>(weightV),new ArrayList<String>(sugarV),2).setVisible(true);
     }//GEN-LAST:event_CreateSLGraphButtonActionPerformed
 
     private void WeightCreateGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WeightCreateGraphButtonActionPerformed
         // TODO add your handling code here:
+        new CreateGraph(new ArrayList<String>(bpV),new ArrayList<String>(weightV),new ArrayList<String>(sugarV),1).setVisible(true);
     }//GEN-LAST:event_WeightCreateGraphButtonActionPerformed
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
