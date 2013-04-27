@@ -10,6 +10,7 @@
 import java.sql.*;
 import java.util.*;
 import javax.swing.JOptionPane;
+import java.text.*;
 
 public class PatientDB extends UserDB
 {
@@ -28,7 +29,7 @@ public class PatientDB extends UserDB
         ensureConnection();
         String createTable = "CREATE TABLE PATIENTS_"+username+" (id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                         + "bp VARCHAR(255), sugar VARCHAR(255), weight VARCHAR(255), drugs VARCHAR(255), observations VARCHAR(2500), "
-                        + "LOWBP VARCHAR(2500), HIGHBP VARCHAR(2500), SUGARTIME VARCHAR(2500), WEIGHTTIME VARCHAR(2500))";
+                        + "LOWBP VARCHAR(2500), HIGHBP VARCHAR(2500), SUGARTIME VARCHAR(2500), WEIGHTTIME VARCHAR(2500), APPTIME VARCHAR(3500), APPCONFIRM VARCHAR(2500))";
         PreparedStatement prep = con.prepareStatement(createTable);
         prep.executeUpdate();
     }
@@ -87,12 +88,12 @@ public class PatientDB extends UserDB
     public void setBP(String bp, String bpHigh, String bpLow) throws SQLException
     {
         ensureConnection();
-            PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (BP, LOWBP, HIGHBP) VALUES(?,?,?)");
+        PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (BP, LOWBP, HIGHBP) VALUES(?,?,?)");
  
-                pstmt.setString(1,bp);
-                pstmt.setString(2,bpLow);
-                pstmt.setString(3,bpHigh);
-                pstmt.executeUpdate();
+        pstmt.setString(1,bp);
+        pstmt.setString(2,bpLow);
+        pstmt.setString(3,bpHigh);
+        pstmt.executeUpdate();
     }
     public void setSugar(String sugarTime, String sugar) throws SQLException
     {
@@ -196,6 +197,14 @@ public class PatientDB extends UserDB
  
                 pstmt.setString(1,observation);
                 pstmt.executeUpdate();
+    }
+    public void scheduleAppointment(String date, String confirm) throws SQLException
+    {
+        ensureConnection();
+        PreparedStatement pstmt = con.prepareStatement("INSERT INTO PATIENTS_"+username+" (APPTIME,APPCONFIRM) VALUES(?,?)");
+        pstmt.setString(1,date);
+        pstmt.setString(2,confirm);
+        pstmt.executeUpdate();
     }
     public Vector<Object> getPersonalInfo()
     {
@@ -542,5 +551,100 @@ public class PatientDB extends UserDB
         
         return obs;
     }
+    public Vector<String> getAppointmentTime()
+    {
+        Vector<String> app = new Vector();
+        String latest = "--";
+        try
+        {
+            ensureConnection();
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
+            while(rs.next())
+                app.add(rs.getString("APPTIME"));
+            
+            app.removeAll(Collections.singleton(null));
     
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return app;
+    }
+    public String getConfirmedAppointment()
+    {
+        Vector<String> app = new Vector();
+        String c = " ";
+        try
+        {
+            ensureConnection();
+            PreparedStatement prep=con.prepareStatement("SELECT * FROM PATIENTS_"+username);
+            ResultSet rs=prep.executeQuery();
+            while(rs.next())
+                app.add(rs.getString("APPCONFIRM"));
+            
+            app.removeAll(Collections.singleton(null));
+            
+            c = app.lastElement();
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Unable to establish SQL connection. Please check your network settings.\nDetails: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return "("+c+")";
+    }
+    public String getLastAppointment()
+    {
+        Vector<String> app = getAppointmentTime();
+        if(app == null)
+            return "--";
+        else
+        {
+            String l = app.lastElement();
+            try
+            {
+                java.util.Date d = new SimpleDateFormat("MM/dd/yyyy h:mm a").parse(l);
+                java.util.Date now = new java.util.Date();
+                if(d.before(now))
+                    return l;
+                else if(app.size() == 1)
+                    return "--";
+                else
+                {
+                    l=app.elementAt(app.size()-2);
+                    return l;
+                }
+            }
+            catch(ParseException e) {};       
+        }
+        return "--";
+    }
+    public String getNextAppointment()
+    {
+        Vector<String> app = getAppointmentTime();
+        if(app == null)
+            return "--";
+        else
+        {
+            String f = app.firstElement();
+            try
+            {
+                java.util.Date d = new SimpleDateFormat("MM/dd/yyyy h:mm a").parse(f);
+                java.util.Date now = new java.util.Date();
+                if(d.after(now))
+                {
+                    return (f + " " + getConfirmedAppointment());
+                }
+                else
+                    return "--";
+            }
+            catch(ParseException e) {};       
+        }
+        return "--";
+    }
 }
