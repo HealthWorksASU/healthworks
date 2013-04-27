@@ -190,6 +190,22 @@ public class PatientDB extends UserDB
             return false;
         }  
     }
+    public boolean deleteAppointment(String toRemove)
+    {
+        String remove = "DELETE FROM PATIENTS_"+username+" WHERE APPTIME = \'"+toRemove+"\'";
+        
+        try
+        {
+            ensureConnection();
+            PreparedStatement prep=con.prepareStatement(remove);
+            prep.executeUpdate();
+            return true;
+        }
+        catch(SQLException e)
+        {
+            return false;
+        } 
+    }
     public void setObservations(String observation) throws SQLException
     {
         ensureConnection();
@@ -205,26 +221,6 @@ public class PatientDB extends UserDB
         pstmt.setString(1,date);
         pstmt.setString(2,confirm);
         pstmt.executeUpdate();
-    }
-    public Vector<Object> getPersonalInfo()
-    {
-        return new Vector<Object>();
-    }
-    public Vector<String> getAddress()
-    {
-        return new Vector<String>();
-    }
-    public Vector<String> getEmergencyInfo()
-    {
-        return new Vector<String>();
-    }
-    public Vector<String> getInsuranceInfo()
-    {
-        return new Vector<String>();
-    }
-    public Vector<String> getRegistrationInfo()
-    {
-        return new Vector<String>();
     }
     public Vector<String> getBP()
     {
@@ -574,7 +570,7 @@ public class PatientDB extends UserDB
         
         return app;
     }
-    public String getConfirmedAppointment()
+    public String getAppointmentConfirmation()
     {
         Vector<String> app = new Vector();
         String c = " ";
@@ -631,20 +627,54 @@ public class PatientDB extends UserDB
             return "--";
         else
         {
-            String f = app.firstElement();
+            String n = app.lastElement();
             try
             {
-                java.util.Date d = new SimpleDateFormat("MM/dd/yyyy h:mm a").parse(f);
+                java.util.Date d = new SimpleDateFormat("MM/dd/yyyy h:mm a").parse(n);
                 java.util.Date now = new java.util.Date();
                 if(d.after(now))
-                {
-                    return (f + " " + getConfirmedAppointment());
-                }
+                    return (n + " ");
                 else
                     return "--";
             }
-            catch(ParseException e) {};       
+            catch(ParseException e) 
+            {
+                System.out.println(e.getMessage());
+            }       
         }
         return "--";
+    }
+    
+    public boolean confirmAppointment(String date)
+    {
+        String update = "UPDATE PATIENTS_"+username+" SET APPCONFIRM=\'Confirmed\' WHERE APPTIME = \'"+date+"\'";
+        
+        try
+        {
+            ensureConnection();
+            PreparedStatement prep=con.prepareStatement(update);
+            prep.executeUpdate();
+            return true;
+        }
+        catch(SQLException e)
+        {
+            return false;
+        } 
+    }
+    public boolean denyAppointment(String date)
+    {
+        String update = "UPDATE PATIENTS_"+username+" SET APPCONFIRM=\'Denied\' WHERE APPTIME = \'"+date+"\'";
+        
+        try
+        {
+            ensureConnection();
+            PreparedStatement prep=con.prepareStatement(update);
+            prep.executeUpdate();
+            return true;
+        }
+        catch(SQLException e)
+        {
+            return false;
+        } 
     }
 }

@@ -31,8 +31,8 @@ public class PatientPanel extends javax.swing.JFrame {
     private String sAvg,bpHighAvg,bpLowAvg,wAvg;
     DecimalFormat fmt = new DecimalFormat("#.##");
     private JXMonthView mv;
-    private String fmtDate = "MMMM d, yy";
-    Format formatter = new SimpleDateFormat(fmtDate);
+    private boolean reschedFlag;
+    private String nextAppointment,confirm;
     /**
      * Creates new form PatientPanel
      */
@@ -125,11 +125,11 @@ public class PatientPanel extends javax.swing.JFrame {
             
             mv = datePick.getMonthView();
             java.util.Date da = new java.util.Date();
-            mv.setLowerBound(da);
             int y,d;
             int m = da.getMonth();
             y= da.getYear();
             d = da.getDate();
+            mv.setLowerBound(new java.util.Date(y,m,d+1));
             System.out.println(da.toString());
             System.out.println(d + " "+ m+ " "+y);
             switch(m)
@@ -152,8 +152,16 @@ public class PatientPanel extends javax.swing.JFrame {
             System.out.println(new java.util.Date(y,m,d).toString());
             mv.setUpperBound(new java.util.Date(y,m,d));
             
-            nextApp.setText(patient.getNextAppointment());
+            nextAppointment = patient.getNextAppointment();
+            if(nextAppointment.equals("--"))
+                confirm = "";
+            else
+                confirm = patient.getAppointmentConfirmation();
+            
+            nextApp.setText(nextAppointment + confirm);
             lastApp.setText(patient.getLastAppointment());
+            
+            popupDeniedAppointment();
         }
         catch(SQLException e)
         {
@@ -616,69 +624,71 @@ public class PatientPanel extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(updatePersonalInfo)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(6, 6, 6)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addGap(12, 12, 12)
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(LatestSugarLevelLabel)
-                                                        .addComponent(LatestWeightLabel))
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(bp)
-                                                        .addComponent(sugar)
-                                                        .addComponent(weight)))
-                                                .addComponent(LatestStatisticsLabel)))
-                                        .addComponent(LatestBloodPressureLabel))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addContainerGap()
-                                            .addComponent(address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(updatePersonalInfo)))
-                                .addGap(65, 65, 65)
-                                .addComponent(name))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addGap(19, 19, 19)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(6, 6, 6)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(jLabel3)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                    .addComponent(nextApp))
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(jLabel5)
-                                                    .addGap(18, 18, 18)
-                                                    .addComponent(lastApp))))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(scheduleApp)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(datePick, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addGap(30, 30, 30)
-                                    .addComponent(DataPane, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(8, 8, 8)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(CommentsViewScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(AddObservationPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(logout))
-                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(CommentsObservationsLabel)
-                                    .addComponent(PrescriptionsLabel)
-                                    .addComponent(PrescriptionsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(LatestSugarLevelLabel)
+                                            .addComponent(LatestBloodPressureLabel)
+                                            .addComponent(LatestWeightLabel))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(bp)
+                                            .addComponent(sugar)
+                                            .addComponent(weight)))
+                                    .addComponent(address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(65, 65, 65)
+                        .addComponent(name)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(logout, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(PrescriptionsLabel)
+                                .addGap(89, 89, 89))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SendObservationButton)))
+                        .addComponent(SendObservationButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(nextApp))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(lastApp))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(scheduleApp)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(datePick, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addComponent(DataPane, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(LatestStatisticsLabel)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(CommentsViewScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(PrescriptionsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(AddObservationPane)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(CommentsObservationsLabel)
+                                .addGap(37, 37, 37)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -686,65 +696,57 @@ public class PatientPanel extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(logout)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(logout)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addComponent(name)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(PrescriptionsLabel))
+                        .addGap(15, 15, 15)
+                        .addComponent(name))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(updatePersonalInfo)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 240, Short.MAX_VALUE)
-                                .addComponent(CommentsObservationsLabel)
-                                .addGap(7, 7, 7)
-                                .addComponent(CommentsViewScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(AddObservationPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(PrescriptionsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(SendObservationButton)
-                        .addGap(31, 31, 31))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(LatestStatisticsLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(LatestBloodPressureLabel)
-                            .addComponent(bp))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(LatestSugarLevelLabel)
-                            .addComponent(sugar))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(LatestWeightLabel)
-                            .addComponent(weight))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(scheduleApp)
-                            .addComponent(datePick, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(nextApp))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(lastApp))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(DataPane, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(LatestStatisticsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(LatestBloodPressureLabel)
+                    .addComponent(bp))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(LatestSugarLevelLabel)
+                    .addComponent(sugar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(LatestWeightLabel)
+                    .addComponent(weight))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(scheduleApp)
+                    .addComponent(datePick, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(nextApp))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(lastApp))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(DataPane, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(85, 85, 85)
+                .addComponent(PrescriptionsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(PrescriptionsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(CommentsObservationsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(CommentsViewScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(AddObservationPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(SendObservationButton)
+                .addGap(31, 31, 31))
         );
 
         DataPane.getAccessibleContext().setAccessibleName("Blood Pressure");
@@ -752,6 +754,11 @@ public class PatientPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void popupDeniedAppointment()
+    {
+        if(confirm.equals("(Denied)"))
+            JOptionPane.showMessageDialog(this, "Your appointment on "+nextAppointment+"\nhas been denied because your doctor is busy then. \nPlease reschedule your appointment as soon as possible. Thank you");
+    }
     private void CreateBPGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBPGraphButtonActionPerformed
         // TODO add your handling code here:
         new CreateGraph(new ArrayList<String>(bpV),new ArrayList<String>(weightV),new ArrayList<String>(sugarV),0).setVisible(true);
@@ -978,7 +985,7 @@ public class PatientPanel extends javax.swing.JFrame {
         {
             String chat = AddObservationPaneTextArea.getText();
             if(chat.equals(""))
-                JOptionPane.showMessageDialog(this, "Please enter a obervasation first");
+                JOptionPane.showMessageDialog(this, "Please enter in the field first");
             else
             {
                 chat = "\n["+patient.getFirstName()+"] "+chat;
@@ -999,14 +1006,18 @@ public class PatientPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_SendObservationButtonActionPerformed
 
     private void scheduleAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scheduleAppActionPerformed
-        boolean flag = true;
-        if(!nextApp.equals("--"))
+        boolean flag = true; reschedFlag = false;
+        if(confirm.equals("(Denied)"))
+            reschedFlag = true;
+        else if(!nextApp.getText().equals("--"))
         {
             int response = JOptionPane.showConfirmDialog(this, "Do you want Reschedule your appointment?", "Reschedule",
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             
             if (response == JOptionPane.NO_OPTION)
                 flag = false;
+            else
+                reschedFlag = true;
         }
         
         if(flag)
@@ -1021,6 +1032,14 @@ public class PatientPanel extends javax.swing.JFrame {
         java.util.Date d = mv.getSelectionDate();
         String dat = Integer.toString(d.getMonth()+1)+"/"+Integer.toString(d.getDate())+"/"+Integer.toString(d.getYear()+1900);
         
+        if(d.getDay() == 0 || d.getDay() == 6)
+        {
+            JOptionPane.showMessageDialog(this, "The clinic is closed on weekends, please select a week day.");
+            scheduleApp.setEnabled(true);
+            datePick.setEnabled(false);
+            return;
+        }
+        
         String[] times = {"8:00 AM","9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "2:00 PM", "3:00 PM"};
         String timeSelect;
         try
@@ -1029,15 +1048,45 @@ public class PatientPanel extends javax.swing.JFrame {
                     "Appointment Time", JOptionPane.QUESTION_MESSAGE,null, times,"Select a time");
             
             if(timeSelect == null)
+            {
+                scheduleApp.setEnabled(true);
+                datePick.setEnabled(false);
                 return;
+            }
+            
+            if(reschedFlag)
+            {
+                if(!patient.deleteAppointment(nextAppointment))
+                {
+                    JOptionPane.showMessageDialog(this, "Appointment could not be rescheduled");
+                    scheduleApp.setEnabled(true);
+                    datePick.setEnabled(false);
+                    return;
+                }
+                reschedFlag = false;
+            }
             
             patient.scheduleAppointment((dat+" "+timeSelect), "Not Confirmed");
-            nextApp.setText(dat+" "+timeSelect+" "+" (Not Confirmed)");
-   
+            nextAppointment = patient.getNextAppointment();
+            if(nextAppointment.equals("--"))
+                confirm = "";
+            else
+                confirm = patient.getAppointmentConfirmation();
+            
+            nextApp.setText(nextAppointment + confirm);
+            
+            scheduleApp.setEnabled(true);
+            datePick.setEnabled(false);
         }    
         catch(SQLException e)
         {
             JOptionPane.showMessageDialog(this, e);
+        }
+        catch(NullPointerException e) 
+        {
+            JOptionPane.showMessageDialog(this, e);
+            scheduleApp.setEnabled(true);
+            datePick.setEnabled(false);
         }
     }//GEN-LAST:event_datePickActionPerformed
 
