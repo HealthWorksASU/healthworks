@@ -1,17 +1,11 @@
-Sat Apr 27 14:18:02 MST 2013 : Apache Derby Network Server - 10.8.1.2 - (1095077) started and ready to accept connections on port 1527
+Sat Apr 27 23:55:35 MST 2013 : Apache Derby Network Server - 10.8.1.2 - (1095077) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-Sat Apr 27 14:18:02 MST 2013:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-013e-4d5c-1ae4-00005378814f 
-on database directory /Users/DaMania/NetBeansProjects/health/database/information  with class loader sun.misc.Launcher$AppClassLoader@43be2d65 
+Sat Apr 27 23:55:36 MST 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-013e-4f6c-dd5b-00005378814f 
+on database directory /Users/DaMania/NetBeansProjects/health/database/information  with class loader sun.misc.Launcher$AppClassLoader@7a9664a1 
 Loaded from file:/Applications/NetBeans/glassfish-3.1.2.2/javadb/lib/derby.jar
 java.vendor=Apple Inc.
 java.runtime.version=1.6.0_45-b06-451-11M4406
 user.dir=/Applications/NetBeans/glassfish-3.1.2.2/javadb
 derby.system.home=/Users/DaMania/NetBeansProjects/health/database
 Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Sat Apr 27 17:24:57 MST 2013: Shutting down Derby engine
-----------------------------------------------------------------
-Sat Apr 27 17:24:57 MST 2013:
-Shutting down instance a816c00e-013e-4d5c-1ae4-00005378814f on database directory /Users/DaMania/NetBeansProjects/health/database/information with class loader sun.misc.Launcher$AppClassLoader@43be2d65 
-----------------------------------------------------------------

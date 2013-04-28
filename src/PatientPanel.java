@@ -1110,18 +1110,23 @@ public class PatientPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_datePickActionPerformed
 
     private void cancelAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelAppActionPerformed
-        if(patient.deleteAppointment(nextAppointment))
+        int response = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "Logout",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION)
         {
-            nextAppointment = patient.getNextAppointment();
-            if(nextAppointment.equals("--"))
-                confirm = "";
-            else
-                confirm = patient.getAppointmentConfirmation();
-            nextApp.setText(nextAppointment + confirm);
-            scheduleApp.setEnabled(true);
-            datePick.setEnabled(false);
-            JOptionPane.showMessageDialog(this, "Appointment cancelled");
-            cancelApp.setEnabled(false);
+            if(patient.deleteAppointment(nextAppointment))
+            {
+                nextAppointment = patient.getNextAppointment();
+                if(nextAppointment.equals("--"))
+                    confirm = "";
+                else
+                    confirm = patient.getAppointmentConfirmation();
+                nextApp.setText(nextAppointment + confirm);
+                scheduleApp.setEnabled(true);
+                datePick.setEnabled(false);
+                JOptionPane.showMessageDialog(this, "Appointment cancelled");
+                cancelApp.setEnabled(false);
+            }
         }
     }//GEN-LAST:event_cancelAppActionPerformed
 

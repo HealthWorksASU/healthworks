@@ -417,10 +417,16 @@ public class NurseView extends javax.swing.JFrame {
     }//GEN-LAST:event_DoctorCategorySelectorActionPerformed
 
     private void LogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButtonActionPerformed
-        try {nurseDBManager.closeConnection();}
-        catch (SQLException e) {}
-        this.dispose();
-        new LoginScreen().setVisible(true);
+        int response = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "Logout",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION)
+        {
+            try {nurseDBManager.closeConnection();}
+            catch (SQLException e) {}
+            
+            this.dispose();
+            new LoginScreen().setVisible(true);
+        }  
     }//GEN-LAST:event_LogoutButtonActionPerformed
 
     private void PatientDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PatientDeleteButtonActionPerformed
