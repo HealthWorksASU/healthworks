@@ -972,7 +972,7 @@ public class PatientPanel extends javax.swing.JFrame {
             if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER)
             {
                 if(chat.equals(""))
-                    JOptionPane.showMessageDialog(this, "Please enter a obervasation first");
+                    JOptionPane.showMessageDialog(this, "Please enter an observasation first");
                 else
                 {
                     chat = "\n["+patient.getFirstName()+"] "+chat;
@@ -1110,7 +1110,7 @@ public class PatientPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_datePickActionPerformed
 
     private void cancelAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelAppActionPerformed
-        int response = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "Logout",
+        int response = JOptionPane.showConfirmDialog(this, "Do you want to cancel the appointment?", "Cancel Appointment",
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (response == JOptionPane.YES_OPTION)
         {
